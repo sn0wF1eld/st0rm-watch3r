@@ -25,15 +25,19 @@ const NavButton: FC<ButtonProps> = ({title, linkTo}) => {
 function Navbar() {
   return (
       <div>
-        <GeneralStats />
-        <div className="fixed bg-main-bg w-full navbar">
+        <div className="fixed bg-button-bg w-full navbar" style={{zIndex: 9999}}>
             <div className='flex gap-2 p-2 relative'>
                 <NavLink 
                     className='hover:animate-rotate'
                     style={ {width: '63px', backgroundSize: "100%", backgroundImage: "url('/Icemanmelting-snowflake-logo-deisgn-final2.png"}} to='/' />
-                <NavButton title='Form' linkTo='/' />
-                <NavButton title='Stats' linkTo='/stats' />
-                <NavButton title='State' linkTo='/state' />
+                <div className="flex w-full items-center">
+                    <NavButton title='Form' linkTo='/' />
+                    <NavButton title='Stats' linkTo='/stats' />
+                    <NavButton title='State' linkTo='/state' />
+                    <div className='ml-auto'>
+                        <GeneralStats />
+                    </div>
+                </div>
             </div>
         </div>
       </div>

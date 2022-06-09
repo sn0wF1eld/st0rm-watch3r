@@ -18,7 +18,8 @@ module.exports = {
         'secondary-bg': '#33373E',
         'light-gray': '#F7F7F7',
         'half-transparent': 'rgba(0, 0, 0, 0.5)',
-        'button-bg': '#262a32'
+        'button-bg': '#262a32',
+        'cyan-blue': '#42c8f1'
       },
       borderWidth: {
         1: '1px',

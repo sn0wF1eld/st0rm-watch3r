@@ -8,7 +8,7 @@ const apiCall = {
 
 
 function GeneralStats() {
-    const [count, setCount] = useState('');
+    const [count, setCount] = useState(0);
     const [transactionsCount, setTransactionsCount] = useState({started: 0, terminated: 0})
 
     useEffect(() => {
@@ -37,23 +37,30 @@ function GeneralStats() {
               console.log(err);
             }
           };
-        //clean up function
         return () => {
             ws.close()
             ws2.close()
         };
     }, []);
 
-
+    function secondsToDaysHoursMinutesSeconds(seconds: number) {
+        const d = Math.floor(seconds / 86400)
+        const h = Math.floor(seconds % 86400 / 3600);
+        const m = Math.floor(seconds % 86400 % 3600 / 60);
+        const s = Math.floor(seconds % 86400 % 3600 % 60);
     
-
+        const dDisplay = d > 0 ? d + (d === 1 ? " day, " : " days, ") : "";
+        const hDisplay = h > 0 ? h + (h === 1 ? " hour, " : " hours, ") : "";
+        const mDisplay = m > 0 ? m + (m === 1 ? " minute, " : " minutes, ") : "";
+        const sDisplay = s > 0 ? s + (s === 1 ? " second" : " seconds") : "";
+        return dDisplay + hDisplay + mDisplay + sDisplay; 
+    }
 
     return (
-        <div className='fixed flex flex-col right-4 bottom-4 border-5 border-color p-2 hover:cursor-pointer' style={{ zIndex: '2000' }}>
-            <span className='absolute top-0 right-0'><HiRefresh className='hover:animate-spin' /></span>
-            <p>Uptime: {count}</p>
-            <p>Started: {transactionsCount.started}</p>
-            <p>Terminated: {transactionsCount.terminated}</p>
+        <div className='flex flex-row gap-4 text-dark-blue'>
+            <p><span className='font-bold'>Uptime: </span>{secondsToDaysHoursMinutesSeconds(count)}</p>
+            <p><span className='font-bold'>Started: </span>{transactionsCount.started}</p>
+            <p><span className='font-bold'>Terminated: </span>{transactionsCount.terminated}</p>
         </div>
     )
 }

@@ -7,9 +7,9 @@ import Statistics from './pages/Statistics';
 
 function App() {
   return (
-    <div>
+    <div className='bg-main-bg'>
       <BrowserRouter>
-      <div className='flex relative bg-main-bg w-full'>
+      <div className='flex relative w-full'>
         <Navbar />
         <div className='relative w-full mt-24 h-full'>
         <Routes>
