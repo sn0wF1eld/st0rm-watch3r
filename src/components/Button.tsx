@@ -8,7 +8,7 @@ type ButtonProps = {
 const Button: FC<ButtonProps> = ({customFunction ,children}) => {
   return (
     <button
-        className='p-5 font-bold text-20 h-full w-60 bg-button-bg text-green-400 hover:bg-secondary-bg'
+        className='p-2 font-bold text-20 w-60 bg-button-bg text-green-400 hover:bg-secondary-bg'
         type='button'
         onClick={() => customFunction()}
     >

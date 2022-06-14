@@ -73,7 +73,7 @@ function Statistics() {
   const [processCpuTime, setProcessCpuTime] = useState(0)
 
   useEffect(() => {
-    const ws = new WebSocket('ws://148.71.176.77:9000/system/info')
+    const ws = new WebSocket('ws://148.71.176.77:9001/system/info')
 
     ws.onopen = () => ws.send(JSON.stringify(apiCall))
 
@@ -142,6 +142,10 @@ function Statistics() {
                 type: 'linear' as const,
                 display: true,
                 position: 'left' as const,
+                title: {
+                  text: 'ms',
+                  display: true
+                }
               },
               y1: {
                 type: 'linear' as const,
@@ -150,6 +154,10 @@ function Statistics() {
                 grid: {
                   drawOnChartArea: false,
                 },
+                title: {
+                  text: '%',
+                  display: true
+                }
               }
             }
           }}
@@ -238,14 +246,16 @@ function Statistics() {
             label='Heap Max Size'
             unit='MB'
           />
-          <Button
-            customFunction={handleGCDump}
-          >Heap Dump
-          </Button>
-          <Button
-            customFunction={handlePerformGC}
-          >Perform GC
-          </Button>
+          <div className="flex flex-col gap-y-3">
+            <Button
+              customFunction={handleGCDump}
+            >Heap Dump
+            </Button>
+            <Button
+              customFunction={handlePerformGC}
+            >Perform GC
+            </Button>
+          </div>
         </div>
         <div >
           <Line

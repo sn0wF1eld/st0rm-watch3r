@@ -11,7 +11,7 @@ function State() {
     const [startTime, setStartTime] = useState('')
 
     useEffect(() => {
-        const ws = new WebSocket('ws://148.71.176.77:9000/state');
+        const ws = new WebSocket('ws://148.71.176.77:9001/state');
 
         ws.onopen = (event) => {
             ws.send(JSON.stringify(apiCall));
