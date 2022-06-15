@@ -1,5 +1,6 @@
-import { randomUUID } from 'crypto';
 import React, { useEffect, useState } from 'react'
+// @ts-ignore
+import uuid from 'react-uuid'
 import { useForm } from 'react-hook-form'
 import { useStateContext } from '../contexts/ContextProvider'
 
@@ -49,7 +50,7 @@ function Form() {
         <div className="flex gap-3">
           <input className='w-52' type="text" placeholder='Connection Name' {...register('name', { required: true })}/>
           <input className='w-52' type="text" placeholder='Connection IP' {...register('ip', { required: true })}/>
-          <input hidden value={crypto.randomUUID()} {...register('id')}/>
+          <input hidden value={uuid()} {...register('id')}/>
           <input type="submit" className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'/>
         </div>
         <div className="flex gap-3">
