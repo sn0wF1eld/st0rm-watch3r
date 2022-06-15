@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
 import { NavLink } from 'react-router-dom';
 import { useStateContext } from '../contexts/ContextProvider';
-import GeneralStats from './GeneralStats';
 
 type ButtonProps = {
     title?: string,
@@ -23,18 +22,19 @@ const NavButton: FC<ButtonProps> = ({title, linkTo}) => {
     )
 }
 
+
 function Sidebar() {
     const { connections } = useStateContext();
-
+    
   return (
       <div className='w-72 fixed sidebar dark:bg-secondary-dark-bg bg-button-bg'>
         <div className="ml-3 h-screen
             md:overflow-hidden overflow-auto
             md:hover:overflow-auto pb-10">
-            <div className='flex justify-between items-center'>
+            <div className='flex justify-between items-center w-full mt-10'>
                 <NavLink 
                     className='hover:animate-rotate'
-                    style={ {width: '63px', height: '63px', backgroundSize: "100%", backgroundImage: "url('/Icemanmelting-snowflake-logo-deisgn-final2.png"}} to='/' />
+                    style={ {width: '18rem', height: '5rem', backgroundSize: "100%", backgroundPositionX: 'center', backgroundPositionY: 'center', backgroundRepeat: 'no-repeat', backgroundImage: "url('/Icemanmelting-snowflake-logo-deisgn-clean-final-just-text3.png"}} to='/' />
 
             </div>
             <div className="mt-10">

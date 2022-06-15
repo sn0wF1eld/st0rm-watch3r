@@ -74,7 +74,7 @@ function Statistics() {
   const [usedDiskSpace, setUsedDiskSpace] = useState(0)
   const [processCpuTime, setProcessCpuTime] = useState(0)
   const [connection, setConnection] = useState({} as any)
-  const { connections } = useStateContext()
+  const { connections, setLoading } = useStateContext()
   const { id } = useParams()
 
   useEffect(() => {
@@ -111,17 +111,42 @@ function Statistics() {
     return () => ws.close()
   }, [id, connection, connections])
 
-  function handleGCDump():void {
-    fetch(`http://${connection.ip}/heap-dump/dump`)
-        .then(response => response.blob())
+  function handleGCDump(): void {
+    setLoading(true)
+
+    fetch(`http://${connection.ip}/heap-dump/${connection.name.trim().replace(' ', '-')}`,
+      {
+        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+        mode: 'no-cors', // no-cors, *cors, same-origin
+        cache: 'no-cache'
+      })
+      .then(response => {
+        return response.blob()
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = connection.name.trim().replace(' ', '-') + '.hprof'
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        setLoading(false)
+        a.remove()
+      })
+      .catch(() => {
+        alert("oh no!")
+        return setLoading(false)
+      });
   }
 
-  function handlePerformGC():void {
+  function handlePerformGC(): void {
     fetch(`http://${connection.ip}/gc-collect`)
-    .then(res => {
-      console.log(res)
-      return res
-    })
+      .then(res => {
+        console.log(res)
+        return res
+      })
   }
 
   return (

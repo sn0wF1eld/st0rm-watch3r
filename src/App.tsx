@@ -1,13 +1,18 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Loader from './components/Loader';
 import Sidebar from './components/Sidebar';
+import { useStateContext } from './contexts/ContextProvider';
 import Form from './pages/Form';
 import State from './pages/State';
 import Statistics from './pages/Statistics';
 
 function App() {
+  const {loading} = useStateContext()
+  
   return (
     <div className='bg-main-bg'>
+      {loading && <Loader />}
       <BrowserRouter>
       <div className='flex relative w-full'>
         <Sidebar />

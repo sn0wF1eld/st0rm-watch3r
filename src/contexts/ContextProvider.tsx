@@ -3,11 +3,13 @@ import React, { createContext, FC, useContext, useState } from 'react'
 const StateContext = createContext<any | null>(null)
 
 const initialState = {
-    connections: [] as any[]
+    connections: [] as any[],
+    loading: false
 }
 
 export const ContextProvider: FC<({ children: any})> = ({ children }) => {
     const [connections, setConnections] = useState(initialState.connections)
+    const [loading, setLoading] = useState(initialState.loading)
 
     const addConnection = (connection: any) => {
         setConnections([...connections, connection])
@@ -23,7 +25,9 @@ export const ContextProvider: FC<({ children: any})> = ({ children }) => {
             connections,
             setConnections,
             addConnection,
-            removeConnection
+            removeConnection,
+            loading,
+            setLoading
         }}
     >
         {children}
