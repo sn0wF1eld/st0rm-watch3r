@@ -28,7 +28,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "docker-platform": "docker buildx create --use",
+    "docker-dev": "docker buildx build --platform linux/arm64/v8,linux/amd64 --push --tag sn0wf1eld/clojure-data-grinder-monitor:1.0 ."
   },
   "eslintConfig": {
     "extends": [
