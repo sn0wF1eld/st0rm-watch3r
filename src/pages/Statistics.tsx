@@ -112,8 +112,8 @@ function Statistics() {
   }, [id, connection, connections])
 
   function handleGCDump():void {
-    console.log('dump cenas')
-    // open modal, type file name, dump
+    fetch(`http://${connection.ip}/heap-dump/dump`)
+        .then(response => response.blob())
   }
 
   function handlePerformGC():void {

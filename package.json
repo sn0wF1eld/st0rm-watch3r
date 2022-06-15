@@ -30,7 +30,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "docker-platform": "docker buildx create --use",
-    "docker-dev": "docker buildx build --platform linux/arm64/v8,linux/amd64 --push --tag sn0wf1eld/clojure-data-grinder-monitor:1.0 ."
+    "docker-dev": "docker buildx build --platform linux/arm64/v8,linux/amd64 --push --tag sn0wf1eld/clojure-data-grinder-monitor:1.0 .",
+    "docker-dev-run" : "docker run -p 3000:3000 -d sn0wf1eld/clojure-data-grinder-monitor:1.0"
   },
   "eslintConfig": {
     "extends": [
