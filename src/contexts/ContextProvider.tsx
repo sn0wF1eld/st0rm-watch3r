@@ -10,12 +10,10 @@ export const ContextProvider: FC<({ children: any})> = ({ children }) => {
     const [connections, setConnections] = useState(initialState.connections)
 
     const addConnection = (connection: any) => {
-        console.log('added: ', connection)
         setConnections([...connections, connection])
     }
 
     const removeConnection = (connection: any) => {
-        console.log('removed: ', connection)
         setConnections(connections.filter(item => item !== connection))
     }
 

@@ -40,19 +40,16 @@ function Sidebar() {
             <div className="mt-10">
                 <NavButton title='CDG Nodes' linkTo='/' />
                 {
-                    connections.map((connection: any) => (<div key={connection.ip}>
+                    connections.map((connection: any) => (<div key={connection.ip} className='ml-6'>
                         <span className='text-light-blue'>{connection.name}</span>
                         <div>
-                            <NavButton title='Metrics' linkTo={'/stats/' + connection.ip}/>
-                            <NavButton title='Steps State' linkTo={'/state' + connection.ip} />
+                            <NavButton title='Metrics' linkTo={'/stats/' + connection.id}/>
+                            <NavButton title='Steps State' linkTo={'/state/' + connection.id} />
                         </div>
                     </div>
                     ))
 
                 }
-                <p>xxxxxxxx</p>
-                <NavButton title='Metrics' linkTo='/stats' />
-                <NavButton title='Steps State' linkTo='/state' />
             </div>
         </div>
       </div>

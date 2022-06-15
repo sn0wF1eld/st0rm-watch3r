@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { HiRefresh } from 'react-icons/hi'
 
 const apiCall = {
@@ -7,13 +7,13 @@ const apiCall = {
   };
 
 
-function GeneralStats() {
+const GeneralStats: FC<{ip:string}> = ({ip}) => {
     const [count, setCount] = useState(0);
     const [transactionsCount, setTransactionsCount] = useState({started: 0, terminated: 0})
 
     useEffect(() => {
-        const ws = new WebSocket('ws://148.71.176.77:9000/uptime');
-        const ws2 = new WebSocket('ws://148.71.176.77:9000/transactions/count');
+        const ws = new WebSocket(`ws://${ip}/uptime`);
+        const ws2 = new WebSocket(`ws://${ip}/transactions/count`);
 
         ws.onopen = (event) => {
             ws.send(JSON.stringify(apiCall));
@@ -41,7 +41,7 @@ function GeneralStats() {
             ws.close()
             ws2.close()
         };
-    }, []);
+    }, [ip]);
 
     function secondsToDaysHoursMinutesSeconds(seconds: number) {
         const d = Math.floor(seconds / 86400)

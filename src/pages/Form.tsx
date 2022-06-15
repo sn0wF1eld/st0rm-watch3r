@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStateContext } from '../contexts/ContextProvider'
@@ -8,10 +9,14 @@ const apiCall = {
 };
 
 function Form() {
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const { register, handleSubmit, formState: { errors }, reset } = useForm()
   const { addConnection, removeConnection, connections } = useStateContext()
   const [ state, setState ] = useState({})
-  const onSubmit = (data: any) => console.log(data)
+  const onSubmit = (data: any) => {
+    addConnection(data)
+    reset()
+  }
+  
 
   useEffect(() => {
     connections.map((connection: any) => {
@@ -38,21 +43,30 @@ function Form() {
   }, [connections])
   
   return (
-    <div className='flex flex-col h-full w-full'>
-      <form onSubmit={handleSubmit(addConnection)} className='flex flex-row gap-3 justify-between'>
-        <input className='grow' type="text" placeholder='Connection Name' {...register('name', { required: true })}/>
-        <input className='grow' type="text" placeholder='Enter new connection' {...register('ip', { required: true })}/>
-      
-        <input type="submit" className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'/>
+    <div className='flex flex-col h-full w-full ml-10'>
+      <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
+        <div>
+        <div className="flex gap-3">
+          <input className='w-52' type="text" placeholder='Connection Name' {...register('name', { required: true })}/>
+          <input className='w-52' type="text" placeholder='Connection IP' {...register('ip', { required: true })}/>
+          <input hidden value={crypto.randomUUID()} {...register('id')}/>
+          <input type="submit" className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'/>
+        </div>
+        <div className="flex gap-3">
+          {errors.name && <span className='text-red-400 w-52'>This field is required</span>}
+          {errors.ip && <span className='text-red-400 w-52'>This field is required</span>}
+          </div>
+        </div>
       </form>
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-10">
         {
           connections.map((connection: any) => (
-            <p key={connection.ip}>
-              <span className='text-green-600 p-3 mt-2'>{connection.ip}</span>
-              <span className='text-red-600 hover:cursor-pointer' onClick={() => removeConnection(connection)}>Remove</span>
-              <span className='text-green-200'>Uptime: {state[connection.name as keyof typeof state]}</span>
-            </p>
+            <div key={connection.ip} className='mt-5 p-4 flex bg-button-bg w-2/3 justify-between'>
+              <span className='text-green-600 flex-1'>{connection.name}</span>
+              <span className='text-green-600 flex-1'>{connection.ip}</span>
+              <span className='text-red-600 hover:cursor-pointer' onClick={() => removeConnection(connection)}>X</span>
+              <span className='text-green-200 ml-3'>Uptime: {state[connection.name as keyof typeof state]}</span>
+            </div>
           ))
         }
       </div>

@@ -13,6 +13,8 @@ import {
 import NumberDisplay from '../components/NumberDisplay';
 import Section from '../components/Section';
 import Button from '../components/Button';
+import { useParams } from 'react-router-dom';
+import { useStateContext } from '../contexts/ContextProvider';
 
 ChartJS.register(
   CategoryScale,
@@ -71,9 +73,14 @@ function Statistics() {
   const [usableDiskSpace, setUsableDiskSpace] = useState(0)
   const [usedDiskSpace, setUsedDiskSpace] = useState(0)
   const [processCpuTime, setProcessCpuTime] = useState(0)
+  const [connection, setConnection] = useState({} as any)
+  const { connections } = useStateContext()
+  const { id } = useParams()
 
   useEffect(() => {
-    const ws = new WebSocket('ws://148.71.176.77:9001/system/info')
+    setConnection(connections.find((item: any) => item.id === id))
+
+    const ws = new WebSocket(`ws://${connection?.ip}/system/info`)
 
     ws.onopen = () => ws.send(JSON.stringify(apiCall))
 
@@ -102,7 +109,7 @@ function Statistics() {
       }
     }
     return () => ws.close()
-  }, [])
+  }, [id, connection, connections])
 
   function handleGCDump():void {
     console.log('dump cenas')
@@ -110,8 +117,7 @@ function Statistics() {
   }
 
   function handlePerformGC():void {
-    console.log('pergorming cg')
-    fetch('http://148.71.176.77:9000/gc-collect')
+    fetch(`http://${connection.ip}/gc-collect`)
     .then(res => {
       console.log(res)
       return res
@@ -119,172 +125,177 @@ function Statistics() {
   }
 
   return (
-    <div className='flex h-full flex-row flex-wrap content-between'>
-      <Section
-        label='GC'
-      >
-        <div className="flex gap-10 mb-10">
-          <NumberDisplay
-            data={gcTotalPauses}
-            label='GC Total Pauses'
-          />
-          <NumberDisplay
-            data={gcTotalTime}
-            label='GC Total Time'
-            unit='ms'
-          />
-        </div>
-        <div>
-          <Line options={{
-            ...options,
-            scales: {
-              y: {
-                type: 'linear' as const,
-                display: true,
-                position: 'left' as const,
-                title: {
-                  text: 'ms',
-                  display: true
-                }
-              },
-              y1: {
-                type: 'linear' as const,
-                display: true,
-                position: 'right' as const,
-                grid: {
-                  drawOnChartArea: false,
+    <div>
+      <div className="w-full">
+        <span className='text-white font-extrabold text-xl ml-5'>{connection.name}</span>
+      </div>
+      <div className='flex h-full flex-row flex-wrap content-between'>
+        <Section
+          label='GC'
+        >
+          <div className="flex gap-10 mb-10">
+            <NumberDisplay
+              data={gcTotalPauses}
+              label='GC Total Pauses'
+            />
+            <NumberDisplay
+              data={gcTotalTime}
+              label='GC Total Time'
+              unit='ms'
+            />
+          </div>
+          <div>
+            <Line options={{
+              ...options,
+              scales: {
+                y: {
+                  type: 'linear' as const,
+                  display: true,
+                  position: 'left' as const,
+                  title: {
+                    text: 'ms',
+                    display: true
+                  }
                 },
-                title: {
-                  text: '%',
-                  display: true
+                y1: {
+                  type: 'linear' as const,
+                  display: true,
+                  position: 'right' as const,
+                  grid: {
+                    drawOnChartArea: false,
+                  },
+                  title: {
+                    text: '%',
+                    display: true
+                  }
                 }
               }
-            }
-          }}
-            data={{
+            }}
+              data={{
+                labels: currTime,
+                datasets: [{
+                  label: 'GC Average Time (ms)',
+                  data: gcAverageTime,
+                  borderColor: 'red',
+                  backgroundColor: 'red',
+                  yAxisID: 'y'
+                },
+                {
+                  label: 'Time in GC (%)',
+                  data: gcTimePercent,
+                  borderColor: 'lime',
+                  backgroundColor: 'lime',
+                  yAxisID: 'y1'
+                }]
+              }}
+              redraw={true}
+            />
+          </div>
+        </Section>
+        <Section
+          label='CPU'
+        >
+          <div className='mb-10'>
+            <NumberDisplay
+              data={processCpuTime}
+              label='Process Cpu Time'
+              unit='ms'
+            />
+          </div>
+          <div>
+            <Line options={options} data={{
               labels: currTime,
               datasets: [{
-                label: 'GC Average Time (ms)',
-                data: gcAverageTime,
-                borderColor: 'red',
-                backgroundColor: 'red',
-                yAxisID: 'y'
+                label: 'Process CPU Load (%)',
+                data: processCpuLoad,
+                borderColor: 'yellow',
+                backgroundColor: 'yellow'
               },
               {
-                label: 'Time in GC (%)',
-                data: gcTimePercent,
-                borderColor: 'lime',
-                backgroundColor: 'lime',
-                yAxisID: 'y1'
+                label: 'System CPU Load (%)',
+                data: systemCpuLoad,
+                borderColor: 'green',
+                backgroundColor: 'green'
               }]
             }}
-            redraw={true}
-          />
-        </div>
-      </Section>
-      <Section
-        label='CPU'
-      >
-        <div className='mb-10'>
-          <NumberDisplay
-            data={processCpuTime}
-            label='Process Cpu Time'
-            unit='ms'
-          />
-        </div>
-        <div>
-          <Line options={options} data={{
-            labels: currTime,
-            datasets: [{
-              label: 'Process CPU Load (%)',
-              data: processCpuLoad,
-              borderColor: 'yellow',
-              backgroundColor: 'yellow'
-            },
-            {
-              label: 'System CPU Load (%)',
-              data: systemCpuLoad,
-              borderColor: 'green',
-              backgroundColor: 'green'
-            }]
-          }}
-          />
-        </div>
-      </Section>
-      <Section
-        label='Disk'
-      >
-        <div className="flex flex-row flex-wrap gap-10">
-          <NumberDisplay
-            data={freeDiskSpace}
-            label='Free Disk Space'
-            unit='MB'
-          />
-          <NumberDisplay
-            data={totalDiskSpace}
-            label='Total Disk Space'
-            unit='MB'
-          />
-          <NumberDisplay
-            data={usableDiskSpace}
-            label='Usable Disk Space'
-            unit='MB'
-          />
-          <NumberDisplay
-            data={usedDiskSpace}
-            label='Used Disk Space'
-            unit='MB'
-          />
-        </div>
-      </Section>
-      <Section
-        label='Heap'
-      >
-        <div className="mb-10 flex gap-10">
-          <NumberDisplay
-            data={heapMaxSize}
-            label='Heap Max Size'
-            unit='MB'
-          />
-          <div className="flex flex-col gap-y-3">
-            <Button
-              customFunction={handleGCDump}
-            >Heap Dump
-            </Button>
-            <Button
-              customFunction={handlePerformGC}
-            >Perform GC
-            </Button>
+            />
           </div>
-        </div>
-        <div >
-          <Line
-            options={options}
-            data={{
-              labels: currTime,
-              datasets: [{
-                label: 'Used Heap Memory (MB)',
-                data: usedHeapMem,
-                borderColor: 'orange',
-                backgroundColor: 'orange'
-              },
-              {
-                label: 'Heap Size (MB)',
-                data: heapSize,
-                borderColor: 'purple',
-                backgroundColor: 'purple'
-              },
-              {
-                label: 'Free Heap Memory (MB)',
-                data: freeHeapMem,
-                borderColor: 'lightBlue',
-                backgroundColor: 'lightBlue'
-              },
-              ]
-            }}
-          />
-        </div>
-      </Section>
+        </Section>
+        <Section
+          label='Disk'
+        >
+          <div className="flex flex-row flex-wrap gap-10">
+            <NumberDisplay
+              data={freeDiskSpace}
+              label='Free Disk Space'
+              unit='MB'
+            />
+            <NumberDisplay
+              data={totalDiskSpace}
+              label='Total Disk Space'
+              unit='MB'
+            />
+            <NumberDisplay
+              data={usableDiskSpace}
+              label='Usable Disk Space'
+              unit='MB'
+            />
+            <NumberDisplay
+              data={usedDiskSpace}
+              label='Used Disk Space'
+              unit='MB'
+            />
+          </div>
+        </Section>
+        <Section
+          label='Heap'
+        >
+          <div className="mb-10 flex gap-10">
+            <NumberDisplay
+              data={heapMaxSize}
+              label='Heap Max Size'
+              unit='MB'
+            />
+            <div className="flex flex-col gap-y-3">
+              <Button
+                customFunction={handleGCDump}
+              >Heap Dump
+              </Button>
+              <Button
+                customFunction={handlePerformGC}
+              >Perform GC
+              </Button>
+            </div>
+          </div>
+          <div >
+            <Line
+              options={options}
+              data={{
+                labels: currTime,
+                datasets: [{
+                  label: 'Used Heap Memory (MB)',
+                  data: usedHeapMem,
+                  borderColor: 'orange',
+                  backgroundColor: 'orange'
+                },
+                {
+                  label: 'Heap Size (MB)',
+                  data: heapSize,
+                  borderColor: 'purple',
+                  backgroundColor: 'purple'
+                },
+                {
+                  label: 'Free Heap Memory (MB)',
+                  data: freeHeapMem,
+                  borderColor: 'lightBlue',
+                  backgroundColor: 'lightBlue'
+                },
+                ]
+              }}
+            />
+          </div>
+        </Section>
+      </div>
     </div>
   )
 }
