@@ -1,17 +1,13 @@
-FROM node:18.3-alpine AS development
-# set working directory
-WORKDIR /app
+FROM node:16-alpine
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+WORKDIR /frontend
 
-# install app dependencies
-COPY package.json ./
-COPY package-lock.json ./
+COPY package*.json ./
+
 RUN npm install
 
-# add app
-COPY . ./
+COPY . .
 
-# start app
-CMD ["npm", "start"]    
+EXPOSE 3000
+
+CMD npm run dev

@@ -2,6 +2,8 @@
 
 version=${version:-"latest"}
 
+NAME="sn0wf1eld/clojure-data-grinder-monitor"
+
 while [ $# -gt 0 ]; do
 
   if [[ $1 == *"--"* ]]; then
@@ -12,6 +14,8 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-npm run docker-platform
-npm run docker-dev --version=$version
-npm run docker-platform-rm
+docker buildx create --use
+
+docker buildx build --platform linux/arm64/v8,linux/amd64 --push --tag $NAME":"$version .
+
+docker buildx rm

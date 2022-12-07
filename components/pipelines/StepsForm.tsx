@@ -1,0 +1,175 @@
+import {useForm} from "react-hook-form";
+import {useState} from "react";
+import Modal from "../modal/Modal";
+
+type StepsFormProps = {
+  modalType: string,
+  data: any,
+  onSubmit: (e: any) => void,
+  stepType: string
+}
+
+const inputStyle = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+const inputErrorStyle = 'ring-red-500 border-red-500'
+const errorElement = <span className='text-red-400'>This field is required</span>
+
+export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFormProps) {
+  const {register, handleSubmit, formState: {errors}} = useForm()
+  const [confirmationModal, setConfirmationModal] = useState(false)
+
+  const beforeSubmit = (data: any) => {
+    if (stepType === 'sink') {
+      if (!confirmationModal) {
+        return setConfirmationModal(true)
+      }
+      setConfirmationModal(false)
+    }
+
+    return onSubmit(data)
+  }
+
+  switch (modalType) {
+    case 'test': {
+      return (
+        <>
+          <form onSubmit={handleSubmit(beforeSubmit)} className='flex flex-row gap-3'>
+            <div className={'flex gap-10'}>
+              <div className='flex flex-col'>
+                <span>Value</span>
+                <textarea className={inputStyle + (errors.testValue && inputErrorStyle)}
+                          disabled={stepType === 'source'}
+                          rows={15} cols={120}
+                          placeholder='Value' {...register('testValue', {required: stepType !== 'source'})}/>
+                {errors.testValue && errorElement}
+              </div>
+              <div className='flex flex-col'>
+                <span>Result</span>
+                <textarea disabled={true} className={'resize-none rounded-md h-full bg-white text-black'}
+                          value={JSON.stringify(data, undefined, 2)}/>
+              </div>
+            </div>
+            <button type="submit"
+                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+                        <span className='flex'>
+                            Test
+                        </span>
+            </button>
+          </form>
+          <Modal
+            title={'Confirm Action'}
+            onClose={() => setConfirmationModal(false)}
+            open={confirmationModal}
+          >
+            <div>
+              Are you sure you want to execute this action?
+              <div className={'flex gap-10 justify-end'}>
+                <button onClick={(e) => beforeSubmit(e)}>Confirm</button>
+                <button onClick={() => setConfirmationModal(false)}>Cancel</button>
+              </div>
+            </div>
+          </Modal>
+        </>
+      )
+    }
+    case 'thread': {
+      return (
+        <div>
+          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
+            <div className='flex flex-col'>
+              <input className={inputStyle + (errors.numericValue && inputErrorStyle)} type="number"
+                     min={1}
+                     defaultValue={data.threads}
+                     placeholder='Numeric Value' {...register('numericValue', {required: true})}/>
+              {errors.numericValue && errorElement}
+            </div>
+            <button type="submit"
+                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+                      <span className='flex'>
+                          Set
+                      </span>
+            </button>
+          </form>
+        </div>)
+    }
+    case 'buffer': {
+      return (
+        <div>
+          <div className={'flex gap-5'}>
+            <span>Buffer Size: {data}</span>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
+            <div className='flex flex-col'>
+              <input className={inputStyle + (errors.numericValue && inputErrorStyle)} type="number"
+                     min={data + 1}
+                     placeholder='Numeric Value' {...register('numericValue', {required: true})}/>
+              {errors.numericValue && errorElement}
+            </div>
+            <button type="submit"
+                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+                      <span className='flex'>
+                          Set
+                      </span>
+            </button>
+          </form>
+        </div>)
+    }
+    case 'pollFrequency': {
+      return (
+        <div>
+          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
+            <div className='flex flex-col'>
+              <input className={inputStyle + (errors.pollFrequency && inputErrorStyle)} type="number"
+                     min={1}
+                     defaultValue={data.pollFrequency}
+                     placeholder='Poll Frequency' {...register('pollFrequency', {required: true})}/>
+              {errors.pollFrequency && errorElement}
+            </div>
+            <div>
+              <select
+                defaultValue={data.timeUnit}
+                className={inputStyle + (errors.timeUnit && inputErrorStyle)} {...register("timeUnit", {required: true})}>
+                <option value="m">minute</option>
+                <option value="s">second</option>
+                <option value="ms">millisecond</option>
+                <option value="us">microsecond</option>
+                <option value="ns">nanosecond</option>
+              </select>
+              {errors.timeUnit && errorElement}
+            </div>
+            <button type="submit"
+                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+                      <span className='flex'>
+                          Set
+                      </span>
+            </button>
+          </form>
+        </div>)
+    }
+    case 'schedule': {
+      return (
+        <div>
+          <div className={'flex gap-5'}>
+            <span>Schedule: {data.schedule}</span>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
+            <div className='flex flex-col'>
+              <input className={inputStyle + (errors.cronJobPattern && inputErrorStyle)} type="text"
+                     placeholder='Cron Job Pattern' {...register('cronJobPattern', {required: true})}/>
+              {errors.cronJobPattern && errorElement}
+            </div>
+            <button type="submit"
+                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+                      <span className='flex'>
+                          Schedule
+                      </span>
+            </button>
+          </form>
+        </div>)
+    }
+
+    default:
+      return null
+  }
+
+
+}
