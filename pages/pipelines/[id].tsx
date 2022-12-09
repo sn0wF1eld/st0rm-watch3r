@@ -153,6 +153,18 @@ export default function Pipelines() {
     }, 200)
   }, [pipelines])
 
+const millisecondsToDateString = (ms: number) => {
+  if (ms != null) {
+    let date = new Date (ms);
+    let dayOfYear = date.toDateString();
+    let time = date.toLocaleTimeString()
+
+    return dayOfYear + ' ' + time;
+  }
+
+  return null;
+};
+
   useEffect(() => {
     if (!connection?.address) return
     const interval = setInterval(() => {
@@ -235,6 +247,7 @@ export default function Pipelines() {
               started={pipelinesState[pipeline.id]?.started}
               terminated={pipelinesState[pipeline.id]?.terminated}
               backPressure={pipelinesState[pipeline.id]?.backPressure}
+              stoppedAt={millisecondsToDateString(pipeline.stoppedAt)}
             />
             <Graph
               key={pipeline.id}

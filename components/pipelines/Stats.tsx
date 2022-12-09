@@ -1,6 +1,6 @@
-import {PipelineState} from "./utils/PipelinesUtils";
+import {Pipeline, PipelineState} from "./utils/PipelinesUtils";
 
-export default function Stats( state: PipelineState) {
+export default function Stats(state: PipelineState) {
 
   return (
     <div className={'flex justify-center gap-10'}>
@@ -15,6 +15,10 @@ export default function Stats( state: PipelineState) {
       <div className={'flex gap-2'}>
         <span className={'text-white'}>Back Pressure:</span>
         <span className={'text-light-blue'}>{state.backPressure !== null ? state.backPressure : '-'}</span>
+      </div>
+      <div className={'flex gap-2'}>
+          <span className={'text-white'}>Stopped At:</span>
+          <span className={'text-light-blue'}>{state.stoppedAt !== null ? state.stoppedAt : '-'}</span>
       </div>
     </div>
   );

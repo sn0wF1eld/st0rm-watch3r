@@ -41,11 +41,13 @@ export type PipelineState = {
   started: number
   terminated: number
   backPressure: number
+  stoppedAt: any
 }
 
 export type Pipeline = {
   id: string
   status: string
+  stoppedAt: number
   pipeline: {
     connectsTo: Pipeline['pipeline'][]
     name: string
