@@ -2,7 +2,7 @@
 
 version=${version:-"latest"}
 
-NAME="sn0wf1eld/clojure-data-grinder-monitor"
+NAME="sn0wf1eld/st0rm-watch3r"
 
 while [ $# -gt 0 ]; do
 

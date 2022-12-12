@@ -1,7 +1,7 @@
 #!/bin/bash
 
 version=${version:-"latest"}
-name="sn0wf1eld/clojure-data-grinder-monitor"
+name="sn0wf1eld/st0rm-watch3r"
 
 while [ $# -gt 0 ]; do
 
