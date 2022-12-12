@@ -23,7 +23,7 @@ export default function Actions({connection, id}: ActionsProps) {
   useEffect(() => {
     if (!openModal) return setFailedTransactions({} as FailedTransaction)
 
-    fetch(`${url}/cdg/api/1/pipelines/${id}/transactions/failed`)
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed`)
       .then(res => {
         res.json()
           .then((json) => {
@@ -35,7 +35,7 @@ export default function Actions({connection, id}: ActionsProps) {
       })
   }, [openModal])
   const handleStart = () => {
-    fetch(`${url}/cdg/api/1/pipelines/${id}/start`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/start`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -43,7 +43,7 @@ export default function Actions({connection, id}: ActionsProps) {
   }
 
   const handleStop = () => {
-    fetch(`${url}/cdg/api/1/pipelines/${id}/stop`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -60,7 +60,7 @@ export default function Actions({connection, id}: ActionsProps) {
   }, 200)
 
   const onReplay = (tx: string) => {
-    fetch(`${url}/cdg/api/1/pipelines/${id}/transactions/failed/${tx}/replay`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}/replay`,
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => console.log('replay', res))
   }
@@ -71,7 +71,7 @@ export default function Actions({connection, id}: ActionsProps) {
       setSelectedTx('')
       return
     }
-    fetch(`${url}/cdg/api/1/pipelines/${id}/transactions/failed/${tx}`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}`,
       {method: 'GET', headers: {'content-type': 'application/json'}})
       .then(res => {
         res.json()

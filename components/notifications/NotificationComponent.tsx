@@ -49,7 +49,7 @@ export default function NotificationComponent() {
           setNotifications(e => [...e, {...json, address: connection.address}])
         }
       }
-      const ws2 = new WebSocket(`ws://${connection?.address}/cdg/api/1/pipelines/errors`)
+      const ws2 = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/pipelines/errors`)
 
       ws2.onmessage = (event) => {
         const json = JSON.parse(event.data)
@@ -111,6 +111,7 @@ export default function NotificationComponent() {
                           <div className={'flex justify-between w-full'}>
                             <span>{notification.type}</span>
                             <span>{notification.level}</span>
+                            <span>{notification.pipelineId}</span>
                             <span>{timeConverter(notification.timestamp)}</span>
                           </div>
                         </div>
@@ -124,7 +125,7 @@ export default function NotificationComponent() {
       }
       {
         openModal && selectedNotification?.type === 'pipeline-error' &&
-          <Modal onClose={() => handleCloseModal()} open={openModal} title={'shard'}
+          <Modal onClose={() => handleCloseModal()} open={openModal} title={''}
                  noOverlayClick={true}>
               <ShardComponent
                   shard={

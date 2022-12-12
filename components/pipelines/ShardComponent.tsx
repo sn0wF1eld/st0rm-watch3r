@@ -28,7 +28,7 @@ export default function ShardComponent({shard}: ShardProps) {
 
       console.log('resp', connection)
       setLoading(true)
-      fetch(`http://${connection?.address}/cdg/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}`,
+      fetch(`http://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}`,
         {method: 'GET', headers: {'content-type': 'application/json'}}
       ).then((res: any) => {
         res.json()
@@ -41,8 +41,11 @@ export default function ShardComponent({shard}: ShardProps) {
   }, [connection])
 
   if (loading) return <LoadingIcon />
+  console.log(shardData)
   return (
     <div className={'w-760 flex flex-col gap-5'}>
+      <span className={'text-gray-400'}>transaction id: <span className={'text-white'}>{shard.txId}</span></span>
+      <span className={'text-gray-400'}>shard id: <span className={'text-white'}>{shardData.id}</span></span>
       <span className={'text-gray-400'}>failed step name: <span className={'text-white'}>{shardData.failedStepName}</span></span>
       <span className={'text-gray-400'}>status: <span className={'text-white'}>{shardData.status}</span></span>
       <div className={'flex gap-10'}>
@@ -50,6 +53,10 @@ export default function ShardComponent({shard}: ShardProps) {
         <button className={buttonStyle} onClick={() => setAreaData(shardData?.throw?.stackTrace)} >Throw</button>
       </div>
       <div className={'h-72 text-white'}>
+        {
+          shardData?.throw?.message &&
+          <span>Exception: {shardData?.throw?.message}</span>
+        }
         <textarea rows={15} cols={80} defaultValue={areaData ? JSON.stringify(areaData, undefined, 2) : ''}/>
       </div>
     </div>

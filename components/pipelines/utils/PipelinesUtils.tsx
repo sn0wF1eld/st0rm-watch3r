@@ -71,14 +71,14 @@ export type UptimeProps = {
 }
 
 export const getSystemConfigs = (connection: Connection) => {
-  return fetch(`http://${connection?.address}/cdg/api/1/pipelines`,
+  return fetch(`http://${connection?.address}/sn0wst0rm/api/1/pipelines`,
     {method: 'GET', headers: {'content-type': 'application/json'}}
   )
     .then(res => res.json())
 }
 
 export const getStepConfigs = (connection: Connection, step: any) => {
-  return fetch(`http://${connection?.address}/cdg/api/1/steps/${step.label}/config`,
+  return fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/config`,
     {method: 'GET', headers: {'content-type': 'application/json'}}
   )
     .then(res => res.json())
