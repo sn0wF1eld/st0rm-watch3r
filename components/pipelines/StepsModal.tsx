@@ -12,7 +12,8 @@ type StepProps = {
     type: string
     title?: string
   },
-  isEdge: boolean
+  isEdge: boolean,
+  status: string
 }
 
 type Statistics = {
@@ -52,7 +53,7 @@ export type QueueState = {
   bufferSize: number
 }
 
-export default function StepsModal({connection, step, isEdge}: StepProps) {
+export default function StepsModal({connection, step, isEdge, status}: StepProps) {
   const [stats, setStats] = useState({} as Statistics)
   const [queueStatistics, setQueueStatistics] = useState({} as QueueStatistics)
   const [state, setState] = useState({} as StepState)
@@ -72,8 +73,8 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
     if (!connection || !step) return
 
     if (!isEdge) {
-      const ws = new WebSocket(`ws://${connection?.address}/cdg/api/1/steps/${step.label}/statistics`)
-      const ws2 = new WebSocket(`ws://${connection?.address}/cdg/api/1/steps/${step.label}/state`)
+      const ws = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/statistics`)
+      const ws2 = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/state`)
 
       ws.onmessage = (event) => {
         const json = JSON.parse(event.data)
@@ -99,8 +100,8 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
       }
     }
 
-    const ws = new WebSocket(`ws://${connection?.address}/cdg/api/1/queues/${step.title}/statistics`)
-    const ws2 = new WebSocket(`ws://${connection?.address}/cdg/api/1/queues/${step.title}/state`)
+    const ws = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/statistics`)
+    const ws2 = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/state`)
 
     ws.onmessage = (event) => {
       const json = JSON.parse(event.data)
@@ -124,7 +125,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
 
   const onSubmit = (data: any) => {
     if (threadModal) {
-      fetch(`http://${connection?.address}/cdg/api/1/steps/${step.label}/threads`,
+      fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/threads`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -134,7 +135,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
         .catch(err => console.log(err))
     }
     if (pollFrequencyModal) {
-      fetch(`http://${connection?.address}/cdg/api/1/steps/${step.label}/poll-frequency`,
+      fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/poll-frequency`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -147,7 +148,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
         .catch(err => console.log(err))
     }
     if (scheduleModal) {
-      fetch(`http://${connection?.address}/cdg/api/1/jobs/${step.label}/schedule`,
+      fetch(`http://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/schedule`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -159,7 +160,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
         .catch(err => console.log(err))
     }
     if (testModal) {
-      fetch(`http://${connection?.address}/cdg/api/1/steps/${step.label}/test`,
+      fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/test`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -183,7 +184,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
         });
     }
     if (bufferSizeModal) {
-      fetch(`http://${connection?.address}/cdg/api/1/queues/${step.title}/set-buffer-size`,
+      fetch(`http://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/set-buffer-size`,
         {
           method: 'PUT',
           headers: {'content-type': 'application/json'},
@@ -223,7 +224,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
     setModalTitle('Poll Frequency')
   }
   const handleOnTrigger = () => {
-    fetch(`http://${connection?.address}/cdg/api/1/jobs/${step.label}/trigger`,
+    fetch(`http://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/trigger`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -238,7 +239,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
   }
 
   const handleStartStep = () => {
-    fetch(`http://${connection?.address}/cdg/api/1/steps/${step.label}/start`,
+    fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/start`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -247,7 +248,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
   }
 
   const handleStopStep = () => {
-    fetch(`http://${connection?.address}/cdg/api/1/steps/${step.label}/stop`,
+    fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -276,7 +277,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
         <span>Standard Deviation Execution Time: {queueStatistics?.take?.standardDeviationExecutionTimeMs}</span>
         <span>Takes: {queueState.takes}</span>
       </div>
-      <button disabled={queueState.closed} onClick={() => handleOnBufferSize()}>Set Buffer Size</button>
+      <button disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</button>
       {
         openModal && bufferSizeModal &&
           <Modal onClose={handleClose} title={modalTitle} open={openModal} noOverlayClick={true}>
@@ -303,8 +304,8 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
               </div>
               <div>
                   <button onClick={() => handleOnTest()}>Test</button>
-                  <button onClick={() => handleOnThreads()}>Threads</button>
-                  <button onClick={() => handleOnPollFrequency()}>Poll Frequency</button>
+                  <button disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</button>
+                  <button disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</button>
                   <button disabled={!state.stopped} onClick={() => handleStartStep()}>Start</button>
                   <button disabled={state.stopped} onClick={() => handleStopStep()}>Stop</button>
                   <button >
@@ -334,7 +335,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
               </div>
               <div>
                   <button onClick={() => handleOnTrigger()}>Trigger</button>
-                  <button onClick={() => handleOnSchedule()}>Schedule</button>
+                  <button disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</button>
                   <button disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</button>
                   <button disabled={jobState.stopped} onClick={() => handleStopStep()}>Stop</button>
                   <button >

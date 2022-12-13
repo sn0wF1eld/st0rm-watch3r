@@ -5,6 +5,7 @@ import Modal from "../modal/Modal";
 import ShardComponent from "../pipelines/ShardComponent";
 import {Shard} from "../pipelines/FailedTransactionComponent";
 import {timeConverter, useOutsideClick} from "../pipelines/utils/NavUtils";
+import {MdClearAll} from "react-icons/md";
 
 type Notification = {
   id: string
@@ -49,7 +50,7 @@ export default function NotificationComponent() {
           setNotifications(e => [...e, {...json, address: connection.address}])
         }
       }
-      const ws2 = new WebSocket(`ws://${connection?.address}/cdg/api/1/pipelines/errors`)
+      const ws2 = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/pipelines/errors`)
 
       ws2.onmessage = (event) => {
         const json = JSON.parse(event.data)
@@ -82,6 +83,10 @@ export default function NotificationComponent() {
 
   const notificationRef = useOutsideClick(handleOutsideClick) as MutableRefObject<HTMLDivElement>
 
+  const onClearAll = () => {
+    setNotifications(cur => cur.filter(item => item.type !== 'pipeline-error'))
+  }
+
   return (
     <div>
       <div className="inline-flex relative w-fit">
@@ -99,7 +104,12 @@ export default function NotificationComponent() {
         openNotifications && <div
               ref={notificationRef}
               className={'z-10 h-40 overflow-auto absolute right-20 w-96 bg-secondary-bg text-white rounded border-solid border-1 border-gray-500'}>
-              <ul className={'flex flex-col list-none p-0 mt-4 border border-gray-100 rounded-lg'}>
+          {
+            !!notifications.length &&
+              <button className={'absolute bg-transparent text-light-blue right-0 cursor-pointer'}
+                      onClick={() => onClearAll()}><MdClearAll/></button>
+          }
+              <ul className={'flex flex-col list-none p-0 mt-6 border border-gray-100 rounded-lg'}>
                 {
                   notifications.length ?
                     notifications.map((notification, idx) => (
@@ -111,6 +121,7 @@ export default function NotificationComponent() {
                           <div className={'flex justify-between w-full'}>
                             <span>{notification.type}</span>
                             <span>{notification.level}</span>
+                            <span>{notification.pipelineId}</span>
                             <span>{timeConverter(notification.timestamp)}</span>
                           </div>
                         </div>
@@ -124,7 +135,7 @@ export default function NotificationComponent() {
       }
       {
         openModal && selectedNotification?.type === 'pipeline-error' &&
-          <Modal onClose={() => handleCloseModal()} open={openModal} title={'shard'}
+          <Modal onClose={() => handleCloseModal()} open={openModal} title={''}
                  noOverlayClick={true}>
               <ShardComponent
                   shard={

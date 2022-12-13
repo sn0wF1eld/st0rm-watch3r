@@ -1,6 +1,7 @@
 import {useForm} from "react-hook-form";
 import {useState} from "react";
 import Modal from "../modal/Modal";
+import LoadingIcon from "../layout/LoadingIcon";
 
 type StepsFormProps = {
   modalType: string,
@@ -72,6 +73,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
       )
     }
     case 'thread': {
+      if (!data.threads) return <LoadingIcon />
       return (
         <div>
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
@@ -92,14 +94,13 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
         </div>)
     }
     case 'buffer': {
+      if (!data) return <LoadingIcon />
       return (
         <div>
-          <div className={'flex gap-5'}>
-            <span>Buffer Size: {data}</span>
-          </div>
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
             <div className='flex flex-col'>
               <input className={inputStyle + (errors.numericValue && inputErrorStyle)} type="number"
+                     defaultValue={data}
                      min={data + 1}
                      placeholder='Numeric Value' {...register('numericValue', {required: true})}/>
               {errors.numericValue && errorElement}
@@ -114,6 +115,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
         </div>)
     }
     case 'pollFrequency': {
+      if (!data.timeUnit || !data.pollFrequency) return <LoadingIcon />
       return (
         <div>
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
@@ -148,12 +150,10 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
     case 'schedule': {
       return (
         <div>
-          <div className={'flex gap-5'}>
-            <span>Schedule: {data.schedule}</span>
-          </div>
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
             <div className='flex flex-col'>
               <input className={inputStyle + (errors.cronJobPattern && inputErrorStyle)} type="text"
+                     defaultValue={data.schedule}
                      placeholder='Cron Job Pattern' {...register('cronJobPattern', {required: true})}/>
               {errors.cronJobPattern && errorElement}
             </div>

@@ -20,6 +20,7 @@ type FailedTransactionProps = {
     id: string,
     shards: string[]
     pipelineId: string
+    failedAt: number
   }
 }
 
@@ -53,7 +54,7 @@ export default function FailedTransactionComponent({transaction}: FailedTransact
                 </button>
               </div>
               {shardId === shard && openModal &&
-                  <Modal onClose={() => handleClose()} open={openModal} title={'shard'} noOverlayClick={true}>
+                  <Modal onClose={() => handleClose()} open={openModal} title={''} noOverlayClick={true}>
                       <ShardComponent shard={{id: shard, txId: transaction.id, pipelineId: transaction.pipelineId}} />
                   </Modal>}
             </li>
