@@ -62,13 +62,13 @@ export default function Navbar() {
                       <li key={connection?.name}>
                         <span
                           className="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 hover:text-light-blue cursor-pointer"
-                          onClick={() => setOpenChildren(connection.id)}
+                          onMouseEnter={() => setOpenChildren(connection.id)}
                         >
                             {connection?.name}
                         </span>
                         <div
-                          className={`z-10 p-0 bg-white divide-y divide-gray-100 rounded shadow w-44 ml-44 absolute ${openChildren === connection.id ? '' : 'hidden'}`}>
-                          <ul className="list-none py-1 text-sm text-gray-700"
+                          className={`z-10 -mt-9 p-0 bg-white divide-y divide-gray-100 rounded shadow w-44 ml-44 absolute ${openChildren === connection.id ? '' : 'hidden'}`}>
+                          <ul className="list-none text-sm text-gray-700"
                               aria-labelledby="doubleDropdownButton">
                             <li>
                               <Link
