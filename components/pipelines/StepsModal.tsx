@@ -12,7 +12,8 @@ type StepProps = {
     type: string
     title?: string
   },
-  isEdge: boolean
+  isEdge: boolean,
+  status: string
 }
 
 type Statistics = {
@@ -52,7 +53,7 @@ export type QueueState = {
   bufferSize: number
 }
 
-export default function StepsModal({connection, step, isEdge}: StepProps) {
+export default function StepsModal({connection, step, isEdge, status}: StepProps) {
   const [stats, setStats] = useState({} as Statistics)
   const [queueStatistics, setQueueStatistics] = useState({} as QueueStatistics)
   const [state, setState] = useState({} as StepState)
@@ -276,7 +277,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
         <span>Standard Deviation Execution Time: {queueStatistics?.take?.standardDeviationExecutionTimeMs}</span>
         <span>Takes: {queueState.takes}</span>
       </div>
-      <button disabled={queueState.closed} onClick={() => handleOnBufferSize()}>Set Buffer Size</button>
+      <button disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</button>
       {
         openModal && bufferSizeModal &&
           <Modal onClose={handleClose} title={modalTitle} open={openModal} noOverlayClick={true}>
@@ -303,8 +304,8 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
               </div>
               <div>
                   <button onClick={() => handleOnTest()}>Test</button>
-                  <button onClick={() => handleOnThreads()}>Threads</button>
-                  <button onClick={() => handleOnPollFrequency()}>Poll Frequency</button>
+                  <button disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</button>
+                  <button disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</button>
                   <button disabled={!state.stopped} onClick={() => handleStartStep()}>Start</button>
                   <button disabled={state.stopped} onClick={() => handleStopStep()}>Stop</button>
                   <button >
@@ -334,7 +335,7 @@ export default function StepsModal({connection, step, isEdge}: StepProps) {
               </div>
               <div>
                   <button onClick={() => handleOnTrigger()}>Trigger</button>
-                  <button onClick={() => handleOnSchedule()}>Schedule</button>
+                  <button disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</button>
                   <button disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</button>
                   <button disabled={jobState.stopped} onClick={() => handleStopStep()}>Stop</button>
                   <button >

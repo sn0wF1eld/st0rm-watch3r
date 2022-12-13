@@ -25,25 +25,29 @@ export default function Pipelines() {
   const [selectedNode, setSelectedNode] = useState({} as any)
   const [selectedEdge, setSelectedEdge] = useState({} as any)
   const [isEdge, setIsEdge] = useState(false)
+  const [selectedPipelineStatus, setSelectedPipelineStatus] = useState('')
   const [stopSystemModal, setStopSystemModal] = useState(false)
   const [systemStoppedModal, setSystemStoppedModal] = useState(false)
   const [systemConfigurationsModal, setSystemConfigurationsModal] = useState(false)
   const currentLink = usePathname()
 
-  const handleSelectNode = (node: any, pipelineId: string) => {
+  const handleSelectNode = (node: any, pipelineId: string, status: string) => {
     setIsEdge(false)
+    setSelectedPipelineStatus(status)
     setOpenModal(true)
     setSelectedNode(pipelinesToRender[pipelineId].nodes.find((item: any) => item.id === node.nodes[0]))
   }
 
-  const handleSelectEdge = (edge: any, pipelineId: string) => {
+  const handleSelectEdge = (edge: any, pipelineId: string, status: string) => {
     setIsEdge(true)
+    setSelectedPipelineStatus(status)
     setOpenModal(true)
     setSelectedEdge(pipelinesToRender[pipelineId].edges.find((item: any) => item.id === edge.edges[0]))
   }
 
   const handleCloseModal = () => {
     setIsEdge(false)
+    setSelectedPipelineStatus('')
     setOpenModal(false)
     setSelectedNode({})
     setSelectedEdge({})
@@ -254,14 +258,15 @@ const millisecondsToDateString = (ms: number) => {
               style={{height: "300px"}}
               options={options}
               events={{
-                selectNode: (e: any) => handleSelectNode(e, pipeline.id),
-                selectEdge: (e: any) => handleSelectEdge(e, pipeline.id)
+                selectNode: (e: any) => handleSelectNode(e, pipeline.id, pipeline.status),
+                selectEdge: (e: any) => handleSelectEdge(e, pipeline.id, pipeline.status)
               }}
               graph={pipelinesToRender[pipeline.id]}
             />
             <Actions
               connection={connection}
               id={pipeline.id}
+              status={pipeline.status}
             />
           </div>
         ))
@@ -273,7 +278,7 @@ const millisecondsToDateString = (ms: number) => {
             onClose={handleCloseModal}
             noOverlayClick={true}
         >
-            <StepsModal connection={connection} step={selectedNode} isEdge={false}/>
+            <StepsModal connection={connection} step={selectedNode} isEdge={false} status={selectedPipelineStatus}/>
         </Modal>}
     {openModal && isEdge &&
         <Modal
@@ -282,7 +287,7 @@ const millisecondsToDateString = (ms: number) => {
             onClose={handleCloseModal}
             noOverlayClick={true}
         >
-            <StepsModal connection={connection} step={selectedEdge} isEdge={true}/>
+            <StepsModal connection={connection} step={selectedEdge} isEdge={true} status={selectedPipelineStatus}/>
         </Modal>}
     <ColorCodes/>
   </div>
