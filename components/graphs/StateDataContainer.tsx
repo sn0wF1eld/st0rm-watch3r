@@ -32,7 +32,7 @@ export default function StateDataContainer({
   const [rulesModal, setRulesModal] = useState(false)
   const [expand, setExpand] = useState(false)
 
-
+const trimNumber = (number: number) => number.toFixed(3)
 
   if (!expand) return (
     <div className={'absolute flex flex-col bg-gray-700 rounded-r-full -ml-6 py-3 gap-3 z-2 top-20'}>
@@ -44,24 +44,26 @@ export default function StateDataContainer({
 
   return (
     <div
-      className={'absolute flex flex-col bg-card -ml-6 py-3 gap-3 z-2 w-72 top-20 rounded-r border border-solid border-gray-400'}>
-      <a href='#' className='absolute text-light-blue top-2 right-2' onClick={() => setExpand(false)}><TbLayoutSidebarRightExpand/></a>
+      className={'absolute bg-zinc-700 bg-opacity-60 flex flex-col -ml-6 py-4 gap-3 z-2 w-72 top-20 rounded-r border border-solid border-gray-400'}>
+      <a href='#' className='absolute text-light-blue top-2 right-2' onClick={() => setExpand(false)}>
+        <TbLayoutSidebarRightExpand className={'text-16'}/>
+      </a>
       <div className={'flex flex-col justify-between'}>
         <DisplayCard orientation={'row'}>
           <span>Usable Disk Space (Gb)</span>
-          <span>{data.usableDiskSpaceGb}</span>
+          <span>{trimNumber(data.usableDiskSpaceGb)}</span>
         </DisplayCard>
         <DisplayCard orientation={'row'}>
           <span>Total Disk Space (Gb)</span>
-          <span>{data.totalDiskSpaceGb}</span>
+          <span>{trimNumber(data.totalDiskSpaceGb)}</span>
         </DisplayCard>
         <DisplayCard orientation={'row'}>
           <span>Used Disk Space (Gb)</span>
-          <span>{data.usedDiskSpaceGb}</span>
+          <span>{trimNumber(data.usedDiskSpaceGb)}</span>
         </DisplayCard>
         <DisplayCard orientation={'row'}>
           <span>Free Disk Space (Gb)</span>
-          <span>{data.freeDiskSpaceGb}</span>
+          <span>{trimNumber(data.freeDiskSpaceGb)}</span>
         </DisplayCard>
         <DisplayCard orientation={'row'}>
           <span>GC Total Pauses</span>
