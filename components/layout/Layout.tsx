@@ -9,9 +9,9 @@ type LayoutProps = {
 export default function Layout({children}: LayoutProps) {
     return (
         <LayoutProvider>
-            <div className='bg-main-bg h-screen overflow-auto flex flex-col gap-10'>
+            <div className='h-screen bg-gradient-to-b from-gray-900 to-gray-700 overflow-auto flex flex-col gap-10 p-0'>
                 <Navbar/>
-                <main className={"w-full"}>
+                <main className={"w-auto pl-6 pr-6"}>
                     {children}
                 </main>
             </div>

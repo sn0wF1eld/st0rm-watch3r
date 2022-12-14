@@ -2,6 +2,7 @@ import {Connection, useContextProvider} from "../layout/provider/Context";
 import {TbPlugConnectedX} from "react-icons/tb";
 import Modal from "../modal/Modal";
 import {useState} from "react";
+import Button from "../layout/Button";
 
 export default function ConnectionsTable() {
   const {removeConnection, connections} = useContextProvider()
@@ -22,25 +23,25 @@ export default function ConnectionsTable() {
   if (!connections.length) return <h3 className='text-center text-light-blue'>No connections to display</h3>
 
   return (
-    <div className='flex rounded p-5 w-auto'>
-      <table className='w-full rounded table-auto border-spacing-3 border-separate'>
+    <div className='flex w-auto'>
+      <table className='w-full rounded table-auto'>
         <thead>
         <tr className='text-light-blue'>
-          <th>Name</th>
-          <th>IP</th>
-          <th>Actions</th>
+          <th className={'p-3'}>Name</th>
+          <th className={'p-3'}>IP</th>
+          <th className={'p-3'}>Actions</th>
         </tr>
         </thead>
         <tbody>
         {
           connections.map((connection: Connection) => (
-            <tr key={connection.id} className='rounded text-white p-5 bg-blue-700 hover:bg-blue-500'>
-              <td className='p-3 rounded text-center'>{connection.name}</td>
-              <td className='p-3 rounded text-center'>{connection.address}</td>
-              <td className='p-3 rounded text-center'>
-                <button className='p-2 rounded bg-red-500 cursor-pointer hover:bg-red-400'
+            <tr key={connection.id} className='text-light-blue p-3 bg-slate-700 hover:bg-slate-500 border border-red-400'>
+              <td className='p-3 text-center'>{connection.name}</td>
+              <td className='p-3 text-center'>{connection.address}</td>
+              <td className='p-3 text-center'>
+                <Button styles='bg-red-500 hover:bg-red-400 font-bold text-center'
                         onClick={() => confirmRemoveConnection(connection)}>
-                  <TbPlugConnectedX/></button>
+                  Remove Connection <TbPlugConnectedX className={'text-16'}/></Button>
               </td>
             </tr>
           ))

@@ -13,6 +13,7 @@ import StepsModal from "../../components/pipelines/StepsModal";
 import {FiSettings} from "react-icons/fi";
 import SystemConfigModal from "../../components/pipelines/SystemConfigModal";
 import UptimeComponent from "../../components/pipelines/UptimeComponent";
+import Button from "../../components/layout/Button";
 
 export default function Pipelines() {
   const {connections} = useContextProvider()
@@ -213,11 +214,11 @@ const millisecondsToDateString = (ms: number) => {
     </Modal>
   )
   if (loading) return <LoadingIcon/>
-  return <div className={'flex flex-col rounded p-5 bg-secondary-bg ml-6 mr-6'}>
+  return <div className={'flex flex-col p-5 ml-6 mr-6'}>
     <div className={'flex gap-10'}>
-      <button onClick={() => handleOnStop()} className={'bg-red-500 text-white font-bold p-5 cursor-pointer'}>Stop
+      <Button onClick={() => handleOnStop()} styles={'bg-red text-white'}>Stop
         System
-      </button>
+      </Button>
       {stopSystemModal &&
           <Modal open={stopSystemModal} onClose={() => setStopSystemModal(false)} title={'Stop System'}>
               <div>Stopping the system will require manual restart</div>

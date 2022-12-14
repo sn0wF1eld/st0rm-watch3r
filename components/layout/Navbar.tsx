@@ -21,7 +21,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="bg-button-bg px-2 w-auto border-b border-gray-200 p-3 sticky top-0 z-20">
+      className="bg-transparent px-2 w-auto border-b border-gray-200 sticky top-0 z-20">
       <div className="container flex flex-wrap items-center justify-between mx-auto">
         <Link
           href='/'
@@ -30,8 +30,8 @@ export default function Navbar() {
             className='hover:animate-rotate'
             src={"/Icemanmelting-snowflake-logo-deisgn-final2.png"}
             alt={"logo"}
-            width={75}
-            height={75}
+            width={40}
+            height={40}
           />
         </Link>
         <div className="flex md:order-2">
