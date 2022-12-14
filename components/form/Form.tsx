@@ -28,8 +28,8 @@ function Form() {
   const errorElement = <span className='text-red-400'>This field is required</span>
 
   return (
-    <div className='flex flex-col pb-9 w-fit container bg-slate-700 rounded p-5'>
-      <h3 className='text-light-blue'>Add Connection</h3>
+    <div className='flex flex-col pb-9 w-fit container bg-card rounded p-5'>
+      <h3 className='text-light-blue'>Instance Details</h3>
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row w-full gap-3'>
         <div className="flex gap-3">
           <div className='flex flex-col'>
@@ -45,7 +45,7 @@ function Form() {
           <input hidden value={uuid()} {...register('id')}/>
           <Button styles='bg-light-blue hover:bg-dark-blue'>
               <span className='flex font-bold'>
-                Add Connection <TbPlugConnected className={'text-16'}/>
+                Add <TbPlugConnected className={'text-16'}/>
               </span>
           </Button>
         </div>

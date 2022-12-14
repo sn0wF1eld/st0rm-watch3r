@@ -35,13 +35,13 @@ export default function ConnectionsTable() {
         <tbody>
         {
           connections.map((connection: Connection) => (
-            <tr key={connection.id} className='text-light-blue p-3 bg-slate-700 hover:bg-slate-500'>
+            <tr key={connection.id} className='text-light-blue p-3 bg-card'>
               <td className='p-3 text-center'>{connection.name}</td>
               <td className='p-3 text-center'>{connection.address}</td>
               <td className='p-3 text-center'>
                 <Button styles='bg-red-500 hover:bg-red-600 font-bold text-center'
                         onClick={() => confirmRemoveConnection(connection)}>
-                  Remove Connection <TbPlugConnectedX className={'text-16'}/></Button>
+                  Remove <TbPlugConnectedX className={'text-16'}/></Button>
               </td>
             </tr>
           ))

@@ -28,7 +28,8 @@ module.exports = {
         'light-gray': '#F7F7F7',
         'half-transparent': 'rgba(0, 0, 0, 0.5)',
         'button-bg': '#262a32',
-        'cyan-blue': '#42c8f1'
+        'cyan-blue': '#42c8f1',
+        'card': '#334155'
       },
       borderWidth: {
         1: '1px',

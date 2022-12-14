@@ -6,8 +6,12 @@ type ButtonProps = {
 }
 
 export default function Button({onClick, children, disabled, styles}: ButtonProps) {
+  const handleClick = () => {
+    return onClick ? onClick() : null
+  }
+
   return (
-    <button onClick={() => onClick} disabled={disabled} className={'flex border-none m-auto items-center rounded-full p-3 cursor-pointer ' + styles}>
+    <button onClick={() => handleClick()} disabled={disabled} className={'flex border-none m-auto items-center rounded-full p-3 cursor-pointer ' + styles}>
       {children}
     </button>
   )
