@@ -24,7 +24,7 @@ export default function ConnectionsTable() {
 
   return (
     <div className='flex w-auto'>
-      <table className='w-full rounded table-auto'>
+      <table className='w-full table-auto border-separate'>
         <thead>
         <tr className='text-light-blue'>
           <th className={'p-3'}>Name</th>
@@ -35,11 +35,11 @@ export default function ConnectionsTable() {
         <tbody>
         {
           connections.map((connection: Connection) => (
-            <tr key={connection.id} className='text-light-blue p-3 bg-slate-700 hover:bg-slate-500 border border-red-400'>
+            <tr key={connection.id} className='text-light-blue p-3 bg-slate-700 hover:bg-slate-500'>
               <td className='p-3 text-center'>{connection.name}</td>
               <td className='p-3 text-center'>{connection.address}</td>
               <td className='p-3 text-center'>
-                <Button styles='bg-red-500 hover:bg-red-400 font-bold text-center'
+                <Button styles='bg-red-500 hover:bg-red-600 font-bold text-center'
                         onClick={() => confirmRemoveConnection(connection)}>
                   Remove Connection <TbPlugConnectedX className={'text-16'}/></Button>
               </td>
