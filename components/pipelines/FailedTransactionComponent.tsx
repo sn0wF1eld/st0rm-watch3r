@@ -6,6 +6,7 @@ export type Shard = {
   id: string,
   value?: string,
   failedStepName?: string,
+  failedThread?: number,
   status?: string,
   throw?: {
     stackTrace: string[],

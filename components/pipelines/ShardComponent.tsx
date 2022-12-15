@@ -58,6 +58,8 @@ export default function ShardComponent({shard}: ShardProps) {
       <span className={'text-gray-400'}>shard id: <span className={'text-white'}>{shardData.id}</span></span>
       <span className={'text-gray-400'}>failed step name: <span
         className={'text-white'}>{shardData.failedStepName}</span></span>
+      <span className={'text-gray-400'}>failed thread: <span
+          className={'text-white'}>{shardData.failedThread}</span></span>
       <span className={'text-gray-400'}>status: <span className={'text-white'}>{shardData.status}</span></span>
       <div className={'flex gap-10'}>
         <button className={buttonStyle} onClick={() => handleValue()}>Value</button>
