@@ -71,7 +71,7 @@ export type UptimeProps = {
 }
 
 export const getSystemConfigs = (connection: Connection) => {
-  return fetch(`${connection?.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/pipelines`,
+  return fetch(`${connection?.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/system/config`,
     {method: 'GET', headers: {'content-type': 'application/json'}}
   )
     .then(res => res.json())

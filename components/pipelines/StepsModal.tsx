@@ -307,7 +307,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
                   <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Successful Calls: {state.successfulStepCalls}</span>
                   <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Unsuccessful Calls: {state.unsuccessfulStepCalls}</span>
               </div>
-              <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit'}>
+              <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400'}>
                   <Button onClick={() => handleOnTest()}>Test</Button>
                   <Button disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</Button>
                   <Button disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</Button>
@@ -338,7 +338,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
                   <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Triggered: {jobState.triggered}</span>
                   <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Status: {jobState.status}</span>
               </div>
-              <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit'}>
+              <div className={'flex bg-card p-3 border border-solid border-gray-400'}>
                   <Button onClick={() => handleOnTrigger()}>Trigger</Button>
                   <Button disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</Button>
                   <Button disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</Button>

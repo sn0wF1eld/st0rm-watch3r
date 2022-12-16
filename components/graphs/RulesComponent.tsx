@@ -9,6 +9,7 @@ import {
 } from "./utils/GraphUtils";
 import {Connection} from "../layout/provider/Context";
 import {useEffect, useState} from "react";
+import Button from "../layout/Button";
 
 type RulesComponentProps = {
   connection: Connection
@@ -74,21 +75,22 @@ export default function RulesComponent({connection}: RulesComponentProps) {
   }
 
   const onSelectType = (rule: any) => {
+    setOpenDropdown(false)
     reset()
     setSelectedType(rule)
   }
 
   return (
-    <div>
+    <div className={'flex flex-col gap-5'}>
       <button
-        className="w-72 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-right inline-flex cursor-pointer"
+        className="w-72 mx-auto text-white bg-light-blue font-bold hover:bg-dark-blue font-medium rounded-lg text-sm px-4 py-2.5 text-right inline-flex cursor-pointer"
         onClick={() => setOpenDropdown(e => !e)}>
         {selectedType.name || 'Select Type'}
       </button>
       {//TODO: add outside click close
       }
       {openDropdown &&
-          <div className="absolute z-10 w-72 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
+          <div className="absolute z-10 w-72 mt-10 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
               <ul className="list-none py-1 px-0 text-sm text-gray-700 dark:text-gray-200">
                 {
                   rulesTypes.map(rule => (
@@ -105,7 +107,7 @@ export default function RulesComponent({connection}: RulesComponentProps) {
           </div>}
       {
         selectedType.value &&
-          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2'>
+          <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-5'>
               <div className="flex gap-3">
                   <div className='flex flex-col'>
                       <span className={'text-white'}>Critical</span>
@@ -122,17 +124,16 @@ export default function RulesComponent({connection}: RulesComponentProps) {
                     {errors.warning && errorElement}
                   </div>
               </div>
-              <div className="flex gap-10 justify-center">
-                  <button type="submit"
-                          className='p-2 w-1/3 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+              <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400'}>
+                  <Button styles='bg-light-blue hover:bg-dark-blue'>
                       Set
-                  </button>
-                  <input
-                      type={'button'}
+                  </Button>
+                  <Button
                       onClick={() => onReset()}
-                      className='p-2 w-1/3 rounded bg-red-600 hover:cursor-pointer hover:bg-red-400'
-                      value={'Reset'}
-                  />
+                      styles='bg-red-600 hover:bg-red-400'
+                  >
+                      Reset
+                  </Button>
               </div>
           </form>
       }
