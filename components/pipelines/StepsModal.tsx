@@ -282,7 +282,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
         <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Standard Deviation Execution Time: {trimNumber(queueStatistics?.take?.standardDeviationExecutionTimeMs)}</span>
         <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Takes: {queueState.takes}</span>
       </div>
-      <Button disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</Button>
+      <Button styles={'bg-light-blue'} disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</Button>
       {
         openModal && bufferSizeModal &&
           <Modal onClose={handleClose} title={modalTitle} open={openModal} noOverlayClick={true}>
@@ -308,12 +308,12 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
                   <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Unsuccessful Calls: {state.unsuccessfulStepCalls}</span>
               </div>
               <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400'}>
-                  <Button onClick={() => handleOnTest()}>Test</Button>
-                  <Button disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</Button>
-                  <Button disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</Button>
-                  <Button disabled={!state.stopped} onClick={() => handleStartStep()}>Start</Button>
-                  <Button disabled={state.stopped} onClick={() => handleStopStep()}>Stop</Button>
-                  <Button >
+                  <Button styles={'bg-light-blue'} onClick={() => handleOnTest()}>Test</Button>
+                  <Button styles={'bg-light-blue'} disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</Button>
+                  <Button styles={'bg-light-blue'} disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</Button>
+                  <Button styles={'bg-light-blue'} disabled={!state.stopped} onClick={() => handleStartStep()}>Start</Button>
+                  <Button styles={'bg-light-blue'} disabled={state.stopped} onClick={() => handleStopStep()}>Stop</Button>
+                  <Button styles={'bg-light-blue font-bold text-16'} >
                       <FiSettings onClick={() => setConfigurationsModal(true)}/>
                   </Button>
                 {
@@ -339,11 +339,11 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
                   <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Status: {jobState.status}</span>
               </div>
               <div className={'flex bg-card p-3 border border-solid border-gray-400'}>
-                  <Button onClick={() => handleOnTrigger()}>Trigger</Button>
-                  <Button disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</Button>
-                  <Button disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</Button>
-                  <Button disabled={jobState.stopped} onClick={() => handleStopStep()}>Stop</Button>
-                  <Button >
+                  <Button styles={'bg-light-blue'} onClick={() => handleOnTrigger()}>Trigger</Button>
+                  <Button styles={'bg-light-blue'} disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</Button>
+                  <Button styles={'bg-light-blue'} disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</Button>
+                  <Button styles={'bg-light-blue'} disabled={jobState.stopped} onClick={() => handleStopStep()}>Stop</Button>
+                  <Button styles={'bg-light-blue font-bold text-16'} >
                       <FiSettings onClick={() => setConfigurationsModal(true)}/>
                   </Button>
                 {

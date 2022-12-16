@@ -180,8 +180,8 @@ export default function Actions({connection, id, status}: ActionsProps) {
 
                 </div>
                 <div className={'flex justify-center gap-10'}>
-                    <Button disabled={status === 'offline'} onClick={() => onReplay(selectedTx)}>Replay</Button>
-                    <Button disabled={status === 'offline'} onClick={() => onReplayAll()}>Replay All</Button>
+                    <Button styles={'bg-light-blue'} disabled={status === 'offline'} onClick={() => onReplay(selectedTx)}>Replay</Button>
+                    <Button styles={'bg-light-blue'} disabled={status === 'offline'} onClick={() => onReplayAll()}>Replay All</Button>
                 </div>
             </Modal>
         }

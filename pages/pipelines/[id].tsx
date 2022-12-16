@@ -6,7 +6,7 @@ import Graph from 'react-graph-vis'
 import Modal from "../../components/modal/Modal";
 import Stats from "../../components/pipelines/Stats";
 import Actions from "../../components/pipelines/Actions";
-import {getEdgeColor, getNodeColor, Pipeline} from "../../components/pipelines/utils/PipelinesUtils";
+import {Pipeline} from "../../components/pipelines/utils/PipelinesUtils";
 import LoadingIcon from "../../components/layout/LoadingIcon";
 import StepsModal from "../../components/pipelines/StepsModal";
 import {FiSettings} from "react-icons/fi";
@@ -74,10 +74,19 @@ export default function Pipelines() {
       hierarchical: true
     },
     edges: {
-      color: "#dcd7d7"
+      color: "#dcd7d7",
+      width: 2
     },
     nodes: {
-      shape: 'box'
+      shape: 'box',
+      margin: 25,
+      color: {
+        background: '#4b5563',
+        border: '#42c8f1'
+      },
+      font: {
+        color: '#42c8f1',
+      },
     },
     interaction: {
       zoomView: false,
@@ -124,8 +133,8 @@ export default function Pipelines() {
         nodes = [...nodes, {
           id: pline.name,
           label: pline.name,
-          color: getNodeColor(pline.stepType),
-          type: pline.stepType
+          type: pline.stepType,
+          size: 50
         }]
 
         if (pline?.connectsTo?.length) {
@@ -136,7 +145,6 @@ export default function Pipelines() {
                 to: item.name,
                 length: 200,
                 title: item.name,
-                color: getEdgeColor(pline.splittable, pline.switchable)
               }
             ]
             getNodesAndEdges(item)
@@ -216,7 +224,7 @@ export default function Pipelines() {
   )
   if (loading || !connection?.address || !pipelinesToRender) return <LoadingIcon/>
   return <div className={'flex flex-col p-5 ml-6 mr-6'}>
-    <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit'}>
+    <div className={'flex flex-wrap gap-10 bg-card p-3 border border-solid border-gray-400 w-1/2'}>
       <Button onClick={() => handleOnStop()} styles={'m-0 bg-red-500 hover:bg-red-600 font-bold'}>Stop
         System
       </Button>
@@ -230,7 +238,7 @@ export default function Pipelines() {
                 </div>
               </div>
           </Modal>}
-      <Button styles={'font-bold text-16 m-0'}>
+      <Button styles={'font-bold bg-light-blue text-16 m-0'}>
         <FiSettings onClick={() => setSystemConfigurationsModal(true)}/>
       </Button>
       {

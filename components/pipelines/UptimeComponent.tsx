@@ -6,6 +6,8 @@ export default function UptimeComponent({connection}: UptimeProps) {
   const socketPrefix = connection?.secure ? 'wss' : 'ws'
 
   useEffect(() => {
+    if (!connection?.address) return
+
     const ws = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/system/uptime`)
 
     ws.onmessage = (event) => {
