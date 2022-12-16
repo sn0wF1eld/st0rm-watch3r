@@ -50,7 +50,7 @@ export default function StateDataContainer({
     <>
       <div
         ref={sideRef}
-        className={'absolute bg-zinc-700 bg-opacity-60 flex flex-col -ml-6 py-4 gap-3 z-2 w-72 top-20 rounded-r border border-solid border-gray-400'}>
+        className={'absolute backdrop-filter backdrop-blur bg-opacity-30 flex flex-col -ml-6 py-4 gap-3 z-2 w-72 top-20 rounded-r border border-solid border-gray-400'}>
         <a href='#' className='absolute text-light-blue top-2 right-2' onClick={() => setExpand(false)}>
           <TbLayoutSidebarRightExpand className={'text-16'}/>
         </a>

@@ -106,7 +106,7 @@ export default function NotificationComponent() {
       {
         openNotifications && <div
               ref={notificationRef}
-              className={'z-10 h-40 overflow-auto absolute right-20 w-96 bg-secondary-bg text-white rounded border-solid border-1 border-gray-500'}>
+              className={'z-10 h-40 overflow-auto absolute right-10 w-96 bg-secondary-bg text-white rounded border-solid border-1 border-gray-500'}>
           {
             !!notifications.length &&
               <button className={'absolute bg-transparent text-light-blue right-0 cursor-pointer'}
