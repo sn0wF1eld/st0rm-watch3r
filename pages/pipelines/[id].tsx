@@ -30,6 +30,8 @@ export default function Pipelines() {
   const [systemStoppedModal, setSystemStoppedModal] = useState(false)
   const [systemConfigurationsModal, setSystemConfigurationsModal] = useState(false)
   const currentLink = usePathname()
+  const socketPrefix = connection?.secure ? 'wss' : 'ws'
+  const linkPrefix = connection?.secure ? 'https' : 'http'
 
   const handleSelectNode = (node: any, pipelineId: string, status: string) => {
     setIsEdge(false)
@@ -60,7 +62,7 @@ export default function Pipelines() {
   const onStopSystem = () => {
     setStopSystemModal(false)
 
-    fetch(`${connection?.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/system/stop`,
+    fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/system/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -94,7 +96,7 @@ export default function Pipelines() {
   useEffect(() => {
     if (!connection) return
 
-    const ws = new WebSocket(`${connection?.secure ? 'wss' : 'ws'}://${connection?.address}/sn0wst0rm/api/1/pipelines/transactions/count`)
+    const ws = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/transactions/count`)
 
     ws.onmessage = (event) => {
       const json = JSON.parse(event.data)
@@ -172,7 +174,7 @@ export default function Pipelines() {
   useEffect(() => {
     if (!connection?.address) return
     const interval = setInterval(() => {
-      fetch(`${connection?.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/pipelines`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/pipelines`,
         {method: 'GET', headers: {'content-type': 'application/json'}}
       ).then((res: any) => {
         res.json()
