@@ -18,5 +18,7 @@ export default function UptimeComponent({connection}: UptimeProps) {
     return () => ws.close()
   }, [])
   if (!uptime) return <div>-</div>
-  return <div className={'flex text-light-blue text-center items-center justify-center'}>Uptime: {secondsToDaysHoursMinutesSeconds(uptime)}</div>
+  return <div className={'flex text-light-blue text-center items-center justify-center'}><span
+    className="text-white">Uptime: <span
+    className="text-light-blue">{secondsToDaysHoursMinutesSeconds(uptime)}</span></span></div>
 }

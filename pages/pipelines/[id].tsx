@@ -94,7 +94,7 @@ export default function Pipelines() {
   }, [connections, currentLink])
 
   useEffect(() => {
-    if (!connection) return
+    if (!connection?.address) return
 
     const ws = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/transactions/count`)
 
@@ -214,7 +214,7 @@ export default function Pipelines() {
       <div className={'text-red-400'}>System Stopped</div>
     </Modal>
   )
-  if (loading) return <LoadingIcon/>
+  if (loading || !connection?.address || !pipelinesToRender) return <LoadingIcon/>
   return <div className={'flex flex-col p-5 ml-6 mr-6'}>
     <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit'}>
       <Button onClick={() => handleOnStop()} styles={'m-0 bg-red-500 hover:bg-red-600 font-bold'}>Stop
@@ -222,10 +222,12 @@ export default function Pipelines() {
       </Button>
       {stopSystemModal &&
           <Modal open={stopSystemModal} onClose={() => setStopSystemModal(false)} title={'Stop System'}>
-              <div>Stopping the system will require manual restart</div>
-              <div className={'flex gap-10 justify-end'}>
-                  <button onClick={() => onStopSystem()}>Confirm</button>
-                  <button onClick={() => setStopSystemModal(false)}>Cancel</button>
+              <div className={'flex flex-col gap-10'}>
+                <div className={'text-white'}>Stopping the system will require manual restart</div>
+                <div className={'flex justify-center'}>
+                    <Button styles={'bg-light-blue'} onClick={() => onStopSystem()}>Confirm</Button>
+                    <Button styles={'bg-dark-blue'} onClick={() => setStopSystemModal(false)}>Cancel</Button>
+                </div>
               </div>
           </Modal>}
       <Button styles={'font-bold text-16 m-0'}>

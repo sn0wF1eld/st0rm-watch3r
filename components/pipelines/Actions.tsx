@@ -128,12 +128,14 @@ export default function Actions({connection, id, status}: ActionsProps) {
       <Button
         styles={'m-0 font-bold p-3 bg-light-blue cursor-pointer'}
         onClick={() => handleStart()}
+        disabled={status === 'online'}
       >
         Start
       </Button>
       <Button
         styles={'m-0 font-bold p-3 bg-light-blue cursor-pointer'}
         onClick={() => handleStop()}
+        disabled={status === 'offline'}
       >
         Stop
       </Button>

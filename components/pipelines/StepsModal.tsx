@@ -269,18 +269,18 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   if (isEdge) {
     return (<div className={'flex flex-col text-white gap-5'}>
       <span>Put Statistics</span>
-      <div className={'flex gap-5'}>
-        <span>Mean Execution Time(ms): {queueStatistics?.put?.meanExecutionTimeMs}</span>
-        <span>Median Execution Time(ms): {queueStatistics?.put?.medianExecutionTimeMs}</span>
-        <span>Standard Deviation Execution Time: {queueStatistics?.put?.standardDeviationExecutionTimeMs}</span>
-        <span>Puts: {queueState.puts}</span>
+      <div className={'flex gap-5 text-light-blue'}>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Mean Execution Time(ms): {trimNumber(queueStatistics?.put?.meanExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Median Execution Time(ms): {trimNumber(queueStatistics?.put?.medianExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Standard Deviation Execution Time: {trimNumber(queueStatistics?.put?.standardDeviationExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Puts: {queueState.puts}</span>
       </div>
       <span>Take Statistics</span>
-      <div className={'flex gap-5'}>
-        <span>Mean Execution Time(ms): {queueStatistics?.take?.meanExecutionTimeMs}</span>
-        <span>Median Execution Time(ms): {queueStatistics?.take?.medianExecutionTimeMs}</span>
-        <span>Standard Deviation Execution Time: {queueStatistics?.take?.standardDeviationExecutionTimeMs}</span>
-        <span>Takes: {queueState.takes}</span>
+      <div className={'flex gap-5 text-light-blue'}>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Mean Execution Time(ms): {trimNumber(queueStatistics?.take?.meanExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Median Execution Time(ms): {trimNumber(queueStatistics?.take?.medianExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Standard Deviation Execution Time: {trimNumber(queueStatistics?.take?.standardDeviationExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Takes: {queueState.takes}</span>
       </div>
       <Button disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</Button>
       {
@@ -332,11 +332,11 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
       {
         step.type === 'job' &&
           <>
-              <div className={'flex gap-5'}>
-                  <span>Last Trigger: {jobState.lastTrigger}</span>
-                  <span>Last Running Attempt: {jobState.lastAttempt}</span>
-                  <span>Triggered: {jobState.triggered}</span>
-                  <span>Status: {jobState.status}</span>
+              <div className={'flex gap-5 text-light-blue'}>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Last Trigger: {jobState.lastTrigger}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Last Running Attempt: {jobState.lastAttempt}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Triggered: {jobState.triggered}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Status: {jobState.status}</span>
               </div>
               <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit'}>
                   <Button onClick={() => handleOnTrigger()}>Trigger</Button>

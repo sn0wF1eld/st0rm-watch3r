@@ -37,15 +37,15 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
           <form onSubmit={handleSubmit(beforeSubmit)} className='flex flex-col gap-3'>
             <div className={'flex gap-10'}>
               <div className='flex flex-col'>
-                <span>Value</span>
+                <span className={'text-white'}>Value</span>
                 <textarea className={inputStyle + (errors.testValue && inputErrorStyle)}
                           disabled={stepType === 'source'}
-                          rows={15} cols={120}
+                          rows={15} cols={30}
                           placeholder='Value' {...register('testValue', {required: stepType !== 'source'})}/>
                 {errors.testValue && errorElement}
               </div>
-              <div className='flex flex-col'>
-                <span>Result</span>
+              <div className='flex flex-col w-full'>
+                <span className={'text-white'}>Result</span>
                 <textarea disabled={true} className={'resize-none rounded-md h-full bg-white text-black'}
                           value={JSON.stringify(data, undefined, 2)}/>
               </div>
@@ -61,11 +61,11 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
             onClose={() => setConfirmationModal(false)}
             open={confirmationModal}
           >
-            <div>
-              Are you sure you want to execute this action?
-              <div className={'flex gap-10 justify-end'}>
-                <button onClick={(e) => beforeSubmit(e)}>Confirm</button>
-                <button onClick={() => setConfirmationModal(false)}>Cancel</button>
+            <div className={'flex flex-col'}>
+              <span className={'text-white'}>Are you sure you want to execute this action?</span>
+              <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
+                <Button styles={'bg-light-blue'} onClick={(e) => beforeSubmit(e)}>Confirm</Button>
+                <Button styles={'bg-dark-blue'} onClick={() => setConfirmationModal(false)}>Cancel</Button>
               </div>
             </div>
           </Modal>
@@ -73,7 +73,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
       )
     }
     case 'thread': {
-      if (!data.threads) return <LoadingIcon />
+      if (!data.threads) return <LoadingIcon/>
       return (
         <div>
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
@@ -84,17 +84,16 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
                      placeholder='Numeric Value' {...register('numericValue', {required: true})}/>
               {errors.numericValue && errorElement}
             </div>
-            <button type="submit"
-                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+            <Button styles='bg-light-blue'>
                       <span className='flex'>
                           Set
                       </span>
-            </button>
+            </Button>
           </form>
         </div>)
     }
     case 'buffer': {
-      if (!data) return <LoadingIcon />
+      if (!data) return <LoadingIcon/>
       return (
         <div>
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
@@ -105,17 +104,16 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
                      placeholder='Numeric Value' {...register('numericValue', {required: true})}/>
               {errors.numericValue && errorElement}
             </div>
-            <button type="submit"
-                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+            <Button styles='bg-light-blue'>
                       <span className='flex'>
                           Set
                       </span>
-            </button>
+            </Button>
           </form>
         </div>)
     }
     case 'pollFrequency': {
-      if (!data.timeUnit || !data.pollFrequency) return <LoadingIcon />
+      if (!data.timeUnit || !data.pollFrequency) return <LoadingIcon/>
       return (
         <div>
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
@@ -138,12 +136,11 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
               </select>
               {errors.timeUnit && errorElement}
             </div>
-            <button type="submit"
-                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+            <Button styles='bg-light-blue'>
                       <span className='flex'>
                           Set
                       </span>
-            </button>
+            </Button>
           </form>
         </div>)
     }
@@ -157,12 +154,11 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
                      placeholder='Cron Job Pattern' {...register('cronJobPattern', {required: true})}/>
               {errors.cronJobPattern && errorElement}
             </div>
-            <button type="submit"
-                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+            <Button styles='bg-light-blue'>
                       <span className='flex'>
                           Schedule
                       </span>
-            </button>
+            </Button>
           </form>
         </div>)
     }
@@ -170,6 +166,4 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
     default:
       return null
   }
-
-
 }

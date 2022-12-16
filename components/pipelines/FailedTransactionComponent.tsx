@@ -51,7 +51,7 @@ export default function FailedTransactionComponent({transaction}: FailedTransact
               className={'p-2 border-b-1 border-t-0 border-l-0 border-r-0 border-solid border-gray-400'}>
               <div className={'flex flex-col gap-2 text-gray-300'}>
                 <button className={'p-2 cursor-pointer'} onClick={() => handleOpenShard(shard)}>
-                  id: <span className={'text-white'}>{shard}</span>
+                  id: <span className={'text-dark-blue'}>{shard}</span>
                 </button>
               </div>
               {shardId === shard && openModal &&
