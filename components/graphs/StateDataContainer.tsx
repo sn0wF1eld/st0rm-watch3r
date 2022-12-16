@@ -5,6 +5,7 @@ import React, {useState} from "react";
 import Button from "../layout/Button";
 import DisplayCard from "./DisplayCard";
 import {TbLayoutSidebarLeftExpand, TbLayoutSidebarRightExpand} from "react-icons/tb";
+import {trimNumber} from "./utils/GraphUtils";
 
 type StateDataContainerProps = {
   data: {
@@ -32,8 +33,6 @@ export default function StateDataContainer({
   const [rulesModal, setRulesModal] = useState(false)
   const [expand, setExpand] = useState(false)
 
-const trimNumber = (number: number) => number.toFixed(3)
-
   if (!expand) return (
     <div className={'absolute flex flex-col bg-gray-700 rounded-r-full -ml-6 py-3 gap-3 z-2 top-20'}>
       <Button onClick={() => setExpand(true)} styles={'bg-light-blue text-white'}>
@@ -48,7 +47,7 @@ const trimNumber = (number: number) => number.toFixed(3)
       <a href='#' className='absolute text-light-blue top-2 right-2' onClick={() => setExpand(false)}>
         <TbLayoutSidebarRightExpand className={'text-16'}/>
       </a>
-      <div className={'flex flex-col justify-between'}>
+      <div className={'flex flex-col justify-between text-light-blue'}>
         <DisplayCard orientation={'row'}>
           <span>Usable Disk Space (Gb)</span>
           <span>{trimNumber(data.usableDiskSpaceGb)}</span>
@@ -78,7 +77,7 @@ const trimNumber = (number: number) => number.toFixed(3)
           <span>{data.processCpuTimeMs}</span>
         </DisplayCard>
       </div>
-      <div className={'flex flex-wrap justify-center gap-10'}>
+      <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 flex-wrap mx-3'}>
         <Button onClick={() => onGcCollect()}>GC Collect</Button>
         <Button onClick={() => onHeapDump()}>Heap Dump</Button>
         <Button onClick={() => onHeapDownload()}>Heap Download</Button>

@@ -69,3 +69,8 @@ export const activeDropdown = "block cursor-pointer py-2 px-4 hover:bg-gray-100 
 export function handleArraySize(oldArray: any[]): any[] {
   return oldArray.length > 50 ? oldArray.slice(-50) : oldArray
 }
+
+export const trimNumber = (number: number) => {
+  if (!number) return number
+  return number.toFixed(3)
+}

@@ -11,7 +11,7 @@ export default function Button({onClick, children, disabled, styles}: ButtonProp
   }
 
   return (
-    <button onClick={() => handleClick()} disabled={disabled} className={'flex border-none m-auto items-center rounded-full p-3 cursor-pointer ' + styles}>
+    <button onClick={() => handleClick()} disabled={disabled} className={'flex border-none m-auto items-center rounded-full p-3 cursor-pointer font-bold ' + styles}>
       {children}
     </button>
   )

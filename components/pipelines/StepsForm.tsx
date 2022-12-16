@@ -2,6 +2,7 @@ import {useForm} from "react-hook-form";
 import {useState} from "react";
 import Modal from "../modal/Modal";
 import LoadingIcon from "../layout/LoadingIcon";
+import Button from "../layout/Button";
 
 type StepsFormProps = {
   modalType: string,
@@ -33,7 +34,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
     case 'test': {
       return (
         <>
-          <form onSubmit={handleSubmit(beforeSubmit)} className='flex flex-row gap-3'>
+          <form onSubmit={handleSubmit(beforeSubmit)} className='flex flex-col gap-3'>
             <div className={'flex gap-10'}>
               <div className='flex flex-col'>
                 <span>Value</span>
@@ -49,12 +50,11 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
                           value={JSON.stringify(data, undefined, 2)}/>
               </div>
             </div>
-            <button type="submit"
-                    className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'>
+            <Button styles='bg-light-blue hover:bg-dark-blue w-full justify-center'>
                         <span className='flex'>
                             Test
                         </span>
-            </button>
+            </Button>
           </form>
           <Modal
             title={'Confirm Action'}

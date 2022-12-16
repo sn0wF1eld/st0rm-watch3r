@@ -4,6 +4,8 @@ import Modal from "../modal/Modal";
 import StepsForm from "./StepsForm";
 import {FiSettings} from "react-icons/fi";
 import SystemConfigModal from "./SystemConfigModal";
+import Button from "../layout/Button";
+import {trimNumber} from "../graphs/utils/GraphUtils";
 
 type StepProps = {
   connection: Connection,
@@ -280,7 +282,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
         <span>Standard Deviation Execution Time: {queueStatistics?.take?.standardDeviationExecutionTimeMs}</span>
         <span>Takes: {queueState.takes}</span>
       </div>
-      <button disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</button>
+      <Button disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</Button>
       {
         openModal && bufferSizeModal &&
           <Modal onClose={handleClose} title={modalTitle} open={openModal} noOverlayClick={true}>
@@ -291,29 +293,29 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   }
 
   return (
-    <div>
-      <div className={'flex gap-5'}>
-        <span>Mean Execution Time(ms): {stats.meanExecutionTimeMs}</span>
-        <span>Median Execution Time(ms): {stats.medianExecutionTimeMs}</span>
-        <span>Standard Deviation Execution Time: {stats.standardDeviationExecutionTimeMs}</span>
+    <div className={'flex flex-col gap-5'}>
+      <div className={'flex gap-5 justify-between text-light-blue'}>
+        <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Mean Execution Time(ms): {trimNumber(stats.meanExecutionTimeMs)}</div>
+        <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Median Execution Time(ms): {trimNumber(stats.medianExecutionTimeMs)}</div>
+        <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Standard Deviation Execution Time: {trimNumber(stats.standardDeviationExecutionTimeMs)}</div>
       </div>
       {
         step?.type !== 'job' &&
           <>
-              <div className={'flex gap-5'}>
-                  <span>Total Calls: {state.totalStepCalls}</span>
-                  <span>Successful Calls: {state.successfulStepCalls}</span>
-                  <span>Unsuccessful Calls: {state.unsuccessfulStepCalls}</span>
+              <div className={'flex gap-5 justify-between text-light-blue'}>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Total Calls: {state.totalStepCalls}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Successful Calls: {state.successfulStepCalls}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Unsuccessful Calls: {state.unsuccessfulStepCalls}</span>
               </div>
-              <div>
-                  <button onClick={() => handleOnTest()}>Test</button>
-                  <button disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</button>
-                  <button disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</button>
-                  <button disabled={!state.stopped} onClick={() => handleStartStep()}>Start</button>
-                  <button disabled={state.stopped} onClick={() => handleStopStep()}>Stop</button>
-                  <button >
+              <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit'}>
+                  <Button onClick={() => handleOnTest()}>Test</Button>
+                  <Button disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</Button>
+                  <Button disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</Button>
+                  <Button disabled={!state.stopped} onClick={() => handleStartStep()}>Start</Button>
+                  <Button disabled={state.stopped} onClick={() => handleStopStep()}>Stop</Button>
+                  <Button >
                       <FiSettings onClick={() => setConfigurationsModal(true)}/>
-                  </button>
+                  </Button>
                 {
                   configurationsModal &&
                     <Modal
@@ -336,14 +338,14 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
                   <span>Triggered: {jobState.triggered}</span>
                   <span>Status: {jobState.status}</span>
               </div>
-              <div>
-                  <button onClick={() => handleOnTrigger()}>Trigger</button>
-                  <button disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</button>
-                  <button disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</button>
-                  <button disabled={jobState.stopped} onClick={() => handleStopStep()}>Stop</button>
-                  <button >
+              <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit'}>
+                  <Button onClick={() => handleOnTrigger()}>Trigger</Button>
+                  <Button disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</Button>
+                  <Button disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</Button>
+                  <Button disabled={jobState.stopped} onClick={() => handleStopStep()}>Stop</Button>
+                  <Button >
                       <FiSettings onClick={() => setConfigurationsModal(true)}/>
-                  </button>
+                  </Button>
                 {
                   configurationsModal &&
                     <Modal
