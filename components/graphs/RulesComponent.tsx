@@ -21,7 +21,7 @@ export default function RulesComponent({connection}: RulesComponentProps) {
   const [selectedType, setSelectedType] = useState({} as Rule)
   const [existingRules, setExistingRules] = useState({} as any)
 
-  const prefix = connection.secure ? 'https' : 'http'
+  const prefix = connection?.secure ? 'https' : 'http'
 
   const getRules = () => {
     return fetch(`${prefix}://${connection?.address}/jvm/notifications/rules`,

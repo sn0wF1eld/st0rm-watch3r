@@ -41,7 +41,7 @@ export default function ConnectionsTable() {
               <td className='p-3 text-center'>{connection.name}</td>
               <td className='p-3 text-center'>{connection.address}</td>
               <td className="p-3 text-center">
-                {connection.secure ? <BsCheckLg /> : <BsXLg/>
+                {connection?.secure ? <BsCheckLg /> : <BsXLg/>
                 }</td>
               <td className='p-3 text-center'>
                 <Button styles='bg-red-500 hover:bg-red-600 font-bold text-center'

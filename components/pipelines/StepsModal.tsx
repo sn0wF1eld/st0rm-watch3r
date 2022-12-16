@@ -69,8 +69,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   const [bufferSizeModal, setBufferSizeModal] = useState(false)
   const [configurationsModal, setConfigurationsModal] = useState(false)
 
-  const linkPrefix = connection.secure ? 'https' : 'http'
-  const socketPrefix = connection.secure ? 'wss' : 'ws'
+  const linkPrefix = connection?.secure ? 'https' : 'http'
+  const socketPrefix = connection?.secure ? 'wss' : 'ws'
 
   useEffect(() => {
     if (!connection || !step) return

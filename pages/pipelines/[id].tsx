@@ -7,7 +7,6 @@ import Modal from "../../components/modal/Modal";
 import Stats from "../../components/pipelines/Stats";
 import Actions from "../../components/pipelines/Actions";
 import {getEdgeColor, getNodeColor, Pipeline} from "../../components/pipelines/utils/PipelinesUtils";
-import ColorCodes from "../../components/pipelines/ColorCodes";
 import LoadingIcon from "../../components/layout/LoadingIcon";
 import StepsModal from "../../components/pipelines/StepsModal";
 import {FiSettings} from "react-icons/fi";
@@ -61,7 +60,7 @@ export default function Pipelines() {
   const onStopSystem = () => {
     setStopSystemModal(false)
 
-    fetch(`${connection.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/system/stop`,
+    fetch(`${connection?.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/system/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -95,7 +94,7 @@ export default function Pipelines() {
   useEffect(() => {
     if (!connection) return
 
-    const ws = new WebSocket(`${connection.secure ? 'wss' : 'ws'}://${connection?.address}/sn0wst0rm/api/1/pipelines/transactions/count`)
+    const ws = new WebSocket(`${connection?.secure ? 'wss' : 'ws'}://${connection?.address}/sn0wst0rm/api/1/pipelines/transactions/count`)
 
     ws.onmessage = (event) => {
       const json = JSON.parse(event.data)
@@ -158,22 +157,22 @@ export default function Pipelines() {
     }, 200)
   }, [pipelines])
 
-const millisecondsToDateString = (ms: number) => {
-  if (ms != null) {
-    let date = new Date (ms);
-    let dayOfYear = date.toDateString();
-    let time = date.toLocaleTimeString()
+  const millisecondsToDateString = (ms: number) => {
+    if (ms != null) {
+      let date = new Date(ms);
+      let dayOfYear = date.toDateString();
+      let time = date.toLocaleTimeString()
 
-    return dayOfYear + ' ' + time;
-  }
+      return dayOfYear + ' ' + time;
+    }
 
-  return null;
-};
+    return null;
+  };
 
   useEffect(() => {
     if (!connection?.address) return
     const interval = setInterval(() => {
-      fetch(`${connection.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/pipelines`,
+      fetch(`${connection?.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/pipelines`,
         {method: 'GET', headers: {'content-type': 'application/json'}}
       ).then((res: any) => {
         res.json()
@@ -215,8 +214,8 @@ const millisecondsToDateString = (ms: number) => {
   )
   if (loading) return <LoadingIcon/>
   return <div className={'flex flex-col p-5 ml-6 mr-6'}>
-    <div className={'flex gap-10'}>
-      <Button onClick={() => handleOnStop()} styles={'bg-red text-white'}>Stop
+    <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit'}>
+      <Button onClick={() => handleOnStop()} styles={'m-0 bg-red-500 hover:bg-red-600 font-bold'}>Stop
         System
       </Button>
       {stopSystemModal &&
@@ -227,9 +226,9 @@ const millisecondsToDateString = (ms: number) => {
                   <button onClick={() => setStopSystemModal(false)}>Cancel</button>
               </div>
           </Modal>}
-      <button >
+      <Button styles={'font-bold text-16 m-0'}>
         <FiSettings onClick={() => setSystemConfigurationsModal(true)}/>
-      </button>
+      </Button>
       {
         systemConfigurationsModal &&
           <Modal
@@ -240,7 +239,7 @@ const millisecondsToDateString = (ms: number) => {
               <SystemConfigModal connection={connection}/>
           </Modal>
       }
-      <UptimeComponent connection={connection} />
+      <UptimeComponent connection={connection}/>
     </div>
     {
       pipelines.map((pipeline: Pipeline) =>
@@ -290,6 +289,5 @@ const millisecondsToDateString = (ms: number) => {
         >
             <StepsModal connection={connection} step={selectedEdge} isEdge={true} status={selectedPipelineStatus}/>
         </Modal>}
-    <ColorCodes/>
   </div>
 }

@@ -27,8 +27,8 @@ ChartJS.register(
 export default function GraphsContainer(props: GraphsContainerProps) {
   const [state, setState] = useState([] as GraphData[])
   const [lastValue, setLastValue] = useState({} as GraphData)
-  const socketPrefix = props.connection.secure ? 'wss' : 'ws'
-  const linkPrefix = props.connection.secure ? 'https' : 'http'
+  const socketPrefix = props.connection?.secure ? 'wss' : 'ws'
+  const linkPrefix = props.connection?.secure ? 'https' : 'http'
 
   useEffect(() => {
     const ws = new WebSocket(`${socketPrefix}://${props.connection?.address}/jvm/info`)

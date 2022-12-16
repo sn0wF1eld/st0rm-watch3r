@@ -44,7 +44,7 @@ export default function NotificationComponent() {
   useEffect(() => {
 
     connections.forEach((connection: Connection) => {
-      const prefix = connection.secure ? 'wss' : 'ws'
+      const prefix = connection?.secure ? 'wss' : 'ws'
       const ws = new WebSocket(`${prefix}://${connection?.address}/jvm/notifications`)
 
       ws.onmessage = (event) => {

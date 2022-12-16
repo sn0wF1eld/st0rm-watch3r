@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import Modal from "../modal/Modal";
 import FailedTransactionComponent from "./FailedTransactionComponent";
 import LoadingIcon from "../layout/LoadingIcon";
+import Button from "../layout/Button";
 
 type ActionsProps = {
   connection: Connection
@@ -21,7 +22,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
   const [txData, setTxData] = useState({} as any)
   const [loading, setLoading] = useState(false)
 
-  const url = `${connection.secure ? 'https' : 'http'}://${connection.address}`
+  const url = `${connection?.secure ? 'https' : 'http'}://${connection.address}`
 
   const fetchFailed = () => {
     setLoading(true)
@@ -123,21 +124,21 @@ export default function Actions({connection, id, status}: ActionsProps) {
   }
 
   return (
-    <div className={'flex gap-10 justify-center'}>
-      <button
-        className={'rounded text-white font-bold p-3 bg-blue-500 cursor-pointer'}
+    <div className={'flex gap-10 justify-center bg-card p-3 border border-solid border-gray-400 w-fit m-auto'}>
+      <Button
+        styles={'m-0 font-bold p-3 bg-light-blue cursor-pointer'}
         onClick={() => handleStart()}
       >
         Start
-      </button>
-      <button
-        className={'rounded text-white font-bold p-3 bg-blue-500 cursor-pointer'}
+      </Button>
+      <Button
+        styles={'m-0 font-bold p-3 bg-light-blue cursor-pointer'}
         onClick={() => handleStop()}
       >
         Stop
-      </button>
-      <button
-        className={'rounded text-white font-bold p-3 bg-red-500 cursor-pointer'}
+      </Button>
+      <Button
+        styles={'m-0 font-bold p-3 bg-red-500 hover:bg-red-600 cursor-pointer'}
         onClick={() => handleFailed()}
       >
         Failed
@@ -176,13 +177,13 @@ export default function Actions({connection, id, status}: ActionsProps) {
                     </ul>
 
                 </div>
-                <div>
-                    <button disabled={status === 'offline'} onClick={() => onReplay(selectedTx)}>Replay</button>
-                    <button disabled={status === 'offline'} onClick={() => onReplayAll()}>Replay All</button>
+                <div className={'flex justify-center gap-10'}>
+                    <Button disabled={status === 'offline'} onClick={() => onReplay(selectedTx)}>Replay</Button>
+                    <Button disabled={status === 'offline'} onClick={() => onReplayAll()}>Replay All</Button>
                 </div>
             </Modal>
         }
-      </button>
+      </Button>
     </div>
   )
 
