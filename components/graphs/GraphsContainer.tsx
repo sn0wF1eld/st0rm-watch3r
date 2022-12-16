@@ -27,10 +27,11 @@ ChartJS.register(
 export default function GraphsContainer(props: GraphsContainerProps) {
   const [state, setState] = useState([] as GraphData[])
   const [lastValue, setLastValue] = useState({} as GraphData)
-
+  const socketPrefix = props.connection.secure ? 'wss' : 'ws'
+  const linkPrefix = props.connection.secure ? 'https' : 'http'
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://${props.connection?.address}/jvm/info`)
+    const ws = new WebSocket(`${socketPrefix}://${props.connection?.address}/jvm/info`)
 
     ws.onmessage = (event) => {
       const json = JSON.parse(event.data)
@@ -45,7 +46,7 @@ export default function GraphsContainer(props: GraphsContainerProps) {
   }, [props.connection])
 
   const onGcCollect = () => {
-    fetch(`http://${props.connection?.address}/jvm/gc-collect`,
+    fetch(`${linkPrefix}://${props.connection?.address}/jvm/gc-collect`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -53,7 +54,7 @@ export default function GraphsContainer(props: GraphsContainerProps) {
   }
 
   const onHeapDump = () => {
-    fetch(`http://${props.connection?.address}/jvm/heap-dump/dump`,
+    fetch(`${linkPrefix}://${props.connection?.address}/jvm/heap-dump/dump`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -61,7 +62,7 @@ export default function GraphsContainer(props: GraphsContainerProps) {
   }
 
   const onHeapDownload = () => {
-    fetch(`http://${props.connection?.address}/jvm/heap-dump/download`,
+    fetch(`${linkPrefix}://${props.connection?.address}/jvm/heap-dump/download`,
       {method: 'GET', headers: {'response-type': 'blob'}}
     )
       .then(res => {

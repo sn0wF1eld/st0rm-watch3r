@@ -21,7 +21,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
   const [txData, setTxData] = useState({} as any)
   const [loading, setLoading] = useState(false)
 
-  const url = `http://${connection.address}`
+  const url = `${connection.secure ? 'https' : 'http'}://${connection.address}`
 
   const fetchFailed = () => {
     setLoading(true)

@@ -29,7 +29,8 @@ export default function ShardComponent({shard}: ShardProps) {
 
     console.log('resp', connection)
     setLoading(true)
-    fetch(`http://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}`,
+    const prefix = connection.secure ? 'https' : 'http'
+    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     ).then((res: any) => {
       res.json()

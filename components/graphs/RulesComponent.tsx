@@ -21,8 +21,10 @@ export default function RulesComponent({connection}: RulesComponentProps) {
   const [selectedType, setSelectedType] = useState({} as Rule)
   const [existingRules, setExistingRules] = useState({} as any)
 
+  const prefix = connection.secure ? 'https' : 'http'
+
   const getRules = () => {
-    return fetch(`http://${connection?.address}/jvm/notifications/rules`,
+    return fetch(`${prefix}://${connection?.address}/jvm/notifications/rules`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     )
       .then(res => res.json())
@@ -36,7 +38,7 @@ export default function RulesComponent({connection}: RulesComponentProps) {
 
   const onSubmit = (data: any) => {
     reset()
-    fetch(`http://${connection?.address}/jvm/notifications/rule`,
+    fetch(`${prefix}://${connection?.address}/jvm/notifications/rule`,
       {
         method: 'POST',
         headers: {'content-type': 'application/json'},
@@ -57,7 +59,7 @@ export default function RulesComponent({connection}: RulesComponentProps) {
 
   const onReset = () => {
     reset()
-    fetch(`http://${connection?.address}/jvm/notifications/rule/${selectedType.field}/reset`,
+    fetch(`${prefix}://${connection?.address}/jvm/notifications/rule/${selectedType.field}/reset`,
       {
         method: 'PUT',
         headers: {'content-type': 'application/json'}

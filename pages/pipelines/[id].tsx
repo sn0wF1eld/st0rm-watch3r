@@ -61,7 +61,7 @@ export default function Pipelines() {
   const onStopSystem = () => {
     setStopSystemModal(false)
 
-    fetch(`http://${connection?.address}/sn0wst0rm/api/1/system/stop`,
+    fetch(`${connection.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/system/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -95,7 +95,7 @@ export default function Pipelines() {
   useEffect(() => {
     if (!connection) return
 
-    const ws = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/pipelines/transactions/count`)
+    const ws = new WebSocket(`${connection.secure ? 'wss' : 'ws'}://${connection?.address}/sn0wst0rm/api/1/pipelines/transactions/count`)
 
     ws.onmessage = (event) => {
       const json = JSON.parse(event.data)
@@ -173,7 +173,7 @@ const millisecondsToDateString = (ms: number) => {
   useEffect(() => {
     if (!connection?.address) return
     const interval = setInterval(() => {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/pipelines`,
+      fetch(`${connection.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/pipelines`,
         {method: 'GET', headers: {'content-type': 'application/json'}}
       ).then((res: any) => {
         res.json()

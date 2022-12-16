@@ -19,6 +19,7 @@ function Form() {
 
       return
     }
+    console.log(connection)
     addConnection(connection)
     reset()
   }
@@ -43,6 +44,15 @@ function Form() {
             {errors.address && errorElement}
           </div>
           <input hidden value={uuid()} {...register('id')}/>
+          <div className="flex items-center">
+            <input id="default-checkbox" type="checkbox" value=""
+                   className="w-6 h-6 bg-gray-100 accent-light-blue rounded border-gray-300"
+                   {...register('secure')}
+            />
+              <label htmlFor="default-checkbox" className="ml-2 font-medium text-light-blue">
+                Secure Connection
+              </label>
+          </div>
           <Button styles='bg-light-blue hover:bg-dark-blue'>
               <span className='flex font-bold'>
                 Add <TbPlugConnected className={'text-16'}/>

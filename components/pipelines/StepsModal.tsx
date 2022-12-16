@@ -69,12 +69,15 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   const [bufferSizeModal, setBufferSizeModal] = useState(false)
   const [configurationsModal, setConfigurationsModal] = useState(false)
 
+  const linkPrefix = connection.secure ? 'https' : 'http'
+  const socketPrefix = connection.secure ? 'wss' : 'ws'
+
   useEffect(() => {
     if (!connection || !step) return
 
     if (!isEdge) {
-      const ws = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/statistics`)
-      const ws2 = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/state`)
+      const ws = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/statistics`)
+      const ws2 = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/state`)
 
       ws.onmessage = (event) => {
         const json = JSON.parse(event.data)
@@ -100,8 +103,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
       }
     }
 
-    const ws = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/statistics`)
-    const ws2 = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/state`)
+    const ws = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/statistics`)
+    const ws2 = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/state`)
 
     ws.onmessage = (event) => {
       const json = JSON.parse(event.data)
@@ -125,7 +128,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
 
   const onSubmit = (data: any) => {
     if (threadModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/threads`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/threads`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -135,7 +138,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
         .catch(err => console.log(err))
     }
     if (pollFrequencyModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/poll-frequency`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/poll-frequency`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -148,7 +151,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
         .catch(err => console.log(err))
     }
     if (scheduleModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/schedule`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/schedule`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -160,7 +163,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
         .catch(err => console.log(err))
     }
     if (testModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/test`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/test`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -184,7 +187,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
         });
     }
     if (bufferSizeModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/set-buffer-size`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/set-buffer-size`,
         {
           method: 'PUT',
           headers: {'content-type': 'application/json'},
@@ -224,7 +227,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     setModalTitle('Poll Frequency')
   }
   const handleOnTrigger = () => {
-    fetch(`http://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/trigger`,
+    fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/trigger`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -239,7 +242,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   }
 
   const handleStartStep = () => {
-    fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/start`,
+    fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/start`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -248,7 +251,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   }
 
   const handleStopStep = () => {
-    fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/stop`,
+    fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))

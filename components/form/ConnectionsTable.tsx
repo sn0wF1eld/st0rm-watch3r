@@ -3,6 +3,7 @@ import {TbPlugConnectedX} from "react-icons/tb";
 import Modal from "../modal/Modal";
 import {useState} from "react";
 import Button from "../layout/Button";
+import {BsCheckLg, BsXLg} from "react-icons/bs";
 
 export default function ConnectionsTable() {
   const {removeConnection, connections} = useContextProvider()
@@ -29,6 +30,7 @@ export default function ConnectionsTable() {
         <tr className='text-light-blue'>
           <th className={'p-3'}>Name</th>
           <th className={'p-3'}>IP</th>
+          <th className={'p-3'}>Secure</th>
           <th className={'p-3'}>Actions</th>
         </tr>
         </thead>
@@ -38,6 +40,9 @@ export default function ConnectionsTable() {
             <tr key={connection.id} className='text-light-blue p-3 bg-card'>
               <td className='p-3 text-center'>{connection.name}</td>
               <td className='p-3 text-center'>{connection.address}</td>
+              <td className="p-3 text-center">
+                {connection.secure ? <BsCheckLg /> : <BsXLg/>
+                }</td>
               <td className='p-3 text-center'>
                 <Button styles='bg-red-500 hover:bg-red-600 font-bold text-center'
                         onClick={() => confirmRemoveConnection(connection)}>
