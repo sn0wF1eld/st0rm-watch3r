@@ -5,7 +5,7 @@ import StepsForm from "./StepsForm";
 import {FiSettings} from "react-icons/fi";
 import SystemConfigModal from "./SystemConfigModal";
 import Button from "../layout/Button";
-import {trimNumber} from "../graphs/utils/GraphUtils";
+import {showToastFailMessage, showToastSuccessMessage, trimNumber} from "../graphs/utils/GraphUtils";
 
 type StepProps = {
   connection: Connection,
@@ -136,8 +136,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
           headers: {'content-type': 'application/json'},
           body: JSON.stringify({threads: parseInt(data.numericValue, 10)})
         })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(() => showToastSuccessMessage('Threads set successfully'))
+        .catch(() => showToastFailMessage('Failed to set Threads'))
     }
     if (pollFrequencyModal) {
       fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/poll-frequency`,
@@ -149,8 +149,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
             timeUnit: data.timeUnit
           })
         })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(() => showToastSuccessMessage('Poll Frequency set successfully'))
+        .catch(() => showToastFailMessage('Failed to set Poll Frequency'))
     }
     if (scheduleModal) {
       fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/schedule`,
@@ -161,8 +161,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
             schedule: data.cronJobPattern,
           })
         })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(() => showToastSuccessMessage('Job scheduled successfully'))
+        .catch(() => showToastFailMessage('Failed to schedule job'))
     }
     if (testModal) {
       fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/test`,
@@ -197,8 +197,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
             bufferSize: parseInt(data.numericValue, 10),
           })
         })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(() => showToastSuccessMessage('Buffer Size set successfully'))
+        .catch(() => showToastFailMessage('Failed to set Buffer Size'))
     }
 
   }

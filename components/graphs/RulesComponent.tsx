@@ -4,8 +4,11 @@ import {
   dropdownElement,
   errorElement,
   inputErrorStyle,
-  inputStyle, Rule,
-  rulesTypes
+  inputStyle,
+  Rule,
+  rulesTypes,
+  showToastFailMessage,
+  showToastSuccessMessage
 } from "./utils/GraphUtils";
 import {Connection} from "../layout/provider/Context";
 import {useEffect, useState} from "react";
@@ -53,9 +56,11 @@ export default function RulesComponent({connection}: RulesComponentProps) {
         if (res.ok) {
           getRules()
             .then(r => setExistingRules(r))
+          console.log('here', res.ok)
+          showToastSuccessMessage('Rule Set!')
         }
       })
-      .catch(err => console.log(err))
+      .catch(() => showToastFailMessage('Error setting Rules.'))
   }
 
   const onReset = () => {
@@ -87,8 +92,6 @@ export default function RulesComponent({connection}: RulesComponentProps) {
         onClick={() => setOpenDropdown(e => !e)}>
         {selectedType.name || 'Select Type'}
       </button>
-      {//TODO: add outside click close
-      }
       {openDropdown &&
           <div className="absolute z-10 w-72 mt-10 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700">
               <ul className="list-none py-1 px-0 text-sm text-gray-700 dark:text-gray-200">

@@ -1,4 +1,5 @@
 import {Connection} from "../../layout/provider/Context";
+import {toast} from "react-toastify";
 
 export type GraphsContainerProps = {
   connection: Connection,
@@ -73,4 +74,23 @@ export function handleArraySize(oldArray: any[]): any[] {
 export const trimNumber = (number: number) => {
   if (!number) return number
   return number.toFixed(3)
+}
+
+export const showToastSuccessMessage = (message: string) => {
+  console.log('toast')
+  toast.success(message, {
+    position: toast.POSITION.BOTTOM_CENTER
+  })
+}
+
+export const showToastFailMessage = (message: string) => {
+  toast.error(message, {
+    position: toast.POSITION.BOTTOM_CENTER
+  })
+}
+
+export const showToastInfoMessage = (message: string) => {
+  toast.info(message, {
+    position: toast.POSITION.BOTTOM_CENTER
+  })
 }

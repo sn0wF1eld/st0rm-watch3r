@@ -4,6 +4,7 @@ import Modal from "../modal/Modal";
 import FailedTransactionComponent from "./FailedTransactionComponent";
 import LoadingIcon from "../layout/LoadingIcon";
 import Button from "../layout/Button";
+import {showToastFailMessage, showToastSuccessMessage} from "../graphs/utils/GraphUtils";
 
 type ActionsProps = {
   connection: Connection
@@ -46,16 +47,16 @@ export default function Actions({connection, id, status}: ActionsProps) {
     fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/start`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+      .then(() => showToastSuccessMessage('Pipeline started'))
+      .catch(() => showToastFailMessage('Failed to start'))
   }
 
   const handleStop = () => {
     fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+      .then(() => showToastSuccessMessage('Pipeline Stopped'))
+      .catch(() => showToastFailMessage('Failed to start pipeline'))
 
   }
 
@@ -73,15 +74,16 @@ export default function Actions({connection, id, status}: ActionsProps) {
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => {
         if (res.ok) {
+          showToastSuccessMessage('Transaction replayed')
           fetchFailed()
             .then(json => {
               setLoading(false)
               setFailedTransactions(json)
             })
-            .catch(err => console.log(err))
+            .catch(() => showToastFailMessage('Failed to fetch transactions'))
         }
       })
-      .catch(err => console.log(err))
+      .catch(() => showToastFailMessage('Failed to replay transaction'))
   }
 
   const onReplayAll = () => {
@@ -93,6 +95,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
       })
       .then(res => {
         if (res.ok) {
+          showToastSuccessMessage('Replayed all transactions')
           fetchFailed()
             .then(json => {
               setLoading(false)
@@ -101,7 +104,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
             .catch(err => console.log(err))
         }
       })
-      .catch(err => console.log(err))
+      .catch(() => showToastFailMessage('Failed to replay transactions'))
   }
 
   const onSelectTx = (tx: string) => {

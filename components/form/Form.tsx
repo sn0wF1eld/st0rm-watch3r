@@ -5,6 +5,7 @@ import uuid from "react-uuid";
 import {TbPlugConnected} from "react-icons/tb";
 import Modal from "../modal/Modal";
 import Button from "../layout/Button";
+import {showToastInfoMessage} from "../graphs/utils/GraphUtils";
 
 
 function Form() {
@@ -19,7 +20,7 @@ function Form() {
 
       return
     }
-    console.log(connection)
+    showToastInfoMessage('Connection Added')
     addConnection(connection)
     reset()
   }

@@ -13,6 +13,7 @@ import {FiSettings} from "react-icons/fi";
 import SystemConfigModal from "../../components/pipelines/SystemConfigModal";
 import UptimeComponent from "../../components/pipelines/UptimeComponent";
 import Button from "../../components/layout/Button";
+import {showToastFailMessage, showToastSuccessMessage} from "../../components/graphs/utils/GraphUtils";
 
 export default function Pipelines() {
   const {connections} = useContextProvider()
@@ -65,8 +66,8 @@ export default function Pipelines() {
     fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/system/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+      .then(() => showToastSuccessMessage('System Stopped'))
+      .catch(() => showToastFailMessage('Failed to stop the system'))
   }
 
   const options = {

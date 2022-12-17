@@ -17,7 +17,7 @@ export default function Navbar() {
 
   const currentLink = usePathname()
 
-  const activeLink = 'text-white'
+  const activeLink = 'text-dark-blue'
 
   const handleOutsideClick = () => {
     setOpenChildren('')

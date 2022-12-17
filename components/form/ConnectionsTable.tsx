@@ -4,6 +4,7 @@ import Modal from "../modal/Modal";
 import {useState} from "react";
 import Button from "../layout/Button";
 import {BsCheckLg, BsXLg} from "react-icons/bs";
+import {showToastInfoMessage} from "../graphs/utils/GraphUtils";
 
 export default function ConnectionsTable() {
   const {removeConnection, connections} = useContextProvider()
@@ -19,6 +20,7 @@ export default function ConnectionsTable() {
     removeConnection(selectedConnection)
     setSelectedConnection({} as Connection)
     setOpenModal(false)
+    showToastInfoMessage('Connection Removed')
   }
 
   if (!connections.length) return <h3 className='text-center text-light-blue'>No connections to display</h3>
@@ -59,18 +61,18 @@ export default function ConnectionsTable() {
               title='Error Adding Connection'
               onClose={() => setOpenModal(false)}
           >
-              <h3 className="text-center text-light-blue">Delete connection {selectedConnection.name}?</h3>
+              <h3 className="text-center text-white">Delete connection {selectedConnection.name}?</h3>
               <div className='flex justify-end gap-10'>
-                <button className='p-2 rounded bg-red-500 cursor-pointer hover:bg-red-400' onClick={() => {
+                <Button styles='bg-light-blue hover:bg-dark-blue'
+                        onClick={() => handleRemoveConnection()}>
+                    Confirm
+                </Button>
+                <Button styles='bg-dark-blue' onClick={() => {
                   setOpenModal(false);
                   setSelectedConnection({} as Connection)
                 }}>
                     Cancel
-                </button>
-                <button className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'
-                        onClick={() => handleRemoveConnection()}>
-                    Delete
-                </button>
+                </Button>
               </div>
           </Modal>}
     </div>
