@@ -213,7 +213,7 @@ export default function Pipelines() {
           console.log(err)
           return setSystemStoppedModal(true)
         })
-    }, 5000)
+    }, 1000)
 
     return () => clearInterval(interval)
   }, [connection, pipelines])
