@@ -12,7 +12,7 @@ export default function Layout({children}: LayoutProps) {
         <LayoutProvider>
             <div className='h-screen bg-gradient-to-b from-gray-900 to-gray-700 overflow-auto flex flex-col gap-10 p-0'>
                 <Navbar/>
-                <main className={"w-auto pl-6 pr-6"}>
+                <main className={"w-auto pl-6 pr-6 flex-1"}>
                     {children}
                 </main>
               <Footer/>

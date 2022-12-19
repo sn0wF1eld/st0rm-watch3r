@@ -6,9 +6,8 @@ export default function Footer() {
   const [openAbout, setOpenAbout] = useState(false)
 
   return (
-    <div className={'absolute bottom-0 flex bg-opacity-30 backdrop-filter backdrop-blur px-2 gap-10 h-20 p-2 items-center'}>
+    <div className={'bottom-0 w-auto flex bg-opacity-30 backdrop-filter backdrop-blur px-2 gap-10 h-20 p-2 items-center'}>
       <Image
-        className='hover:animate-rotate'
         src={"/Icemanmelting-snowflake-logo-deisgn-final2.png"}
         alt={"logo"}
         width={40}
