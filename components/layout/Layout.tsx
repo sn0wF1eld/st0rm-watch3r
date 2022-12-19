@@ -1,6 +1,7 @@
 import {ReactNode} from "react";
 import LayoutProvider from "./provider/Context";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 type LayoutProps = {
     children: ReactNode
@@ -14,6 +15,7 @@ export default function Layout({children}: LayoutProps) {
                 <main className={"w-auto pl-6 pr-6"}>
                     {children}
                 </main>
+              <Footer/>
             </div>
         </LayoutProvider>
     )

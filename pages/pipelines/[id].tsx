@@ -13,7 +13,12 @@ import {FiSettings} from "react-icons/fi";
 import SystemConfigModal from "../../components/pipelines/SystemConfigModal";
 import UptimeComponent from "../../components/pipelines/UptimeComponent";
 import Button from "../../components/layout/Button";
-import {showToastFailMessage, showToastSuccessMessage} from "../../components/graphs/utils/GraphUtils";
+import {
+  showToastFailMessage,
+  showToastInfoMessage,
+  showToastSuccessMessage
+} from "../../components/graphs/utils/GraphUtils";
+import {AiFillWarning} from "react-icons/ai";
 
 export default function Pipelines() {
   const {connections} = useContextProvider()
@@ -135,7 +140,8 @@ export default function Pipelines() {
           id: pline.name,
           label: pline.name,
           type: pline.stepType,
-          size: 50
+          size: 50,
+          title: pline.stepType
         }]
 
         if (pline?.connectsTo?.length) {
@@ -145,7 +151,8 @@ export default function Pipelines() {
                 from: pline.name,
                 to: item.name,
                 length: 200,
-                title: item.name,
+                name: item.name,
+                title: `splittable: ${item.splittable} \nswitchable: ${item.switchable}`,
               }
             ]
             getNodesAndEdges(item)
@@ -211,6 +218,8 @@ export default function Pipelines() {
       })
         .catch(err => {
           console.log(err)
+          showToastInfoMessage('System Stopped')
+          clearInterval(interval)
           return setSystemStoppedModal(true)
         })
     }, 5000)
@@ -219,9 +228,9 @@ export default function Pipelines() {
   }, [connection, pipelines])
 
   if (systemStoppedModal) return (
-    <Modal open={systemStoppedModal} onClose={() => setSystemStoppedModal(false)} title={'Warning'}>
-      <div className={'text-red-400'}>System Stopped</div>
-    </Modal>
+    <div className={'text-red-400 items-center justify-center text-center'}>
+          <AiFillWarning className={'w-72 h-72 text-red-400 mx-auto'}/>
+    </div>
   )
   if (loading || !connection?.address || !pipelinesToRender) return <LoadingIcon/>
   return <div className={'flex flex-col p-5 ml-6 mr-6'}>
@@ -232,11 +241,11 @@ export default function Pipelines() {
       {stopSystemModal &&
           <Modal open={stopSystemModal} onClose={() => setStopSystemModal(false)} title={'Stop System'}>
               <div className={'flex flex-col gap-10'}>
-                <div className={'text-white'}>Stopping the system will require manual restart</div>
-                <div className={'flex justify-center'}>
-                    <Button styles={'bg-light-blue'} onClick={() => onStopSystem()}>Confirm</Button>
-                    <Button styles={'bg-dark-blue'} onClick={() => setStopSystemModal(false)}>Cancel</Button>
-                </div>
+                  <div className={'text-white'}>Stopping the system will require manual restart</div>
+                  <div className={'flex justify-center'}>
+                      <Button styles={'bg-light-blue'} onClick={() => onStopSystem()}>Confirm</Button>
+                      <Button styles={'bg-dark-blue'} onClick={() => setStopSystemModal(false)}>Cancel</Button>
+                  </div>
               </div>
           </Modal>}
       <Button styles={'font-bold bg-light-blue text-16 m-0'}>
@@ -296,7 +305,7 @@ export default function Pipelines() {
     {openModal && isEdge &&
         <Modal
             open={openModal}
-            title={selectedEdge.title}
+            title={selectedEdge.name}
             onClose={handleCloseModal}
             noOverlayClick={true}
         >

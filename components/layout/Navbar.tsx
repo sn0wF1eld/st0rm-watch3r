@@ -28,7 +28,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className=" p-0 bg-opacity-30 backdrop-filter backdrop-blur px-2 w-auto border-b border-gray-200 sticky top-0 z-20">
+      className="p-0 bg-opacity-30 backdrop-filter backdrop-blur px-2 w-auto border-b border-gray-200 sticky top-0 z-20">
       <div className="flex items-center gap-10 w-full">
         <Link
           href='/'

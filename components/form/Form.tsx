@@ -20,7 +20,9 @@ function Form() {
 
       return
     }
-    showToastInfoMessage('Connection Added')
+    connection.address = connection.address.replace(/(^\w+:|^)\/\//, '').trim()
+    connection.address = connection.address[connection.address.length - 1] === '/' ? connection.address.slice(0, -1) : connection.address
+      showToastInfoMessage('Connection Added')
     addConnection(connection)
     reset()
   }
