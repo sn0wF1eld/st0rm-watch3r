@@ -222,7 +222,7 @@ export default function Pipelines() {
           clearInterval(interval)
           return setSystemStoppedModal(true)
         })
-    }, 5000)
+    }, 1000)
 
     return () => clearInterval(interval)
   }, [connection, pipelines])
