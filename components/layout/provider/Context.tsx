@@ -12,6 +12,7 @@ export type Connection = {
   id: string
   address: string
   name: string
+  secure: boolean
 }
 
 const Context = createContext<ContextProps | any>({

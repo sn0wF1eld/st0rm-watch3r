@@ -2,6 +2,9 @@ import {Connection, useContextProvider} from "../layout/provider/Context";
 import {TbPlugConnectedX} from "react-icons/tb";
 import Modal from "../modal/Modal";
 import {useState} from "react";
+import Button from "../layout/Button";
+import {BsCheckLg, BsXLg} from "react-icons/bs";
+import {showToastInfoMessage} from "../graphs/utils/GraphUtils";
 
 export default function ConnectionsTable() {
   const {removeConnection, connections} = useContextProvider()
@@ -17,30 +20,35 @@ export default function ConnectionsTable() {
     removeConnection(selectedConnection)
     setSelectedConnection({} as Connection)
     setOpenModal(false)
+    showToastInfoMessage('Connection Removed')
   }
 
   if (!connections.length) return <h3 className='text-center text-light-blue'>No connections to display</h3>
 
   return (
-    <div className='flex rounded p-5 w-auto'>
-      <table className='w-full rounded table-auto border-spacing-3 border-separate'>
+    <div className='flex w-auto'>
+      <table className='w-full table-auto border-separate'>
         <thead>
         <tr className='text-light-blue'>
-          <th>Name</th>
-          <th>IP</th>
-          <th>Actions</th>
+          <th className={'p-3'}>Name</th>
+          <th className={'p-3'}>IP</th>
+          <th className={'p-3'}>Secure</th>
+          <th className={'p-3'}>Actions</th>
         </tr>
         </thead>
         <tbody>
         {
           connections.map((connection: Connection) => (
-            <tr key={connection.id} className='rounded text-white p-5 bg-blue-700 hover:bg-blue-500'>
-              <td className='p-3 rounded text-center'>{connection.name}</td>
-              <td className='p-3 rounded text-center'>{connection.address}</td>
-              <td className='p-3 rounded text-center'>
-                <button className='p-2 rounded bg-red-500 cursor-pointer hover:bg-red-400'
+            <tr key={connection.id} className='text-light-blue p-3 bg-card'>
+              <td className='p-3 text-center'>{connection.name}</td>
+              <td className='p-3 text-center'>{connection.address}</td>
+              <td className="p-3 text-center">
+                {connection?.secure ? <BsCheckLg /> : <BsXLg/>
+                }</td>
+              <td className='p-3 text-center'>
+                <Button styles='bg-red-500 hover:bg-red-600 font-bold text-center'
                         onClick={() => confirmRemoveConnection(connection)}>
-                  <TbPlugConnectedX/></button>
+                  Remove <TbPlugConnectedX className={'text-16'}/></Button>
               </td>
             </tr>
           ))
@@ -53,18 +61,18 @@ export default function ConnectionsTable() {
               title='Error Adding Connection'
               onClose={() => setOpenModal(false)}
           >
-              <h3 className="text-center text-light-blue">Delete connection {selectedConnection.name}?</h3>
+              <h3 className="text-center text-white">Delete connection {selectedConnection.name}?</h3>
               <div className='flex justify-end gap-10'>
-                <button className='p-2 rounded bg-red-500 cursor-pointer hover:bg-red-400' onClick={() => {
+                <Button styles='bg-light-blue hover:bg-dark-blue'
+                        onClick={() => handleRemoveConnection()}>
+                    Confirm
+                </Button>
+                <Button styles='bg-dark-blue' onClick={() => {
                   setOpenModal(false);
                   setSelectedConnection({} as Connection)
                 }}>
                     Cancel
-                </button>
-                <button className='p-2 rounded bg-green-600 hover:cursor-pointer hover:bg-green-400'
-                        onClick={() => handleRemoveConnection()}>
-                    Delete
-                </button>
+                </Button>
               </div>
           </Modal>}
     </div>

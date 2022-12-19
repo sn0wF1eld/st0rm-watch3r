@@ -51,11 +51,11 @@ function Modal({ open, onClose, title, children, noOverlayClick }: ModalProps) {
         open && <ModalHoc selector='#modal'>
               <Overlay />
               <div
-                  className="fixed top-1/2 left-1/2 bg-main-bg p-20 pb-10 pt-14 rounded border-1px border-solid border-blue-900 z-30 -translate-x-1/2 -translate-y-1/2"
+                  className="fixed top-1/2 left-1/2 bg-gray-900 p-20 pb-10 pt-14 rounded border-1px border-solid border-gray-400 z-30 -translate-x-1/2 -translate-y-1/2"
                   ref={modalRef}
               >
                   <a href='#' className='absolute text-light-blue top-2 right-2' onClick={handleCloseClick}><AiFillCloseCircle/></a>
-                  <div className='w-full text-lg text-white'>
+                  <div className='w-full text-lg text-white text-center mb-3 -mt-3'>
                     {title}
                   </div>
                   <div>

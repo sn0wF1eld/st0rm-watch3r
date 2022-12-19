@@ -3,6 +3,8 @@ import {useEffect, useState} from "react";
 import Modal from "../modal/Modal";
 import FailedTransactionComponent from "./FailedTransactionComponent";
 import LoadingIcon from "../layout/LoadingIcon";
+import Button from "../layout/Button";
+import {showToastFailMessage, showToastSuccessMessage} from "../graphs/utils/GraphUtils";
 
 type ActionsProps = {
   connection: Connection
@@ -21,7 +23,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
   const [txData, setTxData] = useState({} as any)
   const [loading, setLoading] = useState(false)
 
-  const url = `http://${connection.address}`
+  const url = `${connection?.secure ? 'https' : 'http'}://${connection.address}`
 
   const fetchFailed = () => {
     setLoading(true)
@@ -45,16 +47,16 @@ export default function Actions({connection, id, status}: ActionsProps) {
     fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/start`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+      .then(() => showToastSuccessMessage('Pipeline started'))
+      .catch(() => showToastFailMessage('Failed to start'))
   }
 
   const handleStop = () => {
     fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+      .then(() => showToastSuccessMessage('Pipeline Stopped'))
+      .catch(() => showToastFailMessage('Failed to start pipeline'))
 
   }
 
@@ -72,15 +74,16 @@ export default function Actions({connection, id, status}: ActionsProps) {
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => {
         if (res.ok) {
+          showToastSuccessMessage('Transaction replayed')
           fetchFailed()
             .then(json => {
               setLoading(false)
               setFailedTransactions(json)
             })
-            .catch(err => console.log(err))
+            .catch(() => showToastFailMessage('Failed to fetch transactions'))
         }
       })
-      .catch(err => console.log(err))
+      .catch(() => showToastFailMessage('Failed to replay transaction'))
   }
 
   const onReplayAll = () => {
@@ -92,6 +95,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
       })
       .then(res => {
         if (res.ok) {
+          showToastSuccessMessage('Replayed all transactions')
           fetchFailed()
             .then(json => {
               setLoading(false)
@@ -100,7 +104,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
             .catch(err => console.log(err))
         }
       })
-      .catch(err => console.log(err))
+      .catch(() => showToastFailMessage('Failed to replay transactions'))
   }
 
   const onSelectTx = (tx: string) => {
@@ -123,21 +127,23 @@ export default function Actions({connection, id, status}: ActionsProps) {
   }
 
   return (
-    <div className={'flex gap-10 justify-center'}>
-      <button
-        className={'rounded text-white font-bold p-3 bg-blue-500 cursor-pointer'}
+    <div className={'flex gap-10 justify-center bg-card p-3 border border-solid border-gray-400 w-fit m-auto'}>
+      <Button
+        styles={'m-0 font-bold p-3 bg-light-blue cursor-pointer'}
         onClick={() => handleStart()}
+        disabled={status === 'online'}
       >
         Start
-      </button>
-      <button
-        className={'rounded text-white font-bold p-3 bg-blue-500 cursor-pointer'}
+      </Button>
+      <Button
+        styles={'m-0 font-bold p-3 bg-light-blue cursor-pointer'}
         onClick={() => handleStop()}
+        disabled={status === 'offline'}
       >
         Stop
-      </button>
-      <button
-        className={'rounded text-white font-bold p-3 bg-red-500 cursor-pointer'}
+      </Button>
+      <Button
+        styles={'m-0 font-bold p-3 bg-red-500 hover:bg-red-600 cursor-pointer'}
         onClick={() => handleFailed()}
       >
         Failed
@@ -176,13 +182,13 @@ export default function Actions({connection, id, status}: ActionsProps) {
                     </ul>
 
                 </div>
-                <div>
-                    <button disabled={status === 'offline'} onClick={() => onReplay(selectedTx)}>Replay</button>
-                    <button disabled={status === 'offline'} onClick={() => onReplayAll()}>Replay All</button>
+                <div className={'flex justify-center gap-10'}>
+                    <Button styles={'bg-light-blue'} disabled={status === 'offline'} onClick={() => onReplay(selectedTx)}>Replay</Button>
+                    <Button styles={'bg-light-blue'} disabled={status === 'offline'} onClick={() => onReplayAll()}>Replay All</Button>
                 </div>
             </Modal>
         }
-      </button>
+      </Button>
     </div>
   )
 

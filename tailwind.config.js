@@ -10,24 +10,24 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      display: ['Open Sans', 'sans-serif'],
-      body: ['Open Sans', 'sans-serif'],
+      display: "'Open Sans', 'sans-serif'",
+      body: "'Open Sans', 'sans-serif'",
     },
     extend: {
       fontSize: {
         11: '11px',
         13: '13px',
         14: '14px',
+        16: '16px',
         20: '20px',
-        '2em': '2em'
       },
       backgroundColor: {
         'main-bg': '#20232A',
         'secondary-bg': '#33373E',
         'light-gray': '#F7F7F7',
-        'half-transparent': 'rgba(0, 0, 0, 0.5)',
         'button-bg': '#262a32',
-        'cyan-blue': '#42c8f1'
+        'cyan-blue': '#42c8f1',
+        'card': '#334155'
       },
       borderWidth: {
         1: '1px',
@@ -57,8 +57,8 @@ module.exports = {
       },
       keyframes: {
         customRotate: {
-          '0%': { transform: 'transform: rotateY(0deg)' },
-          '100%': { transform: 'rotateY(360deg)' },
+          "0%": { transform: 'rotateY(0deg)' },
+          "100%": { transform: 'rotateY(360deg)' },
         }
       },
       animation: {

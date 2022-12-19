@@ -16,5 +16,5 @@ export default function SystemConfigModal({connection, step}: SystemConfigProps)
       .then(res => setConfigurations(res))
       .catch(err => console.log(err))
   }, [])
-  return <div>{JSON.stringify(configurations, undefined, 2)}</div>
+  return <textarea className={'bg-gray-900 text-white'} rows={15} cols={80} disabled={true} value={JSON.stringify(configurations, undefined, 2)}/>
 }

@@ -3,7 +3,7 @@ import ConnectionsTable from "../components/form/ConnectionsTable";
 
 export default function Home() {
   return (
-    <div className='flex flex-col rounded p-5 bg-secondary-bg w-auto ml-6 mr-6'>
+    <div className='flex flex-col gap-10 box-content p-5 w-auto'>
       <Form/>
       <ConnectionsTable/>
     </div>

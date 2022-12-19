@@ -4,6 +4,8 @@ import Modal from "../modal/Modal";
 import StepsForm from "./StepsForm";
 import {FiSettings} from "react-icons/fi";
 import SystemConfigModal from "./SystemConfigModal";
+import Button from "../layout/Button";
+import {showToastFailMessage, showToastSuccessMessage, trimNumber} from "../graphs/utils/GraphUtils";
 
 type StepProps = {
   connection: Connection,
@@ -69,12 +71,15 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   const [bufferSizeModal, setBufferSizeModal] = useState(false)
   const [configurationsModal, setConfigurationsModal] = useState(false)
 
+  const linkPrefix = connection?.secure ? 'https' : 'http'
+  const socketPrefix = connection?.secure ? 'wss' : 'ws'
+
   useEffect(() => {
     if (!connection || !step) return
 
     if (!isEdge) {
-      const ws = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/statistics`)
-      const ws2 = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/state`)
+      const ws = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/statistics`)
+      const ws2 = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/state`)
 
       ws.onmessage = (event) => {
         const json = JSON.parse(event.data)
@@ -100,8 +105,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
       }
     }
 
-    const ws = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/statistics`)
-    const ws2 = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/state`)
+    const ws = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/statistics`)
+    const ws2 = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/state`)
 
     ws.onmessage = (event) => {
       const json = JSON.parse(event.data)
@@ -125,17 +130,17 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
 
   const onSubmit = (data: any) => {
     if (threadModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/threads`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/threads`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
           body: JSON.stringify({threads: parseInt(data.numericValue, 10)})
         })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(() => showToastSuccessMessage('Threads set successfully'))
+        .catch(() => showToastFailMessage('Failed to set Threads'))
     }
     if (pollFrequencyModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/poll-frequency`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/poll-frequency`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -144,11 +149,11 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
             timeUnit: data.timeUnit
           })
         })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(() => showToastSuccessMessage('Poll Frequency set successfully'))
+        .catch(() => showToastFailMessage('Failed to set Poll Frequency'))
     }
     if (scheduleModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/schedule`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/schedule`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -156,11 +161,11 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
             schedule: data.cronJobPattern,
           })
         })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(() => showToastSuccessMessage('Job scheduled successfully'))
+        .catch(() => showToastFailMessage('Failed to schedule job'))
     }
     if (testModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/test`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/test`,
         {
           method: 'POST',
           headers: {'content-type': 'application/json'},
@@ -184,7 +189,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
         });
     }
     if (bufferSizeModal) {
-      fetch(`http://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/set-buffer-size`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/set-buffer-size`,
         {
           method: 'PUT',
           headers: {'content-type': 'application/json'},
@@ -192,8 +197,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
             bufferSize: parseInt(data.numericValue, 10),
           })
         })
-        .then(res => console.log(res))
-        .catch(err => console.log(err))
+        .then(() => showToastSuccessMessage('Buffer Size set successfully'))
+        .catch(() => showToastFailMessage('Failed to set Buffer Size'))
     }
 
   }
@@ -224,7 +229,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     setModalTitle('Poll Frequency')
   }
   const handleOnTrigger = () => {
-    fetch(`http://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/trigger`,
+    fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/trigger`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -239,7 +244,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   }
 
   const handleStartStep = () => {
-    fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/start`,
+    fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/start`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -248,7 +253,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   }
 
   const handleStopStep = () => {
-    fetch(`http://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/stop`,
+    fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -264,20 +269,20 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   if (isEdge) {
     return (<div className={'flex flex-col text-white gap-5'}>
       <span>Put Statistics</span>
-      <div className={'flex gap-5'}>
-        <span>Mean Execution Time(ms): {queueStatistics?.put?.meanExecutionTimeMs}</span>
-        <span>Median Execution Time(ms): {queueStatistics?.put?.medianExecutionTimeMs}</span>
-        <span>Standard Deviation Execution Time: {queueStatistics?.put?.standardDeviationExecutionTimeMs}</span>
-        <span>Puts: {queueState.puts}</span>
+      <div className={'flex gap-5 text-light-blue'}>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Mean Execution Time(ms): {trimNumber(queueStatistics?.put?.meanExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Median Execution Time(ms): {trimNumber(queueStatistics?.put?.medianExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Standard Deviation Execution Time: {trimNumber(queueStatistics?.put?.standardDeviationExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Puts: {queueState.puts}</span>
       </div>
       <span>Take Statistics</span>
-      <div className={'flex gap-5'}>
-        <span>Mean Execution Time(ms): {queueStatistics?.take?.meanExecutionTimeMs}</span>
-        <span>Median Execution Time(ms): {queueStatistics?.take?.medianExecutionTimeMs}</span>
-        <span>Standard Deviation Execution Time: {queueStatistics?.take?.standardDeviationExecutionTimeMs}</span>
-        <span>Takes: {queueState.takes}</span>
+      <div className={'flex gap-5 text-light-blue'}>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Mean Execution Time(ms): {trimNumber(queueStatistics?.take?.meanExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Median Execution Time(ms): {trimNumber(queueStatistics?.take?.medianExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Standard Deviation Execution Time: {trimNumber(queueStatistics?.take?.standardDeviationExecutionTimeMs)}</span>
+        <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Takes: {queueState.takes}</span>
       </div>
-      <button disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</button>
+      <Button styles={'bg-light-blue'} disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</Button>
       {
         openModal && bufferSizeModal &&
           <Modal onClose={handleClose} title={modalTitle} open={openModal} noOverlayClick={true}>
@@ -288,29 +293,29 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   }
 
   return (
-    <div>
-      <div className={'flex gap-5'}>
-        <span>Mean Execution Time(ms): {stats.meanExecutionTimeMs}</span>
-        <span>Median Execution Time(ms): {stats.medianExecutionTimeMs}</span>
-        <span>Standard Deviation Execution Time: {stats.standardDeviationExecutionTimeMs}</span>
+    <div className={'flex flex-col gap-5'}>
+      <div className={'flex gap-5 justify-between text-light-blue'}>
+        <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Mean Execution Time(ms): {trimNumber(stats.meanExecutionTimeMs)}</div>
+        <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Median Execution Time(ms): {trimNumber(stats.medianExecutionTimeMs)}</div>
+        <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Standard Deviation Execution Time: {trimNumber(stats.standardDeviationExecutionTimeMs)}</div>
       </div>
       {
         step?.type !== 'job' &&
           <>
-              <div className={'flex gap-5'}>
-                  <span>Total Calls: {state.totalStepCalls}</span>
-                  <span>Successful Calls: {state.successfulStepCalls}</span>
-                  <span>Unsuccessful Calls: {state.unsuccessfulStepCalls}</span>
+              <div className={'flex gap-5 justify-between text-light-blue'}>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Total Calls: {state.totalStepCalls}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Successful Calls: {state.successfulStepCalls}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/4'}>Unsuccessful Calls: {state.unsuccessfulStepCalls}</span>
               </div>
-              <div>
-                  <button onClick={() => handleOnTest()}>Test</button>
-                  <button disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</button>
-                  <button disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</button>
-                  <button disabled={!state.stopped} onClick={() => handleStartStep()}>Start</button>
-                  <button disabled={state.stopped} onClick={() => handleStopStep()}>Stop</button>
-                  <button >
+              <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400'}>
+                  <Button styles={'bg-light-blue'} onClick={() => handleOnTest()}>Test</Button>
+                  <Button styles={'bg-light-blue'} disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</Button>
+                  <Button styles={'bg-light-blue'} disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</Button>
+                  <Button styles={'bg-light-blue'} disabled={!state.stopped} onClick={() => handleStartStep()}>Start</Button>
+                  <Button styles={'bg-light-blue'} disabled={state.stopped} onClick={() => handleStopStep()}>Stop</Button>
+                  <Button styles={'bg-light-blue font-bold text-16'} >
                       <FiSettings onClick={() => setConfigurationsModal(true)}/>
-                  </button>
+                  </Button>
                 {
                   configurationsModal &&
                     <Modal
@@ -327,20 +332,20 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
       {
         step.type === 'job' &&
           <>
-              <div className={'flex gap-5'}>
-                  <span>Last Trigger: {jobState.lastTrigger}</span>
-                  <span>Last Running Attempt: {jobState.lastAttempt}</span>
-                  <span>Triggered: {jobState.triggered}</span>
-                  <span>Status: {jobState.status}</span>
+              <div className={'flex gap-5 text-light-blue'}>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Last Trigger: {jobState.lastTrigger}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Last Running Attempt: {jobState.lastAttempt}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Triggered: {jobState.triggered}</span>
+                  <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Status: {jobState.status}</span>
               </div>
-              <div>
-                  <button onClick={() => handleOnTrigger()}>Trigger</button>
-                  <button disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</button>
-                  <button disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</button>
-                  <button disabled={jobState.stopped} onClick={() => handleStopStep()}>Stop</button>
-                  <button >
+              <div className={'flex bg-card p-3 border border-solid border-gray-400'}>
+                  <Button styles={'bg-light-blue'} onClick={() => handleOnTrigger()}>Trigger</Button>
+                  <Button styles={'bg-light-blue'} disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</Button>
+                  <Button styles={'bg-light-blue'} disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</Button>
+                  <Button styles={'bg-light-blue'} disabled={jobState.stopped} onClick={() => handleStopStep()}>Stop</Button>
+                  <Button styles={'bg-light-blue font-bold text-16'} >
                       <FiSettings onClick={() => setConfigurationsModal(true)}/>
-                  </button>
+                  </Button>
                 {
                   configurationsModal &&
                     <Modal

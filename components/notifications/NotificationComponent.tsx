@@ -16,7 +16,8 @@ type Notification = {
   txId?: string
   pipelineId?: string
   txShardId?: string
-  level: string
+  level: string,
+  secure: boolean
 }
 
 
@@ -30,7 +31,8 @@ export default function NotificationComponent() {
   const markAsRead = (notification: Notification) => {
     setNotifications(cur => cur.filter(item => item.id !== notification.id))
 
-    fetch(`http://${notification.address}/jvm/notifications/${notification.id}/read`,
+    const prefix = notification.secure ? 'https' : 'http'
+    fetch(`${prefix}://${notification.address}/jvm/notifications/${notification.id}/read`,
       {
         method: 'PUT',
         headers: {'content-type': 'application/json'}
@@ -42,20 +44,21 @@ export default function NotificationComponent() {
   useEffect(() => {
 
     connections.forEach((connection: Connection) => {
-      const ws = new WebSocket(`ws://${connection?.address}/jvm/notifications`)
+      const prefix = connection?.secure ? 'wss' : 'ws'
+      const ws = new WebSocket(`${prefix}://${connection?.address}/jvm/notifications`)
 
       ws.onmessage = (event) => {
         const json = JSON.parse(event.data)
         if (json) {
-          setNotifications(e => [...e, {...json, address: connection.address}])
+          setNotifications(e => [...e, {...json, address: connection.address, secure: connection.secure}])
         }
       }
-      const ws2 = new WebSocket(`ws://${connection?.address}/sn0wst0rm/api/1/pipelines/errors`)
+      const ws2 = new WebSocket(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/errors`)
 
       ws2.onmessage = (event) => {
         const json = JSON.parse(event.data)
         if (json) {
-          setNotifications(e => [...e, {...json, address: connection.address}])
+          setNotifications(e => [...e, {...json, address: connection.address, secure: connection.secure}])
         }
       }
       return () => {
@@ -103,7 +106,7 @@ export default function NotificationComponent() {
       {
         openNotifications && <div
               ref={notificationRef}
-              className={'z-10 h-40 overflow-auto absolute right-20 w-96 bg-secondary-bg text-white rounded border-solid border-1 border-gray-500'}>
+              className={'z-10 h-40 overflow-auto absolute right-10 w-96 bg-secondary-bg text-white rounded border-solid border-1 border-gray-500'}>
           {
             !!notifications.length &&
               <button className={'absolute bg-transparent text-light-blue right-0 cursor-pointer'}

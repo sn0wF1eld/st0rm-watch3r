@@ -1,3 +1,40 @@
+import {Connection} from "../../layout/provider/Context";
+import {toast} from "react-toastify";
+
+export type GraphsContainerProps = {
+  connection: Connection,
+  options: any,
+
+}
+export type GraphData = {
+  systemCpuLoad: number,
+  totalClassesLoaded: number,
+  threadCount: number,
+  heapMaxSizeMb: number,
+  classesLoaded: number,
+  usableDiskSpaceGb: number,
+  gcTotalPauses: number,
+  gcTotalTimeMs: number,
+  heapFreeMemoryMb: number,
+  classesUnloaded: number,
+  usedDiskSpaceGb: number,
+  metaspaceMax: number,
+  freeDiskSpaceGb: number,
+  gcTimePercent: number,
+  totalStartedThreads: number,
+  totalDiskSpaceGb: number,
+  metaspaceCommited: number,
+  peakThreadCount: number,
+  timestamp: number,
+  heapUsedMemoryMb: number,
+  heapSizeMb: number,
+  processCpuLoad: number,
+  metaspaceUsed: number,
+  daemonThreadCount: number,
+  gcAvgTimeMs: number,
+  processCpuTimeMs: number
+}
+
 export type Rule = {
   value: string,
   name: string,
@@ -29,3 +66,31 @@ export const inputErrorStyle = 'ring-red-500 border-red-500'
 export const errorElement = <span className='text-red-400'>This field is required</span>
 export const dropdownElement = "block cursor-pointer py-2 px-4 hover:bg-gray-100 hover:text-black"
 export const activeDropdown = "block cursor-pointer py-2 px-4 hover:bg-gray-100 bg-blue-400 hover:text-black"
+
+export function handleArraySize(oldArray: any[]): any[] {
+  return oldArray.length > 50 ? oldArray.slice(-50) : oldArray
+}
+
+export const trimNumber = (number: number) => {
+  if (!number) return number
+  return number.toFixed(3)
+}
+
+export const showToastSuccessMessage = (message: string) => {
+  console.log('toast')
+  toast.success(message, {
+    position: toast.POSITION.BOTTOM_CENTER
+  })
+}
+
+export const showToastFailMessage = (message: string) => {
+  toast.error(message, {
+    position: toast.POSITION.BOTTOM_CENTER
+  })
+}
+
+export const showToastInfoMessage = (message: string) => {
+  toast.info(message, {
+    position: toast.POSITION.BOTTOM_CENTER
+  })
+}

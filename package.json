@@ -23,6 +23,7 @@
     "react-graph-vis": "^1.0.7",
     "react-hook-form": "^7.39.3",
     "react-icons": "^4.6.0",
+    "react-toastify": "^9.1.1",
     "react-uuid": "^2.0.0",
     "typescript": "4.8.4"
   },

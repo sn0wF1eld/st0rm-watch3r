@@ -1,4 +1,3 @@
-import {Connection} from "../layout/provider/Context";
 import {useEffect, useState} from "react";
 import {Line} from "react-chartjs-2";
 import {
@@ -12,42 +11,8 @@ import {
   Tooltip
 } from "chart.js";
 import fileDownload from "js-file-download";
-import Modal from "../modal/Modal";
-import RulesComponent from "./RulesComponent";
-
-type GraphsContainerProps = {
-  connection: Connection,
-  options: any,
-
-}
-type GraphData = {
-  systemCpuLoad: number,
-  totalClassesLoaded: number,
-  threadCount: number,
-  heapMaxSizeMb: number,
-  classesLoaded: number,
-  usableDiskSpaceGb: number,
-  gcTotalPauses: number,
-  gcTotalTimeMs: number,
-  heapFreeMemoryMb: number,
-  classesUnloaded: number,
-  usedDiskSpaceGb: number,
-  metaspaceMax: number,
-  freeDiskSpaceGb: number,
-  gcTimePercent: number,
-  totalStartedThreads: number,
-  totalDiskSpaceGb: number,
-  metaspaceCommited: number,
-  peakThreadCount: number,
-  timestamp: number,
-  heapUsedMemoryMb: number,
-  heapSizeMb: number,
-  processCpuLoad: number,
-  metaspaceUsed: number,
-  daemonThreadCount: number,
-  gcAvgTimeMs: number,
-  processCpuTimeMs: number
-}
+import {GraphData, GraphsContainerProps, handleArraySize} from "./utils/GraphUtils";
+import StateDataContainer from "./StateDataContainer";
 
 ChartJS.register(
   CategoryScale,
@@ -59,18 +24,14 @@ ChartJS.register(
   Legend
 );
 
-function handleArraySize(oldArray: any[]): any[] {
-  return oldArray.length > 50 ? oldArray.slice(-50) : oldArray
-}
-
 export default function GraphsContainer(props: GraphsContainerProps) {
   const [state, setState] = useState([] as GraphData[])
   const [lastValue, setLastValue] = useState({} as GraphData)
-  const [rulesModal, setRulesModal] = useState(false)
-
+  const socketPrefix = props.connection?.secure ? 'wss' : 'ws'
+  const linkPrefix = props.connection?.secure ? 'https' : 'http'
 
   useEffect(() => {
-    const ws = new WebSocket(`ws://${props.connection?.address}/jvm/info`)
+    const ws = new WebSocket(`${socketPrefix}://${props.connection?.address}/jvm/info`)
 
     ws.onmessage = (event) => {
       const json = JSON.parse(event.data)
@@ -85,7 +46,7 @@ export default function GraphsContainer(props: GraphsContainerProps) {
   }, [props.connection])
 
   const onGcCollect = () => {
-    fetch(`http://${props.connection?.address}/jvm/gc-collect`,
+    fetch(`${linkPrefix}://${props.connection?.address}/jvm/gc-collect`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -93,7 +54,7 @@ export default function GraphsContainer(props: GraphsContainerProps) {
   }
 
   const onHeapDump = () => {
-    fetch(`http://${props.connection?.address}/jvm/heap-dump/dump`,
+    fetch(`${linkPrefix}://${props.connection?.address}/jvm/heap-dump/dump`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     )
       .then(res => console.log(res))
@@ -101,7 +62,7 @@ export default function GraphsContainer(props: GraphsContainerProps) {
   }
 
   const onHeapDownload = () => {
-    fetch(`http://${props.connection?.address}/jvm/heap-dump/download`,
+    fetch(`${linkPrefix}://${props.connection?.address}/jvm/heap-dump/download`,
       {method: 'GET', headers: {'response-type': 'blob'}}
     )
       .then(res => {
@@ -113,52 +74,10 @@ export default function GraphsContainer(props: GraphsContainerProps) {
   }
 
   return (
+    <>
+      <StateDataContainer data={lastValue} onGcCollect={onGcCollect} onHeapDump={onHeapDump}
+                          onHeapDownload={onHeapDownload} connection={props.connection}/>
     <div className={'flex flex-col -mt-10 pt-0'}>
-      <div
-        className={'flex flex-col gap-3 top-24 z-2 bg-secondary-bg sticky border-0 border-b-1 border-solid border-gray-400'}>
-        <div className={'flex justify-between'}>
-          <div className={'flex flex-col p-1'}>
-            <span>Usable Disk Space (Gb)</span>
-            <span>{lastValue.usableDiskSpaceGb}</span>
-          </div>
-          <div className={'flex flex-col p-1'}>
-            <span>Total Disk Space (Gb)</span>
-            <span>{lastValue.totalDiskSpaceGb}</span>
-          </div>
-          <div className={'flex flex-col p-1'}>
-            <span>Used Disk Space (Gb)</span>
-            <span>{lastValue.usedDiskSpaceGb}</span>
-          </div>
-          <div className={'flex flex-col p-1'}>
-            <span>Free Disk Space (Gb)</span>
-            <span>{lastValue.freeDiskSpaceGb}</span>
-          </div>
-          <div className={'flex flex-col p-1'}>
-            <span>GC Total Pauses</span>
-            <span>{lastValue.gcTotalPauses}</span>
-          </div>
-          <div className={'flex flex-col p-1'}>
-            <span>GC Total Times (ms)</span>
-            <span>{lastValue.gcTotalTimeMs}</span>
-          </div>
-          <div className={'flex flex-col p-1'}>
-            <span>Process CPU Time (ms)</span>
-            <span>{lastValue.processCpuTimeMs}</span>
-          </div>
-        </div>
-        <div className={'flex justify-center gap-10'}>
-          <button onClick={() => onGcCollect()}>GC Collect</button>
-          <button onClick={() => onHeapDump()}>Heap Dump</button>
-          <button onClick={() => onHeapDownload()}>Heap Download</button>
-          <button onClick={() => setRulesModal(true)}>Rules</button>
-          {
-            rulesModal &&
-            <Modal open={rulesModal} onClose={() => setRulesModal(false)} title={'Rules'}>
-                <RulesComponent connection={props.connection} />
-            </Modal>
-          }
-        </div>
-      </div>
       <div className={'flex justify-between'}>
         <div className='w-2/5 mb-10'>
           <div className='flex flex-col w-full pl-10 pb-10 pr-10'>
@@ -352,5 +271,6 @@ export default function GraphsContainer(props: GraphsContainerProps) {
         </div>
       </div>
     </div>
+    </>
   )
 }
