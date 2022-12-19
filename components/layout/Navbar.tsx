@@ -5,11 +5,13 @@ import {Connection, useContextProvider} from "./provider/Context";
 import {MutableRefObject, useEffect, useState} from "react";
 import NotificationComponent from "../notifications/NotificationComponent";
 import {useOutsideClick} from "../pipelines/utils/NavUtils";
+import Modal from "../modal/Modal";
 
 export default function Navbar() {
   const {connections} = useContextProvider()
   const [openConnections, setOpenConnections] = useState(false)
   const [openChildren, setOpenChildren] = useState('')
+  const [openAbout, setOpenAbout] = useState(false)
 
   useEffect(() => {
     setOpenChildren('')
@@ -102,6 +104,36 @@ export default function Navbar() {
                   }
                 </ul>
               </div>
+            </li>
+            <li className={'flex items-center'}>
+              <span onClick={() => setOpenAbout(true)} className={'block p-0 text-white rounded hover:bg-transparent hover:text-light-blue cursor-pointer'}>About</span>
+              {
+                openAbout &&
+                  <Modal open={openAbout} onClose={() => setOpenAbout(false)} title={'About'}>
+                      <div className={'flex gap-5'}>
+                          <div className={'flex flex-col gap-5'}>
+                              <Image
+                                  src={"/snowstorm-1.png"}
+                                  alt={"snowstorm1"}
+                                  width={200}
+                                  height={200}
+                              />
+                              <Image
+                                  src={"/snowstorm-2.png"}
+                                  alt={"snowstorm2"}
+                                  width={200}
+                                  height={200}
+                              />
+                          </div>
+                          <div className={'flex flex-col justify-between text-light-blue'}>
+                              <span>St0rm Watch3r 1.0.1-beta</span>
+                              <span>St0rm Watch3r is a monitoring tool to be used in conjunction with the Sn0wSt0rm framework.</span>
+                              <span>Copyright © 2020-2022 Sn0wf1eld, Lda</span>
+                              <span>St0rm Watch3r, Sn0wSt0rm and Sn0wf1eld and their logos are trademarks of Sn0wf1eld, Lda, registered in Portugal and other countries.</span>
+                          </div>
+                      </div>
+                  </Modal>
+              }
             </li>
           </ul>
         </div>
