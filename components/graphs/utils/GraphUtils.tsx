@@ -94,3 +94,12 @@ export const showToastInfoMessage = (message: string) => {
     position: toast.POSITION.BOTTOM_CENTER
   })
 }
+
+export const successToToast = (res: any) => {
+  res.json().then((r: any) => showToastSuccessMessage(r.message)
+  )
+}
+
+export const errorToToast = (res: any) => {
+  res.json().then((r: any) => showToastFailMessage(r.message))
+}

@@ -5,12 +5,13 @@ import StepsForm from "./StepsForm";
 import {FiSettings} from "react-icons/fi";
 import SystemConfigModal from "./SystemConfigModal";
 import Button from "../layout/Button";
-import {showToastFailMessage, showToastSuccessMessage, trimNumber} from "../graphs/utils/GraphUtils";
+import {trimNumber, successToToast, errorToToast} from "../graphs/utils/GraphUtils";
 
 type StepProps = {
   connection: Connection,
   step: {
     label: string,
+    name: string,
     type: string
     title?: string
   },
@@ -75,6 +76,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   const socketPrefix = connection?.secure ? 'wss' : 'ws'
 
   useEffect(() => {
+    console.log(step)
     if (!connection || !step) return
 
     if (!isEdge) {
@@ -105,8 +107,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
       }
     }
 
-    const ws = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/statistics`)
-    const ws2 = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/state`)
+    const ws = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.name}/statistics`)
+    const ws2 = new WebSocket(`${socketPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.name}/state`)
 
     ws.onmessage = (event) => {
       const json = JSON.parse(event.data)
@@ -116,6 +118,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     }
 
     ws2.onmessage = (event) => {
+      console.log(step.title)
       const json = JSON.parse(event.data)
       if (json) {
         setQueueState(json)
@@ -136,8 +139,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
           headers: {'content-type': 'application/json'},
           body: JSON.stringify({threads: parseInt(data.numericValue, 10)})
         })
-        .then(() => showToastSuccessMessage('Threads set successfully'))
-        .catch(() => showToastFailMessage('Failed to set Threads'))
+        .then(response => successToToast(response))
+        .catch(response => errorToToast(response))
     }
     if (pollFrequencyModal) {
       fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/poll-frequency`,
@@ -149,8 +152,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
             timeUnit: data.timeUnit
           })
         })
-        .then(() => showToastSuccessMessage('Poll Frequency set successfully'))
-        .catch(() => showToastFailMessage('Failed to set Poll Frequency'))
+          .then(response => successToToast(response))
+          .catch(response => errorToToast(response))
     }
     if (scheduleModal) {
       fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/schedule`,
@@ -161,8 +164,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
             schedule: data.cronJobPattern,
           })
         })
-        .then(() => showToastSuccessMessage('Job scheduled successfully'))
-        .catch(() => showToastFailMessage('Failed to schedule job'))
+          .then(response => successToToast(response))
+          .catch(response => errorToToast(response))
     }
     if (testModal) {
       fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/test`,
@@ -189,7 +192,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
         });
     }
     if (bufferSizeModal) {
-      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.title}/set-buffer-size`,
+      fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/queues/${step.name}/set-buffer-size`,
         {
           method: 'PUT',
           headers: {'content-type': 'application/json'},
@@ -197,8 +200,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
             bufferSize: parseInt(data.numericValue, 10),
           })
         })
-        .then(() => showToastSuccessMessage('Buffer Size set successfully'))
-        .catch(() => showToastFailMessage('Failed to set Buffer Size'))
+          .then(response => successToToast(response))
+          .catch(response => errorToToast(response))
     }
 
   }
@@ -232,8 +235,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/jobs/${step.label}/trigger`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     )
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+        .then(response => successToToast(response))
+        .catch(response => errorToToast(response))
 // TODO: Message
   }
 
@@ -247,8 +250,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/start`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+        .then(response => successToToast(response))
+        .catch(response => errorToToast(response))
 
   }
 
@@ -256,8 +259,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     fetch(`${linkPrefix}://${connection?.address}/sn0wst0rm/api/1/steps/${step.label}/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+        .then(response => successToToast(response))
+        .catch(response => errorToToast(response))
   }
 
   const handleOnBufferSize = () => {
