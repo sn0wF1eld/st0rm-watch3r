@@ -101,7 +101,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
               setLoading(false)
               setFailedTransactions(json)
             })
-            .catch(err => console.log(err))
+              .catch(response => errorToToast(response))
         }
       })
       .catch(response => errorToToast(response))
