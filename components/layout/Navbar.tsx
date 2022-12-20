@@ -36,10 +36,9 @@ export default function Navbar() {
           href='/'
         >
           <Image
-            className='hover:animate-rotate'
-            src={"/Icemanmelting-snowflake-logo-deisgn-final2.png"}
+            src={"/st0rmwatch3r-name.png"}
             alt={"logo"}
-            width={40}
+            width={230}
             height={40}
           />
         </Link>
@@ -113,17 +112,29 @@ export default function Navbar() {
                       <div className={'flex gap-5'}>
                           <div className={'flex flex-col gap-5'}>
                               <Image
-                                  src={"/snowstorm-1.png"}
+                                  src={"/sn0wst0rm.png"}
                                   alt={"snowstorm1"}
-                                  width={200}
+                                  width={250}
                                   height={200}
                               />
+                            <Image
+                                src={"/sn0wst0rm-name.png"}
+                                alt={"snowstorm2"}
+                                width={230}
+                                height={40}
+                            />
                               <Image
-                                  src={"/snowstorm-2.png"}
-                                  alt={"snowstorm2"}
-                                  width={200}
+                                  src={"/st0rmwatch3r.png"}
+                                  alt={"st0rmwatch3r1"}
+                                  width={250}
                                   height={200}
                               />
+                            <Image
+                                src={"/st0rmwatch3r-name.png"}
+                                alt={"st0rmwatch3r2"}
+                                width={230}
+                                height={40}
+                            />
                           </div>
                           <div className={'flex flex-col justify-between text-light-blue'}>
                               <span>St0rm Watch3r 1.0.1-beta</span>
