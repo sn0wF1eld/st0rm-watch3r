@@ -77,7 +77,6 @@ export const trimNumber = (number: number) => {
 }
 
 export const showToastSuccessMessage = (message: string) => {
-  console.log('toast')
   toast.success(message, {
     position: toast.POSITION.BOTTOM_CENTER
   })
@@ -101,5 +100,10 @@ export const successToToast = (res: any) => {
 }
 
 export const errorToToast = (res: any) => {
-  res.json().then((r: any) => showToastFailMessage(r.message))
+  console.log(res)
+  if (res.json) {
+    res.json().then((r: any) => showToastFailMessage(r.message))
+  } else {
+    showToastFailMessage(res.toString())
+  }
 }

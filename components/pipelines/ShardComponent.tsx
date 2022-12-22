@@ -67,7 +67,7 @@ export default function ShardComponent({shard}: ShardProps) {
       </div>
       {
         showMessage &&
-          <span className={'flex flex-wrap text-red-400'}>Exception: {shardData?.throw?.message}</span>
+          <span className={'flex flex-wrap break-words text-red-400'}>Exception: {shardData?.throw?.message}</span>
       }
       {
         areaData &&
