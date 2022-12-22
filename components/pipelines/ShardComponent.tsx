@@ -67,11 +67,11 @@ export default function ShardComponent({shard}: ShardProps) {
       </div>
       {
         showMessage &&
-          <span className={'text-red-400'}>Exception: {shardData?.throw?.message}</span>
+          <span className={'flex flex-wrap text-red-400'}>Exception: {shardData?.throw?.message}</span>
       }
       {
         areaData &&
-          <div className={'h-72 text-white'}>
+          <div className={'h-72 text-white overflow-auto'}>
               <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(areaData, undefined, 2)}/>
           </div>
       }

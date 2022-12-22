@@ -154,9 +154,9 @@ export default function Actions({connection, id, status}: ActionsProps) {
             </Modal>)
         }
         {
-          openModal && !loading && (failedTransactions?.failedTxIds?.length < 1) && (
+          openModal && !loading && ((failedTransactions?.failedTxIds?.length < 1) || !failedTransactions?.failedTxIds) && (
             <Modal open={openModal} onClose={handleCloseModal} title={'Failed Transactions'} noOverlayClick={true}>
-              <span>There are no failed transactions</span>
+              <span className={'text-light-blue'}>There are no failed transactions</span>
             </Modal>)
         }
         {openModal && !loading && (failedTransactions?.failedTxIds?.length > 0) &&

@@ -228,8 +228,9 @@ export default function Pipelines() {
   }, [connection, pipelines])
 
   if (systemStoppedModal) return (
-    <div className={'text-red-400 items-center justify-center text-center'}>
+    <div className={'flex flex-col text-red-400 items-center justify-center text-center'}>
           <AiFillWarning className={'w-72 h-72 text-red-400 mx-auto'}/>
+          <span>System is currently stopped, if it was manually restarted, please <a href="#" onClick={() => window.location.reload()}>refresh</a> this page</span>
     </div>
   )
   if (loading || !connection?.address || !pipelinesToRender) return <LoadingIcon/>

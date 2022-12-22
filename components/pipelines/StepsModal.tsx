@@ -76,7 +76,6 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
   const socketPrefix = connection?.secure ? 'wss' : 'ws'
 
   useEffect(() => {
-    console.log(step)
     if (!connection || !step) return
 
     if (!isEdge) {
@@ -118,7 +117,6 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     }
 
     ws2.onmessage = (event) => {
-      console.log(step.title)
       const json = JSON.parse(event.data)
       if (json) {
         setQueueState(json)
@@ -237,7 +235,6 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     )
         .then(response => successToToast(response))
         .catch(response => errorToToast(response))
-// TODO: Message
   }
 
   const handleOnSchedule = () => {

@@ -7,7 +7,7 @@ import Button from "../layout/Button";
 type StepsFormProps = {
   modalType: string,
   data: any,
-  onSubmit: (e: any) => void,
+  onSubmit: (e: any) => any,
   stepType: string
 }
 
@@ -18,16 +18,22 @@ const errorElement = <span className='text-red-400'>This field is required</span
 export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFormProps) {
   const {register, handleSubmit, formState: {errors}} = useForm()
   const [confirmationModal, setConfirmationModal] = useState(false)
+  const [submitData, setSubmitData] = useState(null)
 
   const beforeSubmit = (data: any) => {
     if (stepType === 'sink') {
       if (!confirmationModal) {
+        setSubmitData(data)
         return setConfirmationModal(true)
       }
       setConfirmationModal(false)
     }
-
     return onSubmit(data)
+  }
+
+  const modalSubmit = () => {
+    setConfirmationModal(false)
+    return onSubmit(submitData)
   }
 
   switch (modalType) {
@@ -50,11 +56,11 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
                           value={JSON.stringify(data, undefined, 2)}/>
               </div>
             </div>
-            <Button styles='bg-light-blue hover:bg-dark-blue w-full justify-center'>
-                        <span className='flex'>
-                            Test
-                        </span>
-            </Button>
+              <input
+                type="submit"
+                className={'flex border-none m-auto items-center rounded-full p-3 cursor-pointer font-bold bg-light-blue hover:bg-dark-blue w-full justify-center'}
+                value={'Test'}
+              />
           </form>
           <Modal
             title={'Confirm Action'}
@@ -64,7 +70,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
             <div className={'flex flex-col'}>
               <span className={'text-white'}>Are you sure you want to execute this action?</span>
               <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
-                <Button styles={'bg-light-blue'} onClick={(e) => beforeSubmit(e)}>Confirm</Button>
+                <Button styles={'bg-light-blue'} onClick={() => modalSubmit()}>Confirm</Button>
                 <Button styles={'bg-dark-blue'} onClick={() => setConfirmationModal(false)}>Cancel</Button>
               </div>
             </div>
