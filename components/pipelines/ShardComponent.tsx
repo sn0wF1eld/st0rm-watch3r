@@ -12,13 +12,14 @@ type ShardProps = {
 const buttonStyle = 'bg-light-blue hover:bg-dark-blue m-0'
 
 export default function ShardComponent({shard}: ShardProps) {
-  const {connections} = useContextProvider()
-  const [connection, setConnection] = useState({} as Connection)
-  const [areaData, setAreaData] = useState('' as any)
-  const [showMessage, setShowMessage] = useState(false)
-  const [shardData, setShardData] = useState({} as Shard)
-  const [loading, setLoading] = useState(false)
-  const currentLink = usePathname()
+    const {connections} = useContextProvider()
+    const [connection, setConnection] = useState({} as Connection)
+    const [areaData, setAreaData] = useState('' as any)
+    const [exceptionData, setExceptionData] = useState('' as any)
+    const [showMessage, setShowMessage] = useState(false)
+    const [shardData, setShardData] = useState({} as Shard)
+    const [loading, setLoading] = useState(false)
+    const currentLink = usePathname()
 
   useEffect(() => {
     setConnection(connections.find((item: any) => currentLink?.indexOf(item.id) !== -1))
@@ -41,15 +42,17 @@ export default function ShardComponent({shard}: ShardProps) {
 
   }, [connection])
 
-  const handleThrow = () => {
-    setShowMessage(true)
-    setAreaData(shardData?.throw?.stackTrace)
-  }
+    const handleThrow = () => {
+        setShowMessage(true)
+        setAreaData(shardData?.throw?.stackTrace)
+        setExceptionData(shardData?.throw?.data)
+    }
 
-  const handleValue = () => {
-    setShowMessage(false)
-    setAreaData(shardData?.value)
-  }
+    const handleValue = () => {
+        setShowMessage(false)
+        setAreaData(shardData?.value)
+        setExceptionData(null)
+    }
 
   if (loading) return <LoadingIcon/>
   return (
@@ -75,6 +78,12 @@ export default function ShardComponent({shard}: ShardProps) {
               <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(areaData, undefined, 2)}/>
           </div>
       }
+      {
+        exceptionData &&
+          <div className={'h-72 text-white overflow-auto'}>
+            <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
+          </div>
+        }
     </div>
   );
 }

@@ -10,6 +10,7 @@ export type Shard = {
   status?: string,
   throw?: {
     stackTrace: string[],
+    data: any,
     message: string
   }
   txId: string,
