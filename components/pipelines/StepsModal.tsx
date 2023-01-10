@@ -282,11 +282,11 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
         <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Standard Deviation Execution Time: {trimNumber(queueStatistics?.take?.standardDeviationExecutionTimeMs)}</span>
         <span className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-1/5'}>Takes: {queueState.takes}</span>
       </div>
-      <Button styles={'bg-light-blue'} disabled={queueState.closed || status === 'online'} onClick={() => handleOnBufferSize()}>Set Buffer Size</Button>
+      <Button styles={'bg-light-blue'} onClick={() => handleOnBufferSize()}>Set Buffer Size</Button>
       {
         openModal && bufferSizeModal &&
           <Modal onClose={handleClose} title={modalTitle} open={openModal} noOverlayClick={true}>
-              <StepsForm modalType={'buffer'} data={queueState.bufferSize} onSubmit={onSubmit} stepType={step.type}/>
+              <StepsForm modalType={'buffer'} data={queueState.bufferSize} onSubmit={onSubmit} stepType={step.type} status={queueState.closed || status === 'online'}/>
           </Modal>
       }
     </div>)
@@ -309,8 +309,8 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
               </div>
               <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400'}>
                   <Button styles={'bg-light-blue'} onClick={() => handleOnTest()}>Test</Button>
-                  <Button styles={'bg-light-blue'} disabled={status === 'online'} onClick={() => handleOnThreads()}>Threads</Button>
-                  <Button styles={'bg-light-blue'} disabled={status === 'online'} onClick={() => handleOnPollFrequency()}>Poll Frequency</Button>
+                  <Button styles={'bg-light-blue'} onClick={() => handleOnThreads()}>Threads</Button>
+                  <Button styles={'bg-light-blue'} onClick={() => handleOnPollFrequency()}>Poll Frequency</Button>
                   <Button styles={'bg-light-blue'} disabled={!state.stopped} onClick={() => handleStartStep()}>Start</Button>
                   <Button styles={'bg-light-blue'} disabled={state.stopped} onClick={() => handleStopStep()}>Stop</Button>
                   <Button styles={'bg-light-blue font-bold text-16'} >
@@ -340,7 +340,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
               </div>
               <div className={'flex bg-card p-3 border border-solid border-gray-400'}>
                   <Button styles={'bg-light-blue'} onClick={() => handleOnTrigger()}>Trigger</Button>
-                  <Button styles={'bg-light-blue'} disabled={status === 'online'} onClick={() => handleOnSchedule()}>Schedule</Button>
+                  <Button styles={'bg-light-blue'} onClick={() => handleOnSchedule()}>Schedule</Button>
                   <Button styles={'bg-light-blue'} disabled={!jobState.stopped} onClick={() => handleStartStep()}>Start</Button>
                   <Button styles={'bg-light-blue'} disabled={jobState.stopped} onClick={() => handleStopStep()}>Stop</Button>
                   <Button styles={'bg-light-blue font-bold text-16'} >
@@ -364,19 +364,19 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
           <Modal onClose={handleClose} title={modalTitle} open={openModal} noOverlayClick={true}>
             {
               threadModal &&
-                <StepsForm modalType={'thread'} data={state} onSubmit={onSubmit} stepType={step.type}/>
+                <StepsForm modalType={'thread'} data={state} onSubmit={onSubmit} stepType={step.type} status={status === 'online'}/>
             }
             {
               pollFrequencyModal &&
-                <StepsForm modalType={'pollFrequency'} data={state} onSubmit={onSubmit} stepType={step.type}/>
+                <StepsForm modalType={'pollFrequency'} data={state} onSubmit={onSubmit} stepType={step.type} status={status === 'online'}/>
             }
             {
               scheduleModal &&
-                <StepsForm modalType={'schedule'} data={jobState} onSubmit={onSubmit} stepType={step.type}/>
+                <StepsForm modalType={'schedule'} data={jobState} onSubmit={onSubmit} stepType={step.type} status={status === 'online'}/>
             }
             {
               testModal &&
-                <StepsForm modalType={'test'} data={testResult} onSubmit={onSubmit} stepType={step.type}/>
+                <StepsForm modalType={'test'} data={testResult} onSubmit={onSubmit} stepType={step.type} status={status === 'online'}/>
             }
           </Modal>
       }

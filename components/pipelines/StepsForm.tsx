@@ -8,14 +8,15 @@ type StepsFormProps = {
   modalType: string,
   data: any,
   onSubmit: (e: any) => any,
-  stepType: string
+  stepType: string,
+  status: boolean
 }
 
 const inputStyle = "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
 const inputErrorStyle = 'ring-red-500 border-red-500'
 const errorElement = <span className='text-red-400'>This field is required</span>
 
-export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFormProps) {
+export default function StepsForm({modalType, data, onSubmit, stepType, status}: StepsFormProps) {
   const {register, handleSubmit, formState: {errors}} = useForm()
   const [confirmationModal, setConfirmationModal] = useState(false)
   const [submitData, setSubmitData] = useState(null)
@@ -90,7 +91,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
                      placeholder='Numeric Value' {...register('numericValue', {required: true})}/>
               {errors.numericValue && errorElement}
             </div>
-            <Button styles='bg-light-blue'>
+            <Button styles='bg-light-blue' disabled={status}>
                       <span className='flex'>
                           Set
                       </span>
@@ -110,7 +111,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
                      placeholder='Numeric Value' {...register('numericValue', {required: true})}/>
               {errors.numericValue && errorElement}
             </div>
-            <Button styles='bg-light-blue'>
+            <Button styles='bg-light-blue' disabled={status}>
                       <span className='flex'>
                           Set
                       </span>
@@ -142,7 +143,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
               </select>
               {errors.timeUnit && errorElement}
             </div>
-            <Button styles='bg-light-blue'>
+            <Button styles='bg-light-blue' disabled={status}>
                       <span className='flex'>
                           Set
                       </span>
@@ -160,7 +161,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType}: StepsFo
                      placeholder='Cron Job Pattern' {...register('cronJobPattern', {required: true})}/>
               {errors.cronJobPattern && errorElement}
             </div>
-            <Button styles='bg-light-blue'>
+            <Button styles='bg-light-blue' disabled={status}>
                       <span className='flex'>
                           Schedule
                       </span>
