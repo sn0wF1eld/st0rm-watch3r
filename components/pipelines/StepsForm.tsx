@@ -86,6 +86,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType, status}:
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
             <div className='flex flex-col'>
               <input className={inputStyle + (errors.numericValue && inputErrorStyle)} type="number"
+                     disabled={status}
                      min={1}
                      defaultValue={data.threads}
                      placeholder='Numeric Value' {...register('numericValue', {required: true})}/>
@@ -106,6 +107,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType, status}:
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
             <div className='flex flex-col'>
               <input className={inputStyle + (errors.numericValue && inputErrorStyle)} type="number"
+                     disabled={status}
                      defaultValue={data}
                      min={data + 1}
                      placeholder='Numeric Value' {...register('numericValue', {required: true})}/>
@@ -126,6 +128,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType, status}:
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
             <div className='flex flex-col'>
               <input className={inputStyle + (errors.pollFrequency && inputErrorStyle)} type="number"
+                     disabled={status}
                      min={1}
                      defaultValue={data.pollFrequency}
                      placeholder='Poll Frequency' {...register('pollFrequency', {required: true})}/>
@@ -133,6 +136,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType, status}:
             </div>
             <div>
               <select
+                disabled={status}
                 defaultValue={data.timeUnit}
                 className={inputStyle + (errors.timeUnit && inputErrorStyle)} {...register("timeUnit", {required: true})}>
                 <option value="m">minute</option>
@@ -157,6 +161,7 @@ export default function StepsForm({modalType, data, onSubmit, stepType, status}:
           <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row gap-3'>
             <div className='flex flex-col'>
               <input className={inputStyle + (errors.cronJobPattern && inputErrorStyle)} type="text"
+                     disabled={status}
                      defaultValue={data.schedule}
                      placeholder='Cron Job Pattern' {...register('cronJobPattern', {required: true})}/>
               {errors.cronJobPattern && errorElement}

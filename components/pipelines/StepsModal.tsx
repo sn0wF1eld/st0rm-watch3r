@@ -312,7 +312,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     return (
       <div className={'flex flex-col text-white gap-5'}>
         <div className={'flex flex-col gap-5 text-light-blue'}>
-          <div className="flex h-96">
+          <div className="flex h-96 w-1400">
             <div className='w-full h-full'>
               <Line
                 options={{

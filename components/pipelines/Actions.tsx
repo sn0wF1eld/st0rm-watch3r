@@ -161,7 +161,10 @@ export default function Actions({connection, id, status}: ActionsProps) {
         }
         {openModal && !loading && (failedTransactions?.failedTxIds?.length > 0) &&
             <Modal open={openModal} onClose={handleCloseModal} title={'Failed Transactions'} noOverlayClick={true}>
-                <div className={'w-400'}>
+                <div className={'w-400 flex flex-col'}>
+                    <span className={'w-full p-2 text-end text-xs text-light-blue'}>
+                        Failed transactions: {failedTransactions?.failedTxIds?.length}
+                    </span>
                     <ul className={'list-none p-0 overflow-auto h-72'}>
                       {
                         failedTransactions?.failedTxIds?.map(tx => (
