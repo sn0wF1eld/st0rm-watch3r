@@ -163,7 +163,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
             <Modal open={openModal} onClose={handleCloseModal} title={'Failed Transactions'} noOverlayClick={true}>
                 <div className={'w-400 flex flex-col'}>
                     <span className={'w-full p-2 text-end text-xs text-light-blue'}>
-                        Failed transactions: {failedTransactions?.failedTxIds?.length}
+                        Transactions: {failedTransactions?.failedTxIds?.length}
                     </span>
                     <ul className={'list-none p-0 overflow-auto h-72'}>
                       {

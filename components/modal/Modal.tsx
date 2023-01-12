@@ -55,7 +55,7 @@ function Modal({ open, onClose, title, children, noOverlayClick }: ModalProps) {
                   ref={modalRef}
               >
                   <a href='#' className='absolute text-light-blue top-2 right-2' onClick={handleCloseClick}><AiFillCloseCircle/></a>
-                  <div className='w-full text-lg text-white text-center mb-3 -mt-3'>
+                  <div className='w-full text-lg text-light-blue text-center mb-3 -mt-3'>
                     {title}
                   </div>
                   <div>

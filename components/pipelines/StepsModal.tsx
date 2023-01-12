@@ -312,7 +312,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
     return (
       <div className={'flex flex-col text-white gap-5'}>
         <div className={'flex flex-col gap-5 text-light-blue'}>
-          <div className="flex h-96 w-1400">
+          <div className="flex h-96 w-1000">
             <div className='w-full h-full'>
               <Line
                 options={{
@@ -399,7 +399,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
       <div className='w-full h-96'>
         <Line options={{
           ...options,
-          plugins: {...options.plugins, title: {display: true, text: 'Take Statistics'}}
+          plugins: {...options.plugins, title: {display: true, text: 'Statistics'}}
         }}
               updateMode={'resize'}
               data={{
