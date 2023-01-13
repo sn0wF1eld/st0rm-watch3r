@@ -80,7 +80,7 @@ export default function Navbar() {
                           <ul className="list-none text-sm text-white p-0 border-r-0 border-t-0 border-b-0 border-l-2 border-solid border-gray-400">
                             <li className={'py-3 pl-2 rounded hover:bg-gray-100 cursor-pointer'}>
                               <Link
-                                href={'/stats/' + connection?.id}
+                                href={'/stats/' + connection?.name}
                                 className={'no-underline pl-2 py-3 -ml-2 -my-3 inline-block h-full text-white hover:text-light-blue w-full'}
                                 onClick={() => setOpenConnections(false)}
                               >
@@ -89,7 +89,7 @@ export default function Navbar() {
                             </li>
                             <li className={'py-3 pl-2 rounded hover:bg-gray-100 cursor-pointer'}>
                               <Link
-                                href={'/pipelines/' + connection?.id}
+                                href={'/pipelines/' + connection?.name}
                                 className={'no-underline inline-block h-full text-white hover:text-light-blue w-full'}
                                 onClick={() => setOpenConnections(false)}
                               >
