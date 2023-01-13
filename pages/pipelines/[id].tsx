@@ -79,6 +79,7 @@ export default function Pipelines() {
     layout: {
       hierarchical: true
     },
+    autoResize: true,
     edges: {
       color: "#dcd7d7",
       width: 2

@@ -50,6 +50,8 @@ export default function NotificationComponent() {
       ws.onmessage = (event) => {
         const json = JSON.parse(event.data)
         if (json) {
+          if (json.type === 'keep-alive') return
+
           setNotifications(e => [...e, {...json, address: connection.address, secure: connection.secure}])
         }
       }
@@ -58,6 +60,7 @@ export default function NotificationComponent() {
       ws2.onmessage = (event) => {
         const json = JSON.parse(event.data)
         if (json) {
+          if (json.type === 'keep-alive') return
           setNotifications(e => [...e, {...json, address: connection.address, secure: connection.secure}])
         }
       }
