@@ -33,6 +33,7 @@ export default function ConnectionsTable() {
           <th className={'p-3'}>Name</th>
           <th className={'p-3'}>IP</th>
           <th className={'p-3'}>Secure</th>
+          <th className="p-3">Version</th>
           <th className={'p-3'}>Actions</th>
         </tr>
         </thead>
@@ -45,6 +46,7 @@ export default function ConnectionsTable() {
               <td className="p-3 text-center">
                 {connection?.secure ? <BsCheckLg /> : <BsXLg/>
                 }</td>
+              <td className="p-3 text-center">{connection.version || '-'}</td>
               <td className='p-3 text-center'>
                 <Button styles='bg-red-500 hover:bg-red-600 font-bold text-center'
                         onClick={() => confirmRemoveConnection(connection)}>

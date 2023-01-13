@@ -13,6 +13,7 @@ export type Connection = {
   address: string
   name: string
   secure: boolean
+  version: string
 }
 
 const Context = createContext<ContextProps | any>({
