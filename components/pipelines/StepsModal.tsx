@@ -396,7 +396,7 @@ export default function StepsModal({connection, step, isEdge, status}: StepProps
 
   return (
     <div className={'flex flex-col gap-5'}>
-      <div className='w-full h-96'>
+      <div className='w-400 h-96 m-auto'>
         <Line options={{
           ...options,
           plugins: {...options.plugins, title: {display: true, text: 'Statistics'}}
