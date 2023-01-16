@@ -236,7 +236,7 @@ export default function Pipelines() {
   )
   if (loading || !connection?.address || !pipelinesToRender) return <LoadingIcon/>
   return <div className={'flex flex-col p-5 ml-6 mr-6'}>
-    <div className={'flex flex-wrap gap-10 bg-card p-3 border border-solid border-gray-400 w-1/2'}>
+    <div className={'flex flex-wrap gap-10 justify-between items-center bg-card p-3 border border-solid border-gray-400 w-1/2'}>
       <Button onClick={() => handleOnStop()} styles={'m-0 bg-red-500 hover:bg-red-600 font-bold'}>Stop
         System
       </Button>
@@ -250,8 +250,8 @@ export default function Pipelines() {
                   </div>
               </div>
           </Modal>}
-      <Button styles={'font-bold bg-light-blue text-16 m-0'}>
-        <FiSettings onClick={() => setSystemConfigurationsModal(true)}/>
+      <Button styles={'font-bold bg-light-blue text-16 m-0'} onClick={() => setSystemConfigurationsModal(true)}>
+        <FiSettings/>
       </Button>
       {
         systemConfigurationsModal &&
@@ -263,7 +263,9 @@ export default function Pipelines() {
               <SystemConfigModal connection={connection}/>
           </Modal>
       }
-      <UptimeComponent connection={connection}/>
+      <div className={'flex w-1/2 h-full'}>
+        <UptimeComponent connection={connection}/>
+      </div>
     </div>
     {
       pipelines.map((pipeline: Pipeline) =>

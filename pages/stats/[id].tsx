@@ -1,10 +1,12 @@
-import {useContextProvider} from "../../components/layout/provider/Context";
+import {Connection, useContextProvider} from "../../components/layout/provider/Context";
 import {useEffect, useState} from "react";
 import {usePathname} from "next/navigation";
 import GraphsContainer from "../../components/graphs/GraphsContainer";
+import LoadingIcon from "../../components/layout/LoadingIcon";
 
 const options = {
   responsive: true,
+  maintainAspectRatio: false,
   elements: {
     line: {
       borderWidth: 1
@@ -22,7 +24,7 @@ const options = {
 
 export default function Stats() {
   const {connections} = useContextProvider()
-  const [connection, setConnection] = useState(null)
+  const [connection, setConnection] = useState({} as Connection)
   const currentLink = usePathname()
 
   useEffect(() => {
@@ -31,7 +33,10 @@ export default function Stats() {
     setConnection(connections.find((item: any) => currentLink?.indexOf(item.name) !== -1))
   }, [connections, currentLink])
 
-  if (!connections.length || !connection) return
+  if (!connections.length || !connection) return <LoadingIcon/>
 
-  return <GraphsContainer connection={connection} options={options}/>
+  return <>
+    <h3 className={'m-auto mb-10 text-light-blue text-center'}>{connection?.name}</h3>
+    <GraphsContainer connection={connection} options={options}/>
+  </>
 }
