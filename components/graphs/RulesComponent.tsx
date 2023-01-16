@@ -63,7 +63,8 @@ export default function RulesComponent({connection}: RulesComponentProps) {
       .catch(() => showToastFailMessage('Error setting Rules.'))
   }
 
-  const onReset = () => {
+  const onReset = (e: any) => {
+    e.preventDefault()
     reset()
     fetch(`${prefix}://${connection?.address}/jvm/notifications/rule/${selectedType.field}/reset`,
       {
@@ -73,7 +74,10 @@ export default function RulesComponent({connection}: RulesComponentProps) {
       .then(res => {
         if (res.ok) {
           getRules()
-            .then(r => setExistingRules(r))
+            .then(r => {
+              setExistingRules(r)
+              showToastSuccessMessage('Rule Reset!')
+            })
         }
       })
       .catch(err => console.log(err))
@@ -132,7 +136,7 @@ export default function RulesComponent({connection}: RulesComponentProps) {
                       Set
                   </Button>
                   <Button
-                      onClick={() => onReset()}
+                      onClick={(e) => onReset(e)}
                       styles='bg-red-600 hover:bg-red-400'
                   >
                       Reset

@@ -22,7 +22,7 @@ export default function ShardComponent({shard}: ShardProps) {
     const currentLink = usePathname()
 
   useEffect(() => {
-    setConnection(connections.find((item: any) => currentLink?.indexOf(item.id) !== -1))
+    setConnection(connections.find((item: any) => currentLink?.indexOf(item.name) !== -1))
   }, [connections])
 
   useEffect(() => {
