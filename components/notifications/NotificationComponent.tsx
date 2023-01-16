@@ -41,33 +41,37 @@ export default function NotificationComponent() {
       .catch(err => console.log(err))
   }
 
+  const connect = (url: string, connection: Connection) => {
+    const ws = new WebSocket(url)
+    ws.onmessage = (event) => {
+      const json = JSON.parse(event.data)
+      if (json) {
+        if (json.type === 'keep-alive') return
+
+        setNotifications(e => [...e, {...json, address: connection.address, secure: connection.secure}])
+      }
+    }
+    ws.onclose = (e) => {
+      console.log('Socket is closed. Reconnect will be attempted in 20 seconds.', e.reason);
+      setTimeout(function() {
+        connect(url, connection);
+      }, 20000);
+    }
+    ws.onerror = (e) => {
+      console.log('Socket encountered an error. Closing socket.', e)
+      ws.close()
+    }
+  }
+
   useEffect(() => {
 
     connections.forEach((connection: Connection) => {
       const prefix = connection?.secure ? 'wss' : 'ws'
-      const ws = new WebSocket(`${prefix}://${connection?.address}/jvm/notifications`)
+      const ws = `${prefix}://${connection?.address}/jvm/notifications`
+      const ws2 = `${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/errors`
 
-      ws.onmessage = (event) => {
-        const json = JSON.parse(event.data)
-        if (json) {
-          if (json.type === 'keep-alive') return
-
-          setNotifications(e => [...e, {...json, address: connection.address, secure: connection.secure}])
-        }
-      }
-      const ws2 = new WebSocket(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/errors`)
-
-      ws2.onmessage = (event) => {
-        const json = JSON.parse(event.data)
-        if (json) {
-          if (json.type === 'keep-alive') return
-          setNotifications(e => [...e, {...json, address: connection.address, secure: connection.secure}])
-        }
-      }
-      return () => {
-        ws.close();
-        ws2.close()
-      }
+      connect(ws, connection)
+      connect(ws2, connection)
     })
   }, [connections])
 
