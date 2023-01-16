@@ -31,6 +31,8 @@ export default function GraphsContainer(props: GraphsContainerProps) {
   const linkPrefix = props.connection?.secure ? 'https' : 'http'
 
   useEffect(() => {
+    setState([])
+    setLastValue({} as GraphData)
     const ws = new WebSocket(`${socketPrefix}://${props.connection?.address}/jvm/info`)
 
     ws.onmessage = (event) => {
