@@ -33,7 +33,7 @@ export default function Stats() {
     setConnection(connections.find((item: any) => currentLink?.indexOf(item.name) !== -1))
   }, [connections, currentLink])
 
-  if (!connections.length || !connection) return <LoadingIcon/>
+  if (!connections.length || !connection?.name) return <LoadingIcon/>
 
   return <>
     <h3 className={'m-auto mb-10 text-light-blue text-center'}>{connection?.name}</h3>
