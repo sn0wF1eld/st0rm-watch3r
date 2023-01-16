@@ -236,7 +236,7 @@ export default function Pipelines() {
   )
   if (loading || !connection?.address || !pipelinesToRender) return <LoadingIcon/>
   return <div className={'flex flex-col p-5 ml-6 mr-6'}>
-    <div className={'flex flex-wrap gap-10 justify-between items-center bg-card p-3 border border-solid border-gray-400 w-1/2'}>
+    <div className={'flex flex-wrap gap-10 justify-between items-center bg-card p-3 border border-solid border-gray-400 w-1/3'}>
       <Button onClick={() => handleOnStop()} styles={'m-0 bg-red-500 hover:bg-red-600 font-bold'}>Stop
         System
       </Button>
