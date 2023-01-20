@@ -42,6 +42,7 @@ export type PipelineState = {
   terminated: number
   backPressure: number
   stoppedAt: any
+  failed: number
 }
 
 export type Pipeline = {

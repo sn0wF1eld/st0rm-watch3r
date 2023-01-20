@@ -14,6 +14,10 @@ export default function Stats(state: PipelineState) {
         <span className={'text-light-blue'}>{state.terminated !== null ? state.terminated : '-'}</span>
       </DisplayCard>
       <DisplayCard orientation={'row gap-3 w-1/5'}>
+        <span className={'text-white'}>Failed:</span>
+        <span className={'text-light-blue'}>{state.failed !== null ? state.failed : '-'}</span>
+      </DisplayCard>
+      <DisplayCard orientation={'row gap-3 w-1/5'}>
         <span className={'text-white'}>Back Pressure:</span>
         <span className={'text-light-blue'}>{state.backPressure !== null ? state.backPressure : '-'}</span>
       </DisplayCard>

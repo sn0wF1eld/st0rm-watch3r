@@ -277,6 +277,7 @@ export default function Pipelines() {
               started={pipelinesState[pipeline.id]?.started}
               terminated={pipelinesState[pipeline.id]?.terminated}
               backPressure={pipelinesState[pipeline.id]?.backPressure}
+              failed={pipelinesState[pipeline.id]?.failed}
               stoppedAt={millisecondsToDateString(pipeline.stoppedAt)}
             />
             <Graph
