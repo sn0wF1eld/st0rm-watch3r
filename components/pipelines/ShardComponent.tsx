@@ -75,7 +75,7 @@ export default function ShardComponent({shard}: ShardProps) {
       {
         areaData &&
           <div className={'h-72 text-white overflow-auto'}>
-              <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(areaData, undefined, 2)}/>
+              <textarea rows={15} cols={80} readOnly={true} value={areaData}/>
           </div>
       }
       {
