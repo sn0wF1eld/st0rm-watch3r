@@ -63,7 +63,6 @@ export default function Actions({connection, id, status}: ActionsProps) {
   const handleFailed = () => setOpenModal(true)
 
   const handleCloseModal = () => setTimeout(() => {
-    console.log('here')
     setOpenModal(false)
     setSelectedTx('')
     setTxData({})
