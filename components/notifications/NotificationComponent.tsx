@@ -48,12 +48,12 @@ export default function NotificationComponent() {
       if (json) {
         if (json.type === 'keep-alive') return
 
-        setNotifications(e => [...e, {...json, address: connection.address, secure: connection.secure}])
+        setNotifications(e => [{...json, address: connection.address, secure: connection.secure}, ...e])
       }
     }
     ws.onclose = (e) => {
       console.log('Socket is closed. Reconnect will be attempted in 20 seconds.', e.reason);
-      setTimeout(function() {
+      setTimeout(function () {
         connect(url, connection);
       }, 20000);
     }
@@ -153,7 +153,9 @@ export default function NotificationComponent() {
                       id: selectedNotification.txShardId,
                       pipelineId: selectedNotification.pipelineId,
                       txId: selectedNotification.txId
-                    } as Shard}/>
+                    } as Shard}
+                  closeModal={handleCloseModal}
+              />
           </Modal>
       }
       {

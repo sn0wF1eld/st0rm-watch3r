@@ -68,6 +68,15 @@ export default function Actions({connection, id, status}: ActionsProps) {
     setTxData({})
   }, 200)
 
+  const handleRefetch = () => {
+    fetchFailed()
+      .then(json => {
+        setLoading(false)
+        setFailedTransactions(json)
+      })
+      .catch(response => errorToToast(response))
+  }
+
   const onReplay = (tx: string) => {
     fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}/replay`,
       {method: 'PUT', headers: {'content-type': 'application/json'}})
@@ -175,7 +184,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
                             </button>
                             {
                               selectedTx === tx &&
-                                <FailedTransactionComponent transaction={{...txData, pipelineId: id}}/>
+                                <FailedTransactionComponent transaction={{...txData, pipelineId: id}} refreshTransactions={() => handleRefetch()}/>
                             }
                           </li>
                         ))

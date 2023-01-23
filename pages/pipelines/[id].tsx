@@ -104,7 +104,7 @@ export default function Pipelines() {
   };
 
   useEffect(() => {
-    setConnection(connections.find((item: any) => currentLink?.indexOf(item.name) !== -1))
+    setConnection(connections.find((item: any) => currentLink?.split('/').find(a => a === item.name)))
     setPipelines([])
     setLoading(true)
   }, [connections, currentLink])

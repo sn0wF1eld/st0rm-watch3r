@@ -30,7 +30,8 @@ export default function Stats() {
   useEffect(() => {
     if (!connections) return
 
-    setConnection(connections.find((item: any) => currentLink?.indexOf(item.name) !== -1))
+    console.log(currentLink)
+    setConnection(connections.find((item: any) => currentLink?.split('/').find(a => a === item.name)))
   }, [connections, currentLink])
 
   if (!connections.length || !connection?.name) return <LoadingIcon/>

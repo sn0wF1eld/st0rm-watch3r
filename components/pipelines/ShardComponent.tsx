@@ -4,7 +4,7 @@ import {Connection, useContextProvider} from "../layout/provider/Context";
 import {usePathname} from "next/navigation";
 import LoadingIcon from "../layout/LoadingIcon";
 import Button from "../layout/Button";
-import {errorToToast, showToastFailMessage, showToastSuccessMessage} from "../graphs/utils/GraphUtils";
+import {errorToToast, showToastSuccessMessage} from "../graphs/utils/GraphUtils";
 
 type ShardProps = {
   shard: Shard
@@ -25,7 +25,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
   const currentLink = usePathname()
 
   useEffect(() => {
-    setConnection(connections.find((item: any) => currentLink?.indexOf(item.name) !== -1))
+    setConnection(connections.find((item: any) => currentLink?.split('/').find(a => a === item.name)))
   }, [connections])
 
   useEffect(() => {
@@ -78,17 +78,10 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => {
         if (res.ok) {
-          res.json()
-            .then(json => {
-              console.log(json)
-              if (json.message.indexOf('failed') === -1) {
-                showToastSuccessMessage('Transaction replayed')
-                return closeModal()
-              }
-              return errorToToast(json.message)
-            })
-
+          showToastSuccessMessage('Transaction replayed')
+          return closeModal()
         }
+        errorToToast(res)
       })
       .catch(response => errorToToast(response))
   }
@@ -124,8 +117,10 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
               <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
           </div>
       }
-      <Button styles={buttonStyle} disabled={shardData.isEditable || newShardValue === ''} onClick={() => handleUpdateValue()}>Save</Button>
-      <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
+      <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
+        <Button styles={buttonStyle} disabled={shardData.isEditable || newShardValue === ''} onClick={() => handleUpdateValue()}>Save</Button>
+        <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
+      </div>
     </div>
   );
 }

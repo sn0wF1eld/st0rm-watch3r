@@ -24,10 +24,11 @@ type FailedTransactionProps = {
     shards: string[]
     pipelineId: string
     failedAt: number
-  }
+  },
+  refreshTransactions: () => void
 }
 
-export default function FailedTransactionComponent({transaction}: FailedTransactionProps) {
+export default function FailedTransactionComponent({transaction, refreshTransactions}: FailedTransactionProps) {
   const [openModal, setOpenModal] = useState(false)
   const [shardId, setShardId] = useState('')
 
@@ -40,6 +41,7 @@ export default function FailedTransactionComponent({transaction}: FailedTransact
     setTimeout(() => {
       setOpenModal(false)
       setShardId('')
+      refreshTransactions()
     }, 50)
   }
 
