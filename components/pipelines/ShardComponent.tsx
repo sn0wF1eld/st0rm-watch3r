@@ -4,7 +4,7 @@ import {Connection, useContextProvider} from "../layout/provider/Context";
 import {usePathname} from "next/navigation";
 import LoadingIcon from "../layout/LoadingIcon";
 import Button from "../layout/Button";
-import {errorToToast, showToastSuccessMessage} from "../graphs/utils/GraphUtils";
+import {errorToToast, showToastSuccessMessage, successToToast} from "../graphs/utils/GraphUtils";
 
 type ShardProps = {
     shard: Shard
@@ -85,7 +85,21 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
             {method: 'PUT', headers: {'content-type': 'application/json'}})
             .then(res => {
                 if (res.ok) {
-                    showToastSuccessMessage('Transaction replayed')
+                    successToToast(res)
+                    return closeModal()
+                }
+                errorToToast(res)
+            })
+            .catch(response => errorToToast(response))
+    }
+
+    const onCleanup = () => {
+        const prefix = connection?.secure ? 'https' : 'http'
+        fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/cleanup`,
+            {method: 'PUT', headers: {'content-type': 'application/json'}})
+            .then(res => {
+                if (res.ok) {
+                    successToToast(res)
                     return closeModal()
                 }
                 errorToToast(res)
@@ -128,6 +142,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
                 <Button styles={buttonStyle} disabled={!shardData.isEditable || newShardValue === ''}
                         onClick={() => handleUpdateValue()}>Save</Button>
                 <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
+                <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
             </div>
         </div>
     );

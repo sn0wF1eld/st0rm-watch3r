@@ -82,7 +82,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => {
         if (res.ok) {
-          showToastSuccessMessage('Transaction replayed')
+          successToToast(res)
           fetchFailed()
             .then(json => {
               setLoading(false)
@@ -94,6 +94,44 @@ export default function Actions({connection, id, status}: ActionsProps) {
       .catch(response => errorToToast(response))
   }
 
+    const onCleanup = (tx: string) => {
+        fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}/cleanup`,
+            {method: 'PUT', headers: {'content-type': 'application/json'}})
+            .then(res => {
+                if (res.ok) {
+                    successToToast(res)
+                    fetchFailed()
+                        .then(json => {
+                            setLoading(false)
+                            setFailedTransactions(json)
+                        })
+                        .catch(response => errorToToast(response))
+                }
+            })
+            .catch(response => errorToToast(response))
+    }
+
+    const onCleanupAll = () => {
+        fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/cleanup`,
+            {
+                method: 'PUT', headers: {'content-type': 'application/json'}, body: JSON.stringify({
+                    ...failedTransactions
+                })
+            })
+            .then(res => {
+                if (res.ok) {
+                    successToToast(res)
+                    fetchFailed()
+                        .then(json => {
+                            setLoading(false)
+                            setFailedTransactions(json)
+                        })
+                        .catch(response => errorToToast(response))
+                }
+            })
+            .catch(response => errorToToast(response))
+    }
+
   const onReplayAll = () => {
     fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/replay`,
       {
@@ -103,7 +141,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
       })
       .then(res => {
         if (res.ok) {
-          showToastSuccessMessage('Replayed all transactions')
+            successToToast(res)
           fetchFailed()
             .then(json => {
               setLoading(false)
@@ -194,6 +232,8 @@ export default function Actions({connection, id, status}: ActionsProps) {
 
                 </div>
                 <div className={'flex justify-center gap-10'}>
+                    <Button styles={'bg-light-blue'} onClick={() => onCleanup(selectedTx)}>Cleanup</Button>
+                    <Button styles={'bg-light-blue'}onClick={() => onCleanupAll()}>Cleanup All</Button>
                     <Button styles={'bg-light-blue'} disabled={status === 'offline'} onClick={() => onReplay(selectedTx)}>Replay</Button>
                     <Button styles={'bg-light-blue'} disabled={status === 'offline'} onClick={() => onReplayAll()}>Replay All</Button>
                 </div>
