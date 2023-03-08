@@ -4,7 +4,7 @@ import Modal from "../modal/Modal";
 import FailedTransactionComponent from "./FailedTransactionComponent";
 import LoadingIcon from "../layout/LoadingIcon";
 import Button from "../layout/Button";
-import {showToastFailMessage, showToastSuccessMessage, successToToast, errorToToast} from "../graphs/utils/GraphUtils";
+import {showToastFailMessage, successToToast, errorToToast} from "../graphs/utils/GraphUtils";
 
 type ActionsProps = {
   connection: Connection
@@ -232,9 +232,9 @@ export default function Actions({connection, id, status}: ActionsProps) {
 
                 </div>
                 <div className={'flex justify-center gap-10'}>
-                    <Button styles={'bg-light-blue'} onClick={() => onCleanup(selectedTx)}>Cleanup</Button>
-                    <Button styles={'bg-light-blue'}onClick={() => onCleanupAll()}>Cleanup All</Button>
-                    <Button styles={'bg-light-blue'} disabled={status === 'offline'} onClick={() => onReplay(selectedTx)}>Replay</Button>
+                    <Button styles={'bg-light-blue'} disabled={!selectedTx} onClick={() => onCleanup(selectedTx)}>Cleanup</Button>
+                    <Button styles={'bg-light-blue'} onClick={() => onCleanupAll()}>Cleanup All</Button>
+                    <Button styles={'bg-light-blue'} disabled={status === 'offline' || !selectedTx} onClick={() => onReplay(selectedTx)}>Replay</Button>
                     <Button styles={'bg-light-blue'} disabled={status === 'offline'} onClick={() => onReplayAll()}>Replay All</Button>
                 </div>
             </Modal>
