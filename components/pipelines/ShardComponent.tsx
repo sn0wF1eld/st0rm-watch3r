@@ -108,42 +108,42 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
     }
 
     if (loading) return <LoadingIcon/>
-    return (
-        <div className={'w-760 flex flex-col gap-5'}>
-            <span className={'text-gray-400'}>transaction id: <span className={'text-white'}>{shard.txId}</span></span>
-            <span className={'text-gray-400'}>shard id: <span className={'text-white'}>{shardData.id}</span></span>
-            <span className={'text-gray-400'}>failed step name: <span
-                className={'text-white'}>{shardData.failedStepName}</span></span>
-            <span className={'text-gray-400'}>failed thread: <span
-                className={'text-white'}>{shardData.failedThread}</span></span>
-            <span className={'text-gray-400'}>status: <span className={'text-white'}>{shardData.status}</span></span>
-            <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
-                <Button styles={buttonStyle} onClick={() => handleValue()}>Value</Button>
-                <Button styles={buttonStyle} onClick={() => handleThrow()}>Throw</Button>
-            </div>
-            {
-                showMessage &&
-              <span className={'flex flex-wrap break-words text-red-400'}>Exception: {shardData?.throw?.message}</span>
-            }
-            {
-                areaData &&
-              <div className={'h-72 text-white overflow-auto'}>
-              <textarea rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
-                        onChange={(e) => setNewShardValue(e.target.value)}/>
-              </div>
-            }
-            {
-                exceptionData &&
-              <div className={'h-72 text-white overflow-auto'}>
-                <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
-              </div>
-            }
-            <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
-                <Button styles={buttonStyle} disabled={!shardData.isEditable || newShardValue === ''}
-                        onClick={() => handleUpdateValue()}>Save</Button>
-                <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
-                <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
-            </div>
+    return <div className={'w-760 flex flex-col gap-5'}>
+        <span className={'text-gray-400'}>transaction id: <span className={'text-white'}>{shard.txId}</span></span>
+        <span className={'text-gray-400'}>shard id: <span className={'text-white'}>{shardData.id}</span></span>
+        <span className={'text-gray-400'}>failed step name: <span
+            className={'text-white'}>{shardData.failedStepName}</span></span>
+        <span className={'text-gray-400'}>failed thread: <span
+            className={'text-white'}>{shardData.failedThread}</span></span>
+        <span className={'text-gray-400'}>failed timestamp: <span
+            className={'text-white'}>{new Date(shardData.failedTs).toString()}</span></span>
+        <span className={'text-gray-400'}>status: <span className={'text-white'}>{shardData.status}</span></span>
+        <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
+            <Button styles={buttonStyle} onClick={() => handleValue()}>Value</Button>
+            <Button styles={buttonStyle} onClick={() => handleThrow()}>Throw</Button>
         </div>
-    );
+        {
+            showMessage &&
+          <span className={'flex flex-wrap break-words text-red-400'}>Exception: {shardData?.throw?.message}</span>
+        }
+        {
+            areaData &&
+          <div className={'h-72 text-white overflow-auto'}>
+          <textarea rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
+                    onChange={(e) => setNewShardValue(e.target.value)}/>
+          </div>
+        }
+        {
+            exceptionData &&
+          <div className={'h-72 text-white overflow-auto'}>
+            <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
+          </div>
+        }
+        <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
+            <Button styles={buttonStyle} disabled={!shardData.isEditable || newShardValue === ''}
+                    onClick={() => handleUpdateValue()}>Save</Button>
+            <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
+            <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
+        </div>
+    </div>;
 }

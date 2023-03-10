@@ -8,6 +8,7 @@ export type Shard = {
   failedStepName?: string,
   failedThread?: number,
   status?: string,
+  failedTs?: number,
   throw?: {
     stackTrace: string[],
     data: any,
