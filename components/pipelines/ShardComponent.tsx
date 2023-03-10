@@ -116,7 +116,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
         <span className={'text-gray-400'}>failed thread: <span
             className={'text-white'}>{shardData.failedThread}</span></span>
         <span className={'text-gray-400'}>failed timestamp: <span
-            className={'text-white'}>{new Date(shardData.failedTs).toString()}</span></span>
+            className={'text-white'}>{new Date(shardData.failedTs ? shardData.failedTs : 0).toString()}</span></span>
         <span className={'text-gray-400'}>status: <span className={'text-white'}>{shardData.status}</span></span>
         <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
             <Button styles={buttonStyle} onClick={() => handleValue()}>Value</Button>
