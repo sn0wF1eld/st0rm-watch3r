@@ -76,8 +76,21 @@ export default function Pipelines() {
   }
 
   const options = {
+    physics: {
+      hierarchicalRepulsion: {
+        nodeDistance: 70,
+      },
+      barnesHut: {
+        springConstant: 0,
+        avoidOverlap: 0.2
+      }
+    },
     layout: {
-      hierarchical: true
+      hierarchical: {
+        direction: 'LR',
+        sortMethod: 'directed',
+        levelSeparation: 300,
+      }
     },
     autoResize: true,
     edges: {
@@ -97,7 +110,7 @@ export default function Pipelines() {
     },
     interaction: {
       zoomView: false,
-      dragNodes: false,
+      dragNodes: true,
       dragView: false,
       selectConnectedEdges: false,
     }
