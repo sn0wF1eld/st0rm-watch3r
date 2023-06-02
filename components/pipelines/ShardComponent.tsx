@@ -129,7 +129,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
         {
             areaData &&
           <div className={'h-72 text-white overflow-auto'}>
-          <textarea rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
+          <textarea key={areaData.length} rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
                     onChange={(e) => setNewShardValue(e.target.value)}/>
           </div>
         }
