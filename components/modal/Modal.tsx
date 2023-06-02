@@ -58,7 +58,7 @@ function Modal({ open, onClose, title, children, noOverlayClick }: ModalProps) {
                   <div className='w-full text-lg text-light-blue text-center mb-3 -mt-3'>
                     {title}
                   </div>
-                  <div>
+                  <div className="max-h-[85vh] overflow-y-auto">
                     {children}
                   </div>
               </div>

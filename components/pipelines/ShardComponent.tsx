@@ -128,14 +128,14 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
         }
         {
             areaData &&
-          <div className={'h-72 text-white overflow-auto'}>
+          <div className={'max-h-fit text-white overflow-auto'}>
           <textarea key={areaData.length} rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
                     onChange={(e) => setNewShardValue(e.target.value)}/>
           </div>
         }
         {
             exceptionData &&
-          <div className={'h-72 text-white overflow-auto'}>
+          <div className={'max-h-fit text-white overflow-auto'}>
             <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
           </div>
         }
