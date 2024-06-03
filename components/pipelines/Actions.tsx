@@ -222,7 +222,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
                             </button>
                             {
                               selectedTx === tx &&
-                                <FailedTransactionComponent transaction={{...txData, pipelineId: name}} refreshTransactions={() => handleRefetch()}/>
+                                <FailedTransactionComponent transaction={{...txData, pipelineId: name, pipelineName: name}} refreshTransactions={() => handleRefetch()}/>
                             }
                           </li>
                         ))

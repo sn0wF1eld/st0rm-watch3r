@@ -14,7 +14,8 @@ type Notification = {
   timestamp: number
   address?: string
   txId?: string
-  pipelineId?: string
+  pipelineId?: string,
+  pipelineName?: string,
   txShardId?: string
   level: string,
   secure: boolean
@@ -131,7 +132,7 @@ export default function NotificationComponent() {
                           <div className={'flex justify-between w-full'}>
                             <span>{notification.type}</span>
                             <span>{notification.level}</span>
-                            <span>{notification.pipelineId}</span>
+                            <span>{notification.pipelineName}</span>
                             <span>{timeConverter(notification.timestamp)}</span>
                           </div>
                         </div>
@@ -152,6 +153,7 @@ export default function NotificationComponent() {
                     {
                       id: selectedNotification.txShardId,
                       pipelineId: selectedNotification.pipelineId,
+                      pipelineName: selectedNotification.pipelineName,
                       txId: selectedNotification.txId
                     } as Shard}
                   closeModal={handleCloseModal}

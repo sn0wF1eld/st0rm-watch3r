@@ -33,7 +33,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
 
     setLoading(true)
     const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}`,
+    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineName}/transactions/failed/${shard.txId}/shards/${shard.id}`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     ).then((res: any) => {
       if (res.ok) {
@@ -65,7 +65,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
   const handleUpdateValue = () => {
     setLoading(true)
     const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}/update`,
+    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineName}/transactions/failed/${shard.txId}/shards/${shard.id}/update`,
       {method: 'PUT', headers: {'content-type': 'application/text'}, body: newShardValue}
     ).then((res: any) => {
       res.json()
@@ -81,7 +81,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
 
   const onReplay = () => {
     const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/replay`,
+    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineName}/transactions/failed/${shard.txId}/replay`,
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => {
         if (res.ok) {
@@ -95,7 +95,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
 
   const onCleanup = () => {
     const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/cleanup`,
+    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineName}/transactions/failed/${shard.txId}/cleanup`,
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => {
         if (res.ok) {
