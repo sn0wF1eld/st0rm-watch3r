@@ -142,24 +142,25 @@ export default function Pipelines() {
     const pipelineAux = {}
     pipelines.forEach((p: Pipeline) => {
 
-      const pipelineObj = p.pipeline
-      const pipelineName = p.id
+      const pipelineObj = p.pipes
+      const pipelineName = p.name
 
       let nodes: any[] = []
 
       let edges: any[] = []
 
-      const getNodesAndEdges = (pline: Pipeline['pipeline']) => {
+      const getNodesAndEdges = (pline: Pipeline['pipes']) => {
         nodes = [...nodes, {
           id: pline.name,
+          name: pline.name,
           label: pline.name,
-          type: pline.stepType,
+          type: pline?.stepType,
           size: 50,
-          title: pline.stepType
+          title: pline?.stepType
         }]
 
         if (pline?.connectsTo?.length) {
-          pline.connectsTo.forEach((item: Pipeline['pipeline']) => {
+          pline.connectsTo.forEach((item: Pipeline['pipes']) => {
             edges = [...edges,
               {
                 from: pline.name,
@@ -175,10 +176,21 @@ export default function Pipelines() {
         return {nodes, edges}
       }
 
+      // Group pipelines and create unified nodes object, so we effectively have only one pipeline
+      const allNodes = (pipelineObj as any)?.map((a: any) => getNodesAndEdges(a)?.nodes)?.reduce((acc: any, cur: any) => {
+        const ret = acc.length > 0 ? [...acc] : cur
+        if (acc.length > 0) {
+          cur.forEach((node: any) => {
+            if (acc.find((item: any) => item.name === node.name)) return
+            ret.push(node)
+          })
+        }
+        return ret
+      }, [])
+
       // @ts-ignore
-      // TODO: refactor into an array, create pipeline type
       pipelineAux[pipelineName] = {
-        nodes: getNodesAndEdges(pipelineObj)?.nodes,
+        nodes: allNodes,
         edges: getNodesAndEdges(pipelineObj)?.edges
       }
     })
@@ -214,7 +226,7 @@ export default function Pipelines() {
             if (pipelines.length && body.length) {
               body.forEach((item: Pipeline) => {
                 pipelines.forEach(pip => {
-                  if (item.id === pip.id) {
+                  if (item.name === pip.name) {
                     statusChanged = statusChanged || !(item.status === pip.status)
                   }
                 })
@@ -243,13 +255,15 @@ export default function Pipelines() {
 
   if (systemStoppedModal) return (
     <div className={'flex flex-col text-red-400 items-center justify-center text-center'}>
-          <AiFillWarning className={'w-72 h-72 text-red-400 mx-auto'}/>
-          <span>System is currently stopped, if it was manually restarted, please <a href="#" onClick={() => window.location.reload()}>refresh</a> this page</span>
+      <AiFillWarning className={'w-72 h-72 text-red-400 mx-auto'}/>
+      <span>System is currently stopped, if it was manually restarted, please <a href="#"
+                                                                                 onClick={() => window.location.reload()}>refresh</a> this page</span>
     </div>
   )
   if (loading || !connection?.address || !pipelinesToRender) return <LoadingIcon/>
   return <div className={'flex flex-col p-5 ml-6 mr-6'}>
-    <div className={'flex flex-wrap gap-10 justify-between items-center bg-card p-3 border border-solid border-gray-400 w-1/3'}>
+    <div
+      className={'flex flex-wrap gap-10 justify-between items-center bg-card p-3 border border-solid border-gray-400 w-1/3'}>
       <Button onClick={() => handleOnStop()} styles={'m-0 bg-red-500 hover:bg-red-600 font-bold'}>Stop
         System
       </Button>
@@ -285,27 +299,30 @@ export default function Pipelines() {
         (
           <div
             className={`border-solid border-3 p-3 mt-10 ${pipeline.status === 'online' ? 'border-green-300' : 'border-red-400'}`}
-            key={pipeline.id}>
+            key={pipeline.name}>
+            <div className={'flex w-full justify-around text-light-blue'}>
+                {pipeline.name}
+            </div>
             <Stats
-              started={pipelinesState[pipeline.id]?.started}
-              terminated={pipelinesState[pipeline.id]?.terminated}
-              backPressure={pipelinesState[pipeline.id]?.backPressure}
-              failed={pipelinesState[pipeline.id]?.failed}
+              started={pipelinesState[pipeline.name]?.started}
+              terminated={pipelinesState[pipeline.name]?.terminated}
+              backPressure={pipelinesState[pipeline.name]?.backPressure}
+              failed={pipelinesState[pipeline.name]?.failed}
               stoppedAt={millisecondsToDateString(pipeline.stoppedAt)}
             />
             <Graph
-              key={pipeline.id}
+              key={pipeline.name}
               style={{height: "300px"}}
               options={options}
               events={{
-                selectNode: (e: any) => handleSelectNode(e, pipeline.id, pipeline.status),
-                selectEdge: (e: any) => handleSelectEdge(e, pipeline.id, pipeline.status)
+                selectNode: (e: any) => handleSelectNode(e, pipeline.name, pipeline.status),
+                selectEdge: (e: any) => handleSelectEdge(e, pipeline.name, pipeline.status)
               }}
-              graph={pipelinesToRender[pipeline.id]}
+              graph={pipelinesToRender[pipeline.name]}
             />
             <Actions
               connection={connection}
-              id={pipeline.id}
+              name={pipeline.name}
               status={pipeline.status}
             />
           </div>

@@ -8,7 +8,7 @@ import {showToastFailMessage, successToToast, errorToToast} from "../graphs/util
 
 type ActionsProps = {
   connection: Connection
-  id: string,
+  name: string,
   status: string
 }
 
@@ -16,7 +16,7 @@ type FailedTransaction = {
   failedTxIds: string[]
 }
 
-export default function Actions({connection, id, status}: ActionsProps) {
+export default function Actions({connection, name, status}: ActionsProps) {
   const [openModal, setOpenModal] = useState(false)
   const [failedTransactions, setFailedTransactions] = useState({} as FailedTransaction)
   const [selectedTx, setSelectedTx] = useState('')
@@ -27,7 +27,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
 
   const fetchFailed = () => {
     setLoading(true)
-    return fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed`)
+    return fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed`)
       .then(res => {
         return res.json()
       })
@@ -44,7 +44,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
 
   }, [openModal])
   const handleStart = () => {
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/start`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/start`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
         .then(response => successToToast(response))
@@ -52,7 +52,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
   }
 
   const handleStop = () => {
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/stop`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
         .then(response => successToToast(response))
@@ -78,7 +78,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
   }
 
   const onReplay = (tx: string) => {
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}/replay`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/${tx}/replay`,
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => {
         if (res.ok) {
@@ -95,7 +95,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
   }
 
     const onCleanup = (tx: string) => {
-        fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}/cleanup`,
+        fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/${tx}/cleanup`,
             {method: 'PUT', headers: {'content-type': 'application/json'}})
             .then(res => {
                 if (res.ok) {
@@ -112,7 +112,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
     }
 
     const onCleanupAll = () => {
-        fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/cleanup`,
+        fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/cleanup`,
             {
                 method: 'PUT', headers: {'content-type': 'application/json'}, body: JSON.stringify({
                     ...failedTransactions
@@ -133,7 +133,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
     }
 
   const onReplayAll = () => {
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/replay`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/replay`,
       {
         method: 'PUT', headers: {'content-type': 'application/json'}, body: JSON.stringify({
           ...failedTransactions
@@ -159,7 +159,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
       setSelectedTx('')
       return
     }
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/${tx}`,
       {method: 'GET', headers: {'content-type': 'application/json'}})
       .then(res => {
         res.json()
@@ -222,7 +222,7 @@ export default function Actions({connection, id, status}: ActionsProps) {
                             </button>
                             {
                               selectedTx === tx &&
-                                <FailedTransactionComponent transaction={{...txData, pipelineId: id}} refreshTransactions={() => handleRefetch()}/>
+                                <FailedTransactionComponent transaction={{...txData, pipelineId: name}} refreshTransactions={() => handleRefetch()}/>
                             }
                           </li>
                         ))
