@@ -319,8 +319,8 @@ export default function Pipelines() {
               style={{height: "300px"}}
               options={options}
               events={{
-                selectNode: (e: any) => handleSelectNode(e, pipeline.name, pipeline.status),
-                selectEdge: (e: any) => handleSelectEdge(e, pipeline.name, pipeline.status)
+                selectNode: (e: any) => handleSelectNode(e, pipeline.id, pipeline.status),
+                selectEdge: (e: any) => handleSelectEdge(e, pipeline.id, pipeline.status)
               }}
               graph={pipelinesToRender[pipeline.id]}
             />
