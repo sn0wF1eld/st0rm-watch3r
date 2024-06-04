@@ -46,11 +46,13 @@ export type PipelineState = {
 }
 
 export type Pipeline = {
+  id: string,
   name: string
   status: string
   stoppedAt: number
   pipes: {
     connectsTo: Pipeline['pipes'][]
+    id: string,
     name: string
     splittable: boolean
     stepType: string

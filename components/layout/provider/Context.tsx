@@ -1,4 +1,5 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
+import {errorToToast, showToastInfoMessage} from "../../graphs/utils/GraphUtils";
 
 type Props = {
   children: ReactNode
@@ -35,17 +36,45 @@ export default function LayoutProvider({children}: Props) {
     setConnections([...connections, connection])
   }
 
+  const updateConnectionVersion = (connection: Connection, version: string) => {
+    connections.forEach(item => {
+      if (item.id === connection.id) item.version = version
+    })
+    localStorage.setItem('connections', JSON.stringify(connections))
+    showToastInfoMessage('Connection Updated successfully.')
+    setConnections(connections)
+    return false
+  }
+
   const removeConnection = (connection: Connection) => {
     const newConnections = connections.filter((item: any) => item.id !== connection.id)
     localStorage.setItem('connections', JSON.stringify(newConnections))
     setConnections(newConnections)
   }
 
+  const removeAllConnections = () => {
+    localStorage.removeItem('connections')
+    setConnections([])
+  }
+
+  const getAppVersion = async (connection: Connection) => {
+    try {
+      const res = await fetch(`${connection?.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/version`,
+        {method: 'GET', headers: {'content-type': 'application/json'}});
+      return await res.json();
+    } catch (err) {
+      return errorToToast(err);
+    }
+  }
+
   return (
     <Context.Provider value={{
       connections,
       addConnection,
-      removeConnection
+      removeConnection,
+      removeAllConnections,
+      getAppVersion,
+      updateConnectionVersion
     }}>
       {children}
     </Context.Provider>

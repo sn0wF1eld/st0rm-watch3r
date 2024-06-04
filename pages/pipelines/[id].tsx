@@ -1,5 +1,5 @@
 import {Connection, useContextProvider} from "../../components/layout/provider/Context";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {usePathname} from "next/navigation";
 // @ts-ignore
 import Graph from 'react-graph-vis'
@@ -143,7 +143,7 @@ export default function Pipelines() {
     pipelines.forEach((p: Pipeline) => {
 
       const pipelineObj = p.pipes
-      const pipelineName = p.name
+      const pipelineId = p.id
 
       let nodes: any[] = []
 
@@ -156,7 +156,9 @@ export default function Pipelines() {
           label: pline.name,
           type: pline?.stepType,
           size: 50,
-          title: pline?.stepType
+          title: pline?.stepType,
+          color: pline?.stepType === 'job' ? {background: '#42c8f1'} : {background: '#4b5563'},
+          font: pline?.stepType === 'job' ? {color: '#4b5563'} : {color: '#42c8f1'}
         }]
 
         if (pline?.connectsTo?.length) {
@@ -181,7 +183,7 @@ export default function Pipelines() {
         const ret = acc.length > 0 ? [...acc] : cur
         if (acc.length > 0) {
           cur.forEach((node: any) => {
-            if (acc.find((item: any) => item.name === node.name)) return
+            if (acc.find((item: any) => item.id === node.id)) return
             ret.push(node)
           })
         }
@@ -189,7 +191,7 @@ export default function Pipelines() {
       }, [])
 
       // @ts-ignore
-      pipelineAux[pipelineName] = {
+      pipelineAux[pipelineId] = {
         nodes: allNodes,
         edges: getNodesAndEdges(pipelineObj)?.edges
       }
@@ -212,6 +214,7 @@ export default function Pipelines() {
 
     return null;
   };
+  const graphRef = useRef()
 
   useEffect(() => {
     if (!connection?.address) return
@@ -226,7 +229,7 @@ export default function Pipelines() {
             if (pipelines.length && body.length) {
               body.forEach((item: Pipeline) => {
                 pipelines.forEach(pip => {
-                  if (item.name === pip.name) {
+                  if (item.id === pip.id) {
                     statusChanged = statusChanged || !(item.status === pip.status)
                   }
                 })
@@ -299,30 +302,31 @@ export default function Pipelines() {
         (
           <div
             className={`border-solid border-3 p-3 mt-10 ${pipeline.status === 'online' ? 'border-green-300' : 'border-red-400'}`}
-            key={pipeline.name}>
+            key={pipeline.id}>
             <div className={'flex w-full justify-around text-light-blue'}>
                 {pipeline.name}
             </div>
             <Stats
-              started={pipelinesState[pipeline.name]?.started}
-              terminated={pipelinesState[pipeline.name]?.terminated}
-              backPressure={pipelinesState[pipeline.name]?.backPressure}
-              failed={pipelinesState[pipeline.name]?.failed}
+              started={pipelinesState[pipeline.id]?.started}
+              terminated={pipelinesState[pipeline.id]?.terminated}
+              backPressure={pipelinesState[pipeline.id]?.backPressure}
+              failed={pipelinesState[pipeline.id]?.failed}
               stoppedAt={millisecondsToDateString(pipeline.stoppedAt)}
             />
             <Graph
-              key={pipeline.name}
+              key={pipeline.id}
+              ref={graphRef}
               style={{height: "300px"}}
               options={options}
               events={{
                 selectNode: (e: any) => handleSelectNode(e, pipeline.name, pipeline.status),
                 selectEdge: (e: any) => handleSelectEdge(e, pipeline.name, pipeline.status)
               }}
-              graph={pipelinesToRender[pipeline.name]}
+              graph={pipelinesToRender[pipeline.id]}
             />
             <Actions
               connection={connection}
-              name={pipeline.name}
+              name={pipeline.id}
               status={pipeline.status}
             />
           </div>

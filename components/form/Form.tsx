@@ -10,15 +10,8 @@ import {errorToToast, showToastInfoMessage} from "../graphs/utils/GraphUtils";
 
 function Form() {
   const {register, handleSubmit, formState: {errors}, reset} = useForm()
-  const {addConnection, connections} = useContextProvider()
+  const {addConnection, connections, getAppVersion} = useContextProvider()
   const [openModal, setOpenModal] = useState(false)
-
-  const getAppVersion = (connection: Connection) => {
-    return    fetch(`${connection?.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/version`,
-      {method: 'GET', headers: {'content-type': 'application/json'}})
-        .then(res => res.json())
-        .catch(err => errorToToast(err))
-  }
 
   function onSubmit(connection: any) {
     if (connections.find((item: Connection) => item.address === connection.address || item.name === connection.name)) {
@@ -31,12 +24,12 @@ function Form() {
     connection.address = connection.address[connection.address.length - 1] === '/' ? connection.address.slice(0, -1) : connection.address
 
     getAppVersion(connection)
-      .then(version => {
+      .then((version: any) => {
         console.log(version, connection)
         showToastInfoMessage('Connection Added')
         addConnection({...connection, version: version.version})
       })
-      .catch(err => errorToToast(err))
+      .catch((err: any) => errorToToast(err))
     reset()
   }
 
@@ -51,8 +44,14 @@ function Form() {
         <div className="flex gap-3">
           <div className='flex flex-col'>
             <input className={inputStyle + (errors.name && inputErrorStyle)} type="text"
-                   placeholder='Connection Name' {...register('name', {required: true})}/>
-            {errors.name && errorElement}
+                   placeholder='Connection Name' {...register('name', {
+              required: true,
+              pattern: {
+                value: /^[^\s]+$/i,
+                message: "Name can't have spaces"
+              }
+            })}/>
+            {errors?.name && errors?.name?.message && <span className="text-red-400">{errors.name.message as string}</span>}
           </div>
           <div className='flex flex-col'>
             <input className={inputStyle + (errors.address && inputErrorStyle)} type="text"
