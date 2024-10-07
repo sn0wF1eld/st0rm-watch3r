@@ -150,16 +150,18 @@ export default function Pipelines() {
       let edges: any[] = []
 
       const getNodesAndEdges = (pline: Pipeline['pipes']) => {
-        nodes = [...nodes, {
-          id: pline.name,
-          name: pline.name,
-          label: pline.name,
-          type: pline?.stepType,
-          size: 50,
-          title: pline?.stepType,
-          color: pline?.stepType === 'job' ? {background: '#42c8f1'} : {background: '#4b5563'},
-          font: pline?.stepType === 'job' ? {color: '#4b5563'} : {color: '#42c8f1'}
-        }]
+        if (!nodes.find(n => n.name === pline.name)) {
+          nodes = [...nodes, {
+            id: pline.name,
+            name: pline.name,
+            label: pline.name,
+            type: pline?.stepType,
+            size: 50,
+            title: pline?.stepType,
+            color: pline?.stepType === 'job' ? {background: '#42c8f1'} : {background: '#4b5563'},
+            font: pline?.stepType === 'job' ? {color: '#4b5563'} : {color: '#42c8f1'}
+          }]
+        }
 
         if (pline?.connectsTo?.length) {
           pline.connectsTo.forEach((item: Pipeline['pipes']) => {
