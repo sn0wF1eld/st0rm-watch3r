@@ -21,7 +21,7 @@ import {
 import {AiFillWarning} from "react-icons/ai";
 
 export default function Pipelines() {
-  const {connections} = useContextProvider()
+  const {connections, getPipelines} = useContextProvider()
   const [connection, setConnection] = useState({} as Connection)
   const [pipelines, setPipelines] = useState([] as Pipeline[])
   const [pipelinesToRender, setPipelinesToRender] = useState(null as any)
@@ -115,6 +115,19 @@ export default function Pipelines() {
       selectConnectedEdges: false,
     }
   };
+
+  useEffect(() => {
+    if (!connection) return
+    const existingConnections = localStorage.getItem('connections')
+    if (existingConnections) {
+      const filterConnections = JSON.parse(existingConnections)?.filter((item: any) => item.id !== connection.id && !!item.id)
+      getPipelines(connection)
+        .then((res: Pipeline[]) => {
+          if (!res) return
+          localStorage.setItem('connections', JSON.stringify([...filterConnections, {...connection, pipelines: res}]))
+        })
+    }
+  }, [connection]);
 
   useEffect(() => {
     setConnection(connections.find((item: any) => currentLink?.split('/').find(a => a === item.name)))
@@ -306,7 +319,7 @@ export default function Pipelines() {
             className={`border-solid border-3 p-3 mt-10 ${pipeline.status === 'online' ? 'border-green-300' : 'border-red-400'}`}
             key={pipeline.id}>
             <div className={'flex w-full justify-around text-light-blue'}>
-                {pipeline.name}
+              {pipeline.name}
             </div>
             <Stats
               started={pipelinesState[pipeline.id]?.started}

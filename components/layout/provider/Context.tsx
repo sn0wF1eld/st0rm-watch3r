@@ -1,5 +1,6 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {errorToToast, showToastInfoMessage} from "../../graphs/utils/GraphUtils";
+import {Pipeline} from "../../pipelines/utils/PipelinesUtils";
 
 type Props = {
   children: ReactNode
@@ -31,9 +32,19 @@ export default function LayoutProvider({children}: Props) {
     }
   }, [])
 
-  const addConnection = (connection: Connection) => {
-    localStorage.setItem('connections', JSON.stringify([...connections, connection]))
-    setConnections([...connections, connection])
+  const addConnection = async (connection: Connection) => {
+    let pipelines
+     await getPipelines(connection)
+        .then((res) => {
+          pipelines = res
+          localStorage.setItem('connections', JSON.stringify([...connections, {...connection, pipelines}]))
+          setConnections([...connections, connection])
+        })
+       .catch(err => {
+         console.log(err)
+         localStorage.setItem('connections', JSON.stringify([...connections, connection]))
+         setConnections([...connections, connection])
+       })
   }
 
   const updateConnectionVersion = (connection: Connection, version: string) => {
@@ -67,6 +78,16 @@ export default function LayoutProvider({children}: Props) {
     }
   }
 
+  const getPipelines = async (connection: Connection) => {
+    if (!connection.address) return
+    return fetch(`${connection?.secure ? 'https' : 'http'}://${connection?.address}/sn0wst0rm/api/1/pipelines`,
+      {method: 'GET', headers: {'content-type': 'application/json'}}
+    ).then(res => res.json()
+      .then((body: Pipeline[]) => {
+        return body
+      }))
+  }
+
   return (
     <Context.Provider value={{
       connections,
@@ -74,7 +95,8 @@ export default function LayoutProvider({children}: Props) {
       removeConnection,
       removeAllConnections,
       getAppVersion,
-      updateConnectionVersion
+      updateConnectionVersion,
+      getPipelines
     }}>
       {children}
     </Context.Provider>
