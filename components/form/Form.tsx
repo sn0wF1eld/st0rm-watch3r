@@ -25,7 +25,6 @@ function Form() {
 
     getAppVersion(connection)
       .then((version: any) => {
-        console.log(version, connection)
         showToastInfoMessage('Connection Added')
         addConnection({...connection, version: version.version})
       })

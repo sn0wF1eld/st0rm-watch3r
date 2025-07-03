@@ -102,7 +102,6 @@ export default function ShardComponent({shard, closeModal, notificationConnectio
     const prefix = notificationConnection ? notificationConnection.secure ? 'https' : 'http' : connection?.secure ? 'https' : 'http'
     fetch(`${prefix}://${notificationConnection ? notificationConnection?.address : connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/download`)
       .then(res => {
-        console.log(res)
         res.blob()
           .then(blob => fileDownload(blob, `failed-transaction-${shard.txId}.bin`))
       })

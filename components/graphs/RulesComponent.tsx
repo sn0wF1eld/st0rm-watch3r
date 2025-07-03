@@ -56,7 +56,6 @@ export default function RulesComponent({connection}: RulesComponentProps) {
         if (res.ok) {
           getRules()
             .then(r => setExistingRules(r))
-          console.log('here', res.ok)
           showToastSuccessMessage('Rule Set!')
         }
       })

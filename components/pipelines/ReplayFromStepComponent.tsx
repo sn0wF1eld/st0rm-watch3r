@@ -31,7 +31,6 @@ export default function ReplayFromStepComponent(props: Props) {
               const currentPipeline = pipelines?.find((pipeline: Pipeline) => pipeline.id === props.pipelineId)
               if (currentPipeline) {
                 const filteredSteps = body.steps?.reduce((acc: string[], step: string) => {
-                  console.log(currentPipeline.pipes, step, acc)
                   if (currentPipeline.pipes?.some((p: Pipeline['pipes']) => p.name === step)) return acc
                   return [...acc, step]
                 }, [])
