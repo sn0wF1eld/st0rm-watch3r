@@ -12,11 +12,13 @@ import ReplayFromStepComponent from "./ReplayFromStepComponent";
 type ShardProps = {
   shard: Shard
   closeModal: () => void
+  url?: string,
+  urlSecure?: boolean
 }
 
 const buttonStyle = 'bg-light-blue hover:bg-dark-blue m-0'
 
-export default function ShardComponent({shard, closeModal}: ShardProps) {
+export default function ShardComponent({shard, closeModal, url, urlSecure}: ShardProps) {
   const {connections} = useContextProvider()
   const [connection, setConnection] = useState({} as Connection)
   const [areaData, setAreaData] = useState('' as any)
@@ -33,11 +35,11 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
   }, [connections])
 
   useEffect(() => {
-    if (!connection?.address) return
+    if (!connection?.address && !url) return
 
     setLoading(true)
-    const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}`,
+    const prefix = url ? urlSecure ? 'https' : 'http' : connection?.secure ? 'https' : 'http'
+    fetch(`${prefix}://${url ? url : connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     ).then((res: any) => {
       if (res.ok) {
@@ -107,7 +109,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
       })
       .catch(err => console.log(err))
   }
-
+console.log(url)
   if (loading) return <LoadingIcon/>
   return <div className={'w-760 flex flex-col gap-5'}>
     <span className={'text-gray-400'}>pipeline id: <span className={'text-white'}>{shard.pipelineId}</span></span>
