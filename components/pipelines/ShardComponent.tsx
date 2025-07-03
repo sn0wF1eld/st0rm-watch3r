@@ -149,7 +149,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
       <Modal open={replayFromStepModalOpen} onClose={() => setReplayFromStepModalOpen(false)}
              title={'Replay From Step'}>
         <ReplayFromStepComponent shardId={shard.id} pipelineId={shard.pipelineId} txId={shard.txId}
-                                 connection={connection} closeModal={() => setReplayFromStepModalOpen(false)}/>
+                                 connection={connection} closeModal={() => closeModal()}/>
       </Modal>
       <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
       <Button styles={buttonStyle} onClick={() => onDownload()}>Download</Button>
