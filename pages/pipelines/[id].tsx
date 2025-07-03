@@ -295,7 +295,7 @@ export default function Pipelines() {
               <SystemConfigModal connection={connection}/>
           </Modal>
       }
-      <div className={'flex w-1/2 h-full'}>
+      <div className={'flex w-full h-full'}>
         <UptimeComponent connection={connection}/>
       </div>
     </div>

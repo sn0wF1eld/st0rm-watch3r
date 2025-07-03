@@ -78,19 +78,19 @@ export default function Navbar() {
                         <div
                           className={`z-10 -mt-9 p-0 bg-white bg-opacity-30 backdrop-blur backdrop-filter divide-y divide-gray-100 rounded shadow w-44 ml-44 absolute ${openChildren === connection.id ? '' : 'hidden'}`}>
                           <ul className="list-none text-sm text-white p-0 border-r-0 border-t-0 border-b-0 border-l-2 border-solid border-gray-400">
-                            <li className={'py-3 pl-2 rounded hover:bg-gray-100 cursor-pointer'}>
+                            <li className={'rounded hover:bg-gray-100 cursor-pointer'}>
                               <Link
                                 href={'/stats/' + connection?.name}
-                                className={'no-underline pl-2 py-3 -ml-2 -my-3 inline-block h-full text-white hover:text-light-blue w-full'}
+                                className={'no-underline py-3 pl-2 inline-block h-full text-white hover:text-light-blue w-full'}
                                 onClick={() => setOpenConnections(false)}
                               >
                                 <span>JVM Metrics</span>
                               </Link>
                             </li>
-                            <li className={'py-3 pl-2 rounded hover:bg-gray-100 cursor-pointer'}>
+                            <li className={'rounded hover:bg-gray-100 cursor-pointer'}>
                               <Link
                                 href={'/pipelines/' + connection?.name}
-                                className={'no-underline inline-block h-full text-white hover:text-light-blue w-full'}
+                                className={'py-3 pl-2 no-underline inline-block h-full text-white hover:text-light-blue w-full'}
                                 onClick={() => setOpenConnections(false)}
                               >
                                 <span>Pipelines</span>
