@@ -5,6 +5,7 @@ import {usePathname} from "next/navigation";
 import LoadingIcon from "../layout/LoadingIcon";
 import Button from "../layout/Button";
 import {errorToToast, successToToast} from "../graphs/utils/GraphUtils";
+import fileDownload from "js-file-download";
 
 type ShardProps = {
   shard: Shard
@@ -107,6 +108,17 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
       .catch(response => errorToToast(response))
   }
 
+  const onDownload = () => {
+    const prefix = connection?.secure ? 'https' : 'http'
+    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/download`)
+      .then(res => {
+        console.log(res)
+        res.blob()
+          .then(blob => fileDownload(blob, `failed-transaction-${shard.txId}.bin`))
+      })
+      .catch(err => console.log(err))
+  }
+
   if (loading) return <LoadingIcon/>
   return <div className={'w-760 flex flex-col gap-5'}>
     <span className={'text-gray-400'}>transaction id: <span className={'text-white'}>{shard.txId}</span></span>
@@ -144,6 +156,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
               onClick={() => handleUpdateValue()}>Save</Button>
       <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
       <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
+      <Button styles={buttonStyle} onClick={() => onDownload()}>Download</Button>
     </div>
   </div>;
 }
