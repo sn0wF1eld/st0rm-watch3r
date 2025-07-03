@@ -16,6 +16,6 @@ done
 
 docker buildx create --use
 
-docker buildx build --platform linux/arm64/v8,linux/amd64 --push --tag $NAME":"$version .
+docker buildx build --platform linux/arm64/v8,linux/amd64 --push --tag $NAME":"$version --tag $NAME":latest"  .
 
 docker buildx rm
