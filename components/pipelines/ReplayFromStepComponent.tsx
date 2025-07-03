@@ -79,11 +79,12 @@ export default function ReplayFromStepComponent(props: Props) {
 
   return <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-5'>
     <select
+      className={"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"}
       placeholder={'Select Step'}
       {...register("step", {required: true})}>
       <option value="current">Current</option>
       {
-        steps.length &&
+        steps?.length &&
         steps?.map((step: string) => <option value={step} key={step}>{step}</option>)
       }
     </select>
