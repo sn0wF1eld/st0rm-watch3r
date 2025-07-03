@@ -100,7 +100,6 @@ export const successToToast = (res: any) => {
 }
 
 export const errorToToast = (res: any) => {
-  console.log(res)
   if (res.json) {
     res.json().then((r: any) => showToastFailMessage(r.message))
   } else {

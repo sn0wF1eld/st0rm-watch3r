@@ -30,7 +30,6 @@ export default function Stats() {
   useEffect(() => {
     if (!connections) return
 
-    console.log(currentLink)
     setConnection(connections.find((item: any) => currentLink?.split('/').find(a => a === item.name)))
   }, [connections, currentLink])
 

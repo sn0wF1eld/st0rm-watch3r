@@ -5,15 +5,19 @@ import {usePathname} from "next/navigation";
 import LoadingIcon from "../layout/LoadingIcon";
 import Button from "../layout/Button";
 import {errorToToast, successToToast} from "../graphs/utils/GraphUtils";
+import fileDownload from "js-file-download";
+import Modal from "../modal/Modal";
+import ReplayFromStepComponent from "./ReplayFromStepComponent";
 
 type ShardProps = {
   shard: Shard
   closeModal: () => void
+  notificationConnection?: Connection,
 }
 
 const buttonStyle = 'bg-light-blue hover:bg-dark-blue m-0'
 
-export default function ShardComponent({shard, closeModal}: ShardProps) {
+export default function ShardComponent({shard, closeModal, notificationConnection}: ShardProps) {
   const {connections} = useContextProvider()
   const [connection, setConnection] = useState({} as Connection)
   const [areaData, setAreaData] = useState('' as any)
@@ -22,6 +26,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
   const [shardData, setShardData] = useState({} as Shard)
   const [loading, setLoading] = useState(false)
   const [newShardValue, setNewShardValue] = useState('')
+  const [replayFromStepModalOpen, setReplayFromStepModalOpen] = useState(false)
   const currentLink = usePathname()
 
   useEffect(() => {
@@ -29,11 +34,11 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
   }, [connections])
 
   useEffect(() => {
-    if (!connection?.address) return
+    if (!connection?.address && !notificationConnection?.address) return
 
     setLoading(true)
-    const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}`,
+    const prefix = notificationConnection ? notificationConnection.secure ? 'https' : 'http' : connection?.secure ? 'https' : 'http'
+    fetch(`${prefix}://${notificationConnection ? notificationConnection?.address : connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}`,
       {method: 'GET', headers: {'content-type': 'application/json'}}
     ).then((res: any) => {
       if (res.ok) {
@@ -64,8 +69,8 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
 
   const handleUpdateValue = () => {
     setLoading(true)
-    const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}/update`,
+    const prefix = notificationConnection ? notificationConnection.secure ? 'https' : 'http' : connection?.secure ? 'https' : 'http'
+    fetch(`${prefix}://${notificationConnection ? notificationConnection?.address : connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/shards/${shard.id}/update`,
       {method: 'PUT', headers: {'content-type': 'application/text'}, body: newShardValue}
     ).then((res: any) => {
       res.json()
@@ -79,9 +84,9 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
     })
   }
 
-  const onReplay = () => {
-    const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/replay`,
+  const onCleanup = () => {
+    const prefix = notificationConnection ? notificationConnection.secure ? 'https' : 'http' : connection?.secure ? 'https' : 'http'
+    fetch(`${prefix}://${notificationConnection ? notificationConnection?.address : connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/cleanup`,
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => {
         if (res.ok) {
@@ -93,22 +98,20 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
       .catch(response => errorToToast(response))
   }
 
-  const onCleanup = () => {
-    const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/cleanup`,
-      {method: 'PUT', headers: {'content-type': 'application/json'}})
+  const onDownload = () => {
+    const prefix = notificationConnection ? notificationConnection.secure ? 'https' : 'http' : connection?.secure ? 'https' : 'http'
+    fetch(`${prefix}://${notificationConnection ? notificationConnection?.address : connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/download`)
       .then(res => {
-        if (res.ok) {
-          successToToast(res)
-          return closeModal()
-        }
-        errorToToast(res)
+        res.blob()
+          .then(blob => fileDownload(blob, `failed-transaction-${shard.txId}.bin`))
       })
-      .catch(response => errorToToast(response))
+      .catch(err => console.log(err))
   }
 
   if (loading) return <LoadingIcon/>
   return <div className={'w-760 flex flex-col gap-5'}>
+    <span className={'text-gray-400'}>pipeline id: <span className={'text-white'}>{shard.pipelineId}</span></span>
+    <span className={'text-gray-400'}>pipeline name: <span className={'text-white'}>{shard.pipelineName}</span></span>
     <span className={'text-gray-400'}>transaction id: <span className={'text-white'}>{shard.txId}</span></span>
     <span className={'text-gray-400'}>shard id: <span className={'text-white'}>{shardData.id}</span></span>
     <span className={'text-gray-400'}>failed step name: <span
@@ -128,22 +131,28 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
     }
     {
       areaData &&
-        <div className={'h-72 text-white overflow-auto'}>
-          <textarea key={areaData.length} rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
+        <div className={'flex w-full align-middle items-center h-72 text-white overflow-auto'}>
+          <textarea className={'m-auto'} key={areaData.length} rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
                     onChange={(e) => setNewShardValue(e.target.value)}/>
         </div>
     }
     {
       exceptionData &&
-        <div className={'h-72 text-white overflow-auto'}>
-            <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
+        <div className={'flex w-full align-middle items-center h-72 text-white overflow-auto'}>
+            <textarea className={'m-auto'} rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
         </div>
     }
     <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
-      <Button styles={buttonStyle} disabled={!shardData.isEditable || newShardValue === ''}
+      <Button styles={buttonStyle} disabled={!shardData.isEditable || newShardValue === '' || !areaData}
               onClick={() => handleUpdateValue()}>Save</Button>
-      <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
+      <Button styles={buttonStyle} onClick={() => setReplayFromStepModalOpen(true)}>Replay</Button>
+      <Modal open={replayFromStepModalOpen} onClose={() => setReplayFromStepModalOpen(false)}
+             title={'Replay From Step'}>
+        <ReplayFromStepComponent shardId={shard.id} pipelineId={shard.pipelineId} txId={shard.txId}
+                                 connection={notificationConnection || connection} closeModal={() => closeModal()}/>
+      </Modal>
       <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
+      <Button styles={buttonStyle} onClick={() => onDownload()}>Download</Button>
     </div>
   </div>;
 }

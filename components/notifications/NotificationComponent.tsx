@@ -18,7 +18,8 @@ type Notification = {
   pipelineName?: string,
   txShardId?: string
   level: string,
-  secure: boolean
+  secure: boolean,
+  notificationConnection: Connection
 }
 
 
@@ -49,7 +50,7 @@ export default function NotificationComponent() {
       if (json) {
         if (json.type === 'keep-alive') return
 
-        setNotifications(e => [{...json, address: connection.address, secure: connection.secure}, ...e])
+        setNotifications(e => [{...json, address: connection.address, secure: connection.secure, notificationConnection: connection}, ...e])
       }
     }
     ws.onclose = (e) => {
@@ -156,6 +157,7 @@ export default function NotificationComponent() {
                       pipelineName: selectedNotification.pipelineName,
                       txId: selectedNotification.txId
                     } as Shard}
+                  notificationConnection={selectedNotification.notificationConnection}
                   closeModal={handleCloseModal}
               />
           </Modal>
