@@ -6,6 +6,8 @@ import LoadingIcon from "../layout/LoadingIcon";
 import Button from "../layout/Button";
 import {errorToToast, successToToast} from "../graphs/utils/GraphUtils";
 import fileDownload from "js-file-download";
+import Modal from "../modal/Modal";
+import ReplayFromStepComponent from "./ReplayFromStepComponent";
 
 type ShardProps = {
   shard: Shard
@@ -23,6 +25,7 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
   const [shardData, setShardData] = useState({} as Shard)
   const [loading, setLoading] = useState(false)
   const [newShardValue, setNewShardValue] = useState('')
+  const [replayFromStepModalOpen, setReplayFromStepModalOpen] = useState(false)
   const currentLink = usePathname()
 
   useEffect(() => {
@@ -155,6 +158,10 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
       <Button styles={buttonStyle} disabled={!shardData.isEditable || newShardValue === ''}
               onClick={() => handleUpdateValue()}>Save</Button>
       <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
+      <Button styles={buttonStyle} onClick={() => setReplayFromStepModalOpen(true)}>Replay From Step</Button>
+      <Modal open={replayFromStepModalOpen} onClose={() => setReplayFromStepModalOpen(false)} title={'Replay From Step'}>
+        <ReplayFromStepComponent shardId={shard.id} pipelineId={shard.pipelineId} txId={shard.txId}/>
+      </Modal>
       <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
       <Button styles={buttonStyle} onClick={() => onDownload()}>Download</Button>
     </div>
