@@ -124,6 +124,8 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
 
   if (loading) return <LoadingIcon/>
   return <div className={'w-760 flex flex-col gap-5'}>
+    <span className={'text-gray-400'}>pipeline id: <span className={'text-white'}>{shard.pipelineId}</span></span>
+    <span className={'text-gray-400'}>pipeline name: <span className={'text-white'}>{shard.pipelineName}</span></span>
     <span className={'text-gray-400'}>transaction id: <span className={'text-white'}>{shard.txId}</span></span>
     <span className={'text-gray-400'}>shard id: <span className={'text-white'}>{shardData.id}</span></span>
     <span className={'text-gray-400'}>failed step name: <span
@@ -144,23 +146,25 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
     {
       areaData &&
         <div className={'h-72 text-white overflow-auto'}>
-          <textarea key={areaData.length} rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
+          <textarea className={'mr-auto'} key={areaData.length} rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
                     onChange={(e) => setNewShardValue(e.target.value)}/>
         </div>
     }
     {
       exceptionData &&
         <div className={'h-72 text-white overflow-auto'}>
-            <textarea rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
+            <textarea className={'mr-auto'} rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
         </div>
     }
     <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
-      <Button styles={buttonStyle} disabled={!shardData.isEditable || newShardValue === ''}
+      <Button styles={buttonStyle} disabled={!shardData.isEditable || newShardValue === '' || !areaData}
               onClick={() => handleUpdateValue()}>Save</Button>
       <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
       <Button styles={buttonStyle} onClick={() => setReplayFromStepModalOpen(true)}>Replay From Step</Button>
-      <Modal open={replayFromStepModalOpen} onClose={() => setReplayFromStepModalOpen(false)} title={'Replay From Step'}>
-        <ReplayFromStepComponent shardId={shard.id} pipelineId={shard.pipelineId} txId={shard.txId} connection={connection}/>
+      <Modal open={replayFromStepModalOpen} onClose={() => setReplayFromStepModalOpen(false)}
+             title={'Replay From Step'}>
+        <ReplayFromStepComponent shardId={shard.id} pipelineId={shard.pipelineId} txId={shard.txId}
+                                 connection={connection}/>
       </Modal>
       <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
       <Button styles={buttonStyle} onClick={() => onDownload()}>Download</Button>
