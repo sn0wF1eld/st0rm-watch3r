@@ -150,7 +150,7 @@ console.log(notificationConnection)
       <Modal open={replayFromStepModalOpen} onClose={() => setReplayFromStepModalOpen(false)}
              title={'Replay From Step'}>
         <ReplayFromStepComponent shardId={shard.id} pipelineId={shard.pipelineId} txId={shard.txId}
-                                 connection={connection} closeModal={() => closeModal()}/>
+                                 connection={notificationConnection || connection} closeModal={() => closeModal()}/>
       </Modal>
       <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
       <Button styles={buttonStyle} onClick={() => onDownload()}>Download</Button>
