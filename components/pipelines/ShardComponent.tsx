@@ -83,20 +83,6 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
     })
   }
 
-  const onReplay = () => {
-    const prefix = connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/replay`,
-      {method: 'PUT', headers: {'content-type': 'application/json'}})
-      .then(res => {
-        if (res.ok) {
-          successToToast(res)
-          return closeModal()
-        }
-        errorToToast(res)
-      })
-      .catch(response => errorToToast(response))
-  }
-
   const onCleanup = () => {
     const prefix = connection?.secure ? 'https' : 'http'
     fetch(`${prefix}://${connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/cleanup`,
@@ -159,12 +145,11 @@ export default function ShardComponent({shard, closeModal}: ShardProps) {
     <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
       <Button styles={buttonStyle} disabled={!shardData.isEditable || newShardValue === '' || !areaData}
               onClick={() => handleUpdateValue()}>Save</Button>
-      <Button styles={buttonStyle} onClick={() => onReplay()}>Replay</Button>
-      <Button styles={buttonStyle} onClick={() => setReplayFromStepModalOpen(true)}>Replay From Step</Button>
+      <Button styles={buttonStyle} onClick={() => setReplayFromStepModalOpen(true)}>Replay</Button>
       <Modal open={replayFromStepModalOpen} onClose={() => setReplayFromStepModalOpen(false)}
              title={'Replay From Step'}>
         <ReplayFromStepComponent shardId={shard.id} pipelineId={shard.pipelineId} txId={shard.txId}
-                                 connection={connection}/>
+                                 connection={connection} closeModal={() => setReplayFromStepModalOpen(false)}/>
       </Modal>
       <Button styles={buttonStyle} onClick={() => onCleanup()}>Cleanup</Button>
       <Button styles={buttonStyle} onClick={() => onDownload()}>Download</Button>
