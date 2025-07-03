@@ -17,14 +17,15 @@ export default function ReplayFromStepComponent(props: Props) {
       {method: 'GET', headers: {'content-type': 'application/json'}}
     ).then(res => res.json()
       .then((body: string[]) => {
-        if (body.length) {
+        if (body.steps?.length) {
           const conns = localStorage.getItem('connections')
           if (conns){
             const pipelines = JSON.parse(conns).find((c: Connection) => c.id === props.connection?.id)?.pipelines
             if (pipelines) {
               const currentPipeline =  pipelines?.find((pipeline: Pipeline) => pipeline.id === props.pipelineId)
               if (currentPipeline) {
-                const filteredSteps = body?.reduce((acc: string[], step: string) => {
+                const filteredSteps = body.steps?.reduce((acc: string[], step: string) => {
+                console.log(currentPipeline.pipes, step, acc)
                   if (currentPipeline.pipes?.some((p: Pipeline['pipes']) => p.name === step)) return acc
                   return [...acc, step]
                 }, [])
@@ -33,7 +34,7 @@ export default function ReplayFromStepComponent(props: Props) {
             }
           }
         }
-        return setSteps(body)
+        return setSteps(body.steps)
       }))
   }, []);
   return <div>{JSON.stringify(steps)}</div>
