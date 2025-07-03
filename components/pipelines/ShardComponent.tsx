@@ -132,15 +132,15 @@ console.log(notificationConnection)
     }
     {
       areaData &&
-        <div className={'h-72 text-white overflow-auto'}>
-          <textarea className={'mr-auto'} key={areaData.length} rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
+        <div className={'flex w-full align-middle items-center h-72 text-white overflow-auto'}>
+          <textarea className={'m-auto'} key={areaData.length} rows={15} cols={80} readOnly={!shardData.isEditable} defaultValue={areaData}
                     onChange={(e) => setNewShardValue(e.target.value)}/>
         </div>
     }
     {
       exceptionData &&
-        <div className={'h-72 text-white overflow-auto'}>
-            <textarea className={'mr-auto'} rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
+        <div className={'flex w-full align-middle items-center h-72 text-white overflow-auto'}>
+            <textarea className={'m-auto'} rows={15} cols={80} readOnly={true} value={JSON.stringify(exceptionData, undefined, 2)}/>
         </div>
     }
     <div className={'flex gap-10 bg-card p-3 border border-solid border-gray-400 w-fit mx-auto'}>
