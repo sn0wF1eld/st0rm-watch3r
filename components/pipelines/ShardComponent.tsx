@@ -108,7 +108,7 @@ export default function ShardComponent({shard, closeModal, notificationConnectio
       })
       .catch(err => console.log(err))
   }
-console.log(notificationConnection)
+
   if (loading) return <LoadingIcon/>
   return <div className={'w-760 flex flex-col gap-5'}>
     <span className={'text-gray-400'}>pipeline id: <span className={'text-white'}>{shard.pipelineId}</span></span>
