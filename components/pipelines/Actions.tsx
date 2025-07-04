@@ -5,6 +5,7 @@ import FailedTransactionComponent from "./FailedTransactionComponent";
 import LoadingIcon from "../layout/LoadingIcon";
 import Button from "../layout/Button";
 import {showToastFailMessage, successToToast, errorToToast} from "../graphs/utils/GraphUtils";
+import fileDownload from "js-file-download";
 
 type ActionsProps = {
   connection: Connection
@@ -153,12 +154,27 @@ export default function Actions({connection, name, status}: ActionsProps) {
       .catch(response => errorToToast(response))
   }
 
+    const onDownloadAll = () => {
+        fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/download`,
+            {
+                method: 'POST',
+                headers: {'content-type': 'application/json'},
+                body: JSON.stringify({ ...failedTransactions})
+            })
+            .then(res => {
+                res.blob()
+                    .then(blob => fileDownload(blob, `failed-transactions-${name}.bin`))
+            })
+            .catch(err => console.log(err))
+    }
+
   const onSelectTx = (tx: string) => {
     if (selectedTx === tx) {
       setTxData({})
       setSelectedTx('')
       return
     }
+    console.log (url)
     fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/${tx}`,
       {method: 'GET', headers: {'content-type': 'application/json'}})
       .then(res => {
@@ -207,11 +223,8 @@ export default function Actions({connection, name, status}: ActionsProps) {
         }
         {openModal && !loading && (failedTransactions?.failedTxIds?.length > 0) &&
             <Modal open={openModal} onClose={handleCloseModal} title={'Failed Transactions'} noOverlayClick={true}>
-                <div className={'w-400 flex flex-col'}>
-                    <span className={'w-full p-2 text-end text-xs text-light-blue'}>
-                        Transactions: {failedTransactions?.failedTxIds?.length}
-                    </span>
-                    <ul className={'list-none p-0 overflow-auto h-72'}>
+                <div className={'w-400 align-middle flex flex-col'}>
+                    <ul className={'list-none overflow-auto h-72 pl-20'}>
                       {
                         failedTransactions?.failedTxIds?.map(tx => (
                           <li key={tx}>
@@ -229,13 +242,17 @@ export default function Actions({connection, name, status}: ActionsProps) {
                       }
 
                     </ul>
+                  <span className={'w-full text-xs text-light-blue'}>
+                        Transactions: {failedTransactions?.failedTxIds?.length}
+                    </span>
 
                 </div>
-                <div className={'flex justify-center gap-10'}>
+                <div className={'flex w-full justify-center pt-5 gap-5'}>
                     <Button styles={'bg-light-blue'} disabled={!selectedTx} onClick={() => onCleanup(selectedTx)}>Cleanup</Button>
                     <Button styles={'bg-light-blue'} onClick={() => onCleanupAll()}>Cleanup All</Button>
                     <Button styles={'bg-light-blue'} disabled={status === 'offline' || !selectedTx} onClick={() => onReplay(selectedTx)}>Replay</Button>
                     <Button styles={'bg-light-blue'} disabled={status === 'offline'} onClick={() => onReplayAll()}>Replay All</Button>
+                    <Button styles={'bg-light-blue'} onClick={() => onDownloadAll()}>Download All</Button>
                 </div>
             </Modal>
         }

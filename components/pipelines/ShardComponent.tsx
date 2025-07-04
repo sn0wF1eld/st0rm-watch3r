@@ -100,10 +100,17 @@ export default function ShardComponent({shard, closeModal, notificationConnectio
 
   const onDownload = () => {
     const prefix = notificationConnection ? notificationConnection.secure ? 'https' : 'http' : connection?.secure ? 'https' : 'http'
-    fetch(`${prefix}://${notificationConnection ? notificationConnection?.address : connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/${shard.txId}/download`)
+    fetch(`${prefix}://${notificationConnection ? notificationConnection?.address : connection?.address}/sn0wst0rm/api/1/pipelines/${shard.pipelineId}/transactions/failed/download`,
+        {
+          method: 'POST',
+          headers: {'content-type': 'application/json'},
+          body: JSON.stringify({
+            failedTxIds: [shard.txId]
+          })
+        })
       .then(res => {
         res.blob()
-          .then(blob => fileDownload(blob, `failed-transaction-${shard.txId}.bin`))
+          .then(blob => fileDownload(blob, `failed-transactions-${shard.pipelineId}.bin`))
       })
       .catch(err => console.log(err))
   }
