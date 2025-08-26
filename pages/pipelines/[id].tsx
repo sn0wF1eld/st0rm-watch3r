@@ -341,7 +341,8 @@ export default function Pipelines() {
             />
             <Actions
               connection={connection}
-              name={pipeline.id}
+              id={pipeline.id}
+              name={pipeline.name}
               status={pipeline.status}
             />
           </div>

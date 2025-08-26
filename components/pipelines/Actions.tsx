@@ -9,6 +9,7 @@ import fileDownload from "js-file-download";
 
 type ActionsProps = {
   connection: Connection
+  id: string,
   name: string,
   status: string
 }
@@ -17,7 +18,7 @@ type FailedTransaction = {
   failedTxIds: string[]
 }
 
-export default function Actions({connection, name, status}: ActionsProps) {
+export default function Actions({connection, id, name, status}: ActionsProps) {
   const [openModal, setOpenModal] = useState(false)
   const [failedTransactions, setFailedTransactions] = useState({} as FailedTransaction)
   const [selectedTx, setSelectedTx] = useState('')
@@ -28,7 +29,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
 
   const fetchFailed = () => {
     setLoading(true)
-    return fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed`)
+    return fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed`)
       .then(res => {
         return res.json()
       })
@@ -45,7 +46,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
 
   }, [openModal])
   const handleStart = () => {
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/start`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/start`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
         .then(response => successToToast(response))
@@ -53,7 +54,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
   }
 
   const handleStop = () => {
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/stop`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/stop`,
       {method: 'PUT', headers: {'content-type': 'application/json'}}
     )
         .then(response => successToToast(response))
@@ -79,7 +80,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
   }
 
   const onReplay = (tx: string) => {
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/${tx}/replay`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}/replay`,
       {method: 'PUT', headers: {'content-type': 'application/json'}})
       .then(res => {
         if (res.ok) {
@@ -96,7 +97,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
   }
 
     const onCleanup = (tx: string) => {
-        fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/${tx}/cleanup`,
+        fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}/cleanup`,
             {method: 'PUT', headers: {'content-type': 'application/json'}})
             .then(res => {
                 if (res.ok) {
@@ -113,7 +114,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
     }
 
     const onCleanupAll = () => {
-        fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/cleanup`,
+        fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/cleanup`,
             {
                 method: 'PUT', headers: {'content-type': 'application/json'}, body: JSON.stringify({
                     ...failedTransactions
@@ -134,7 +135,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
     }
 
   const onReplayAll = () => {
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/replay`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/replay`,
       {
         method: 'PUT', headers: {'content-type': 'application/json'}, body: JSON.stringify({
           ...failedTransactions
@@ -155,7 +156,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
   }
 
     const onDownloadAll = () => {
-        fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/download`,
+        fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/download`,
             {
                 method: 'POST',
                 headers: {'content-type': 'application/json'},
@@ -163,7 +164,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
             })
             .then(res => {
                 res.blob()
-                    .then(blob => fileDownload(blob, `failed-transactions-${name}.bin`))
+                    .then(blob => fileDownload(blob, `failed-transactions-${id}.bin`))
             })
             .catch(err => console.log(err))
     }
@@ -175,7 +176,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
       return
     }
     console.log (url)
-    fetch(`${url}/sn0wst0rm/api/1/pipelines/${name}/transactions/failed/${tx}`,
+    fetch(`${url}/sn0wst0rm/api/1/pipelines/${id}/transactions/failed/${tx}`,
       {method: 'GET', headers: {'content-type': 'application/json'}})
       .then(res => {
         res.json()
@@ -235,7 +236,7 @@ export default function Actions({connection, name, status}: ActionsProps) {
                             </button>
                             {
                               selectedTx === tx &&
-                                <FailedTransactionComponent transaction={{...txData, pipelineId: name, pipelineName: name}} refreshTransactions={() => handleRefetch()}/>
+                                <FailedTransactionComponent transaction={{...txData, pipelineId: id, pipelineName: name}} refreshTransactions={() => handleRefetch()}/>
                             }
                           </li>
                         ))
